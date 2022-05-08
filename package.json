@@ -1,6 +1,6 @@
 {
   "name": "@handsin/api-node",
-  "version": "v1.0.2",
+  "version": "v1.0.4",
   "description": "OpenAPI client for Hands In",
   "author": "OpenAPI-Generator Contributors",
   "keywords": [
@@ -17,13 +17,6 @@
     "build": "tsc --outDir dist/",
     "prepublishOnly": "npm run build"
   },
-  "dependencies": {
-    "axios": "^0.21.1"
-  },
-  "devDependencies": {
-    "@types/node": "^12.11.5",
-    "typescript": "^3.6.4"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hands-in/api-node-sdk.git"
@@ -31,5 +24,12 @@
   "bugs": {
     "url": "https://github.com/hands-in/api-node-sdk/issues"
   },
-  "homepage": "https://github.com/hands-in/api-node-sdk#readme"
+  "homepage": "https://github.com/hands-in/api-node-sdk#readme",
+  "dependencies": {
+    "axios": "^0.27.2"
+  },
+  "devDependencies": {
+    "@types/node": "^12.11.5",
+    "typescript": "^3.6.4"
+  }
 }

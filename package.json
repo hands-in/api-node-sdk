@@ -1,6 +1,6 @@
 {
   "name": "@handsin/api-node",
-  "version": "v1.0.4",
+  "version": "1.0.5",
   "description": "Hands In API client sdk for NodeJS projects",
   "author": "OpenAPI-Generator Contributors",
   "keywords": [

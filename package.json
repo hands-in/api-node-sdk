@@ -2,7 +2,8 @@
   "name": "@handsin/api-node",
   "version": "1.0.6",
   "description": "Hands In API client sdk for NodeJS projects",
-  "author": "OpenAPI-Generator Contributors",
+  "author": "Hands In",
+  "files": ["build"],
   "keywords": [
     "typescript",
     "openapi-client",

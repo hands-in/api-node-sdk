@@ -16,7 +16,7 @@
   "main": "./build/index.js",
   "typings": "./build/index.d.ts",
   "scripts": {
-    "build": "tsc --outDir build/",
+    "build": "tsc --build --clean",
     "prepublishOnly": "npm run build"
   },
   "repository": {

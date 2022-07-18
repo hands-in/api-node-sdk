@@ -4,18 +4,17 @@
     "target": "es5",
     "module": "commonjs",
     "noImplicitAny": true,
-    "outDir": "dist",
-    "rootDir": ".",
+    "outDir": "build",
+    "rootDir": "./src",
     "lib": [
       "es6",
       "dom"
     ],
     "typeRoots": [
       "node_modules/@types"
-    ]
+    ],
+    "allowJs": false
   },
-  "exclude": [
-    "dist",
-    "node_modules"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "build/**/*"]
 }

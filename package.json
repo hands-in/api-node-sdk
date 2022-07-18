@@ -1,20 +1,19 @@
 {
   "name": "@handsin/api-node",
   "version": "v1.0.4",
-  "description": "OpenAPI client for Hands In",
+  "description": "Hands In API client sdk for NodeJS projects",
   "author": "OpenAPI-Generator Contributors",
   "keywords": [
-    "axios",
     "typescript",
     "openapi-client",
     "openapi-generator",
     "hands-in"
   ],
-  "license": "ISC",
-  "main": "./dist/index.js",
-  "typings": "./dist/index.d.ts",
+  "license": "GNU",
+  "main": "./build/index.js",
+  "typings": "./build/index.d.ts",
   "scripts": {
-    "build": "tsc --outDir dist/",
+    "build": "tsc --outDir build/",
     "prepublishOnly": "npm run build"
   },
   "repository": {

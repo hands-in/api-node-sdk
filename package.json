@@ -1,9 +1,11 @@
 {
   "name": "@handsin/api-node",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Hands In API client sdk for NodeJS projects",
   "author": "Hands In",
-  "files": ["build"],
+  "files": [
+    "build"
+  ],
   "keywords": [
     "typescript",
     "openapi-client",

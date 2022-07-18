@@ -16,7 +16,7 @@
   "main": "./build/index.js",
   "typings": "./build/index.d.ts",
   "scripts": {
-    "build": "rm -rf build && tsc",
+    "build": "tsc",
     "prepublishOnly": "npm run build"
   },
   "repository": {

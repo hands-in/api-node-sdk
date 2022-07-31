@@ -1,6 +1,6 @@
 {
   "name": "@handsin/api-node",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Hands In API client sdk for NodeJS projects",
   "author": "Hands In",
   "files": [

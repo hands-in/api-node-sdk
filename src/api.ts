@@ -24,41 +24,14 @@ import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } fr
 /**
  * 
  * @export
- * @interface ACHDetails
- */
-export interface ACHDetails {
-    /**
-     * The routing number for the bank account.
-     * @type {string}
-     * @memberof ACHDetails
-     */
-    'routingNumber'?: string;
-    /**
-     * The last few digits of the bank account number.
-     * @type {string}
-     * @memberof ACHDetails
-     */
-    'accountNumberSuffix'?: string;
-    /**
-     * The type of the bank account performing the transfer. The account type can be `CHECKING`, `SAVINGS`, or `UNKNOWN`.
-     * @type {string}
-     * @memberof ACHDetails
-     */
-    'accountType'?: string;
-}
-/**
- * 
- * @export
  * @enum {string}
  */
 
-export const AVSStatus = {
-    Accepted: 'AVS_ACCEPTED',
-    Rejected: 'AVS_REJECTED',
-    NotChecked: 'AVS_NOT_CHECKED'
-} as const;
-
-export type AVSStatus = typeof AVSStatus[keyof typeof AVSStatus];
+export enum AVSStatus {
+    ACCEPTED = 'AVS_ACCEPTED',
+    REJECTED = 'AVS_REJECTED',
+    NOT_CHECKED = 'AVS_NOT_CHECKED'
+}
 
 
 /**
@@ -130,10 +103,10 @@ export interface AccountCreationParams {
     'lastName'?: string;
     /**
      * 
-     * @type {string}
+     * @type {Language}
      * @memberof AccountCreationParams
      */
-    'language'?: string;
+    'language'?: Language;
     /**
      * 
      * @type {Country}
@@ -179,10 +152,10 @@ export interface AccountDTO {
     'country'?: Country;
     /**
      * 
-     * @type {string}
+     * @type {Language}
      * @memberof AccountDTO
      */
-    'language'?: string;
+    'language'?: Language;
     /**
      * 
      * @type {string}
@@ -209,7 +182,13 @@ export interface Address {
      */
     'addressLines': AddressLines;
     /**
-     * 
+     * The recipient\'s/contacts name at this address
+     * @type {string}
+     * @memberof Address
+     */
+    'name'?: string;
+    /**
+     * The city/state the address is in
      * @type {string}
      * @memberof Address
      */
@@ -219,46 +198,46 @@ export interface Address {
      * @type {Country}
      * @memberof Address
      */
-    'country'?: Country;
+    'country': Country;
     /**
-     * 
+     * The unique post code (also known as a zip code) to an address
      * @type {string}
      * @memberof Address
      */
     'postalCode'?: string;
     /**
-     * 
-     * @type {Sublocality}
-     * @memberof Address
-     */
-    'sublocality'?: Sublocality;
-    /**
-     * 
+     * The organization/company name at this address (if there is one)
      * @type {string}
      * @memberof Address
      */
     'organization'?: string;
+    /**
+     * This property contains additional information, such as the name of the neighborhood or landmark associated with the area. It might also refer to a common name that’s associated with the location
+     * @type {string}
+     * @memberof Address
+     */
+    'sublocality'?: string;
 }
 /**
- * 
+ * The address
  * @export
  * @interface AddressLines
  */
 export interface AddressLines {
     /**
-     * 
+     * The primary address information including the street address and house/flat number.
      * @type {string}
      * @memberof AddressLines
      */
     'addressLine1': string;
     /**
-     * 
+     * This address line is the locality (i.e. a subsection of a town)
      * @type {string}
      * @memberof AddressLines
      */
     'addressLine2'?: string;
     /**
-     * 
+     * This address line is the area name (i.e. a town or state)
      * @type {string}
      * @memberof AddressLines
      */
@@ -267,21 +246,27 @@ export interface AddressLines {
 /**
  * 
  * @export
- * @interface AdjustableQuantity
+ * @interface AllocatedItem
  */
-export interface AdjustableQuantity {
+export interface AllocatedItem {
+    /**
+     * 
+     * @type {string}
+     * @memberof AllocatedItem
+     */
+    'itemId': string;
+    /**
+     * 
+     * @type {Money}
+     * @memberof AllocatedItem
+     */
+    'amountMoney': Money;
     /**
      * 
      * @type {number}
-     * @memberof AdjustableQuantity
+     * @memberof AllocatedItem
      */
-    'minimum': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof AdjustableQuantity
-     */
-    'maxmimum': number;
+    'quantity': number;
 }
 /**
  * 
@@ -305,71 +290,14 @@ export interface Attachment {
 /**
  * 
  * @export
- * @interface BankAccountPaymentDetails
+ * @enum {string}
  */
-export interface BankAccountPaymentDetails {
-    /**
-     * 
-     * @type {string}
-     * @memberof BankAccountPaymentDetails
-     */
-    'bankName'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof BankAccountPaymentDetails
-     */
-    'transferType'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof BankAccountPaymentDetails
-     */
-    'accountOwnershipType'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof BankAccountPaymentDetails
-     */
-    'fingerprint'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof BankAccountPaymentDetails
-     */
-    'country'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof BankAccountPaymentDetails
-     */
-    'statementDescription'?: string;
-    /**
-     * 
-     * @type {ACHDetails}
-     * @memberof BankAccountPaymentDetails
-     */
-    'achDetails'?: ACHDetails;
-    /**
-     * 
-     * @type {Array<PaymentError>}
-     * @memberof BankAccountPaymentDetails
-     */
-    'errors'?: Array<PaymentError>;
+
+export enum CVVStatus {
+    ACCEPTED = 'CVV_ACCEPTED',
+    REJECTED = 'CVV_REJECTED',
+    NOT_CHECKED = 'CVV_NOT_CHECKED'
 }
-/**
- * 
- * @export
- * @enum {string}
- */
-
-export const CVVStatus = {
-    Accepted: 'CVV_ACCEPTED',
-    Rejected: 'CVV_REJECTED',
-    NotChecked: 'CVV_NOT_CHECKED'
-} as const;
-
-export type CVVStatus = typeof CVVStatus[keyof typeof CVVStatus];
 
 
 /**
@@ -378,39 +306,22 @@ export type CVVStatus = typeof CVVStatus[keyof typeof CVVStatus];
  * @enum {string}
  */
 
-export const CaptureMethod = {
-    Payment: 'PAYMENT',
-    Capture: 'CAPTURE',
-    Subscription: 'SUBSCRIPTION'
-} as const;
-
-export type CaptureMethod = typeof CaptureMethod[keyof typeof CaptureMethod];
-
-
-/**
- * 
- * @export
- * @enum {string}
- */
-
-export const CardBrand = {
-    OtherBrand: 'OTHER_BRAND',
-    Visa: 'VISA',
-    Mastercard: 'MASTERCARD',
-    AmericanExpress: 'AMERICAN_EXPRESS',
-    Discover: 'DISCOVER',
-    DiscoverDiners: 'DISCOVER_DINERS',
-    Jcb: 'JCB',
-    ChinaUnionpay: 'CHINA_UNIONPAY',
-    SquareGiftCard: 'SQUARE_GIFT_CARD',
-    SquareCapitalCard: 'SQUARE_CAPITAL_CARD',
-    Interac: 'INTERAC',
-    Eftpos: 'EFTPOS',
-    Felica: 'FELICA',
-    Ebt: 'EBT'
-} as const;
-
-export type CardBrand = typeof CardBrand[keyof typeof CardBrand];
+export enum CardBrand {
+    OTHER_BRAND = 'OTHER_BRAND',
+    VISA = 'VISA',
+    MASTERCARD = 'MASTERCARD',
+    AMERICAN_EXPRESS = 'AMERICAN_EXPRESS',
+    DISCOVER = 'DISCOVER',
+    DISCOVER_DINERS = 'DISCOVER_DINERS',
+    JCB = 'JCB',
+    CHINA_UNIONPAY = 'CHINA_UNIONPAY',
+    SQUARE_GIFT_CARD = 'SQUARE_GIFT_CARD',
+    SQUARE_CAPITAL_CARD = 'SQUARE_CAPITAL_CARD',
+    INTERAC = 'INTERAC',
+    EFTPOS = 'EFTPOS',
+    FELICA = 'FELICA',
+    EBT = 'EBT'
+}
 
 
 /**
@@ -638,15 +549,13 @@ export interface CardPaymentTimeline {
  * @enum {string}
  */
 
-export const CardVerificationMethod = {
-    Pin: 'PIN',
-    PinAndSignature: 'PIN_AND_SIGNATURE',
-    Signature: 'SIGNATURE',
-    OnDevice: 'ON_DEVICE',
-    None: 'NONE'
-} as const;
-
-export type CardVerificationMethod = typeof CardVerificationMethod[keyof typeof CardVerificationMethod];
+export enum CardVerificationMethod {
+    PIN = 'PIN',
+    PIN_AND_SIGNATURE = 'PIN_AND_SIGNATURE',
+    SIGNATURE = 'SIGNATURE',
+    ON_DEVICE = 'ON_DEVICE',
+    NONE = 'NONE'
+}
 
 
 /**
@@ -655,58 +564,202 @@ export type CardVerificationMethod = typeof CardVerificationMethod[keyof typeof 
  * @enum {string}
  */
 
-export const CardVerificationResult = {
-    Success: 'SUCCESS',
-    Failure: 'FAILURE',
-    Unknown: 'UNKNOWN'
-} as const;
-
-export type CardVerificationResult = typeof CardVerificationResult[keyof typeof CardVerificationResult];
+export enum CardVerificationResult {
+    SUCCESS = 'SUCCESS',
+    FAILURE = 'FAILURE',
+    UNKNOWN = 'UNKNOWN'
+}
 
 
 /**
  * 
  * @export
- * @interface CashPaymentDetails
+ * @interface Checkout
  */
-export interface CashPaymentDetails {
+export interface Checkout {
+    /**
+     * A unique identifier for the checkout session object.
+     * @type {string}
+     * @memberof Checkout
+     */
+    'id': string;
     /**
      * 
-     * @type {Money}
-     * @memberof CashPaymentDetails
+     * @type {CheckoutStatus}
+     * @memberof Checkout
      */
-    'buyerSuppliedMoney': Money;
+    'status': CheckoutStatus;
+    /**
+     * A unique identifier for the order object.
+     * @type {string}
+     * @memberof Checkout
+     */
+    'orderId': string;
+    /**
+     * The date and time at which the checkout session will expire. If undefined the checkout session will expire after 7 days.
+     * @type {string}
+     * @memberof Checkout
+     */
+    'expirationDate': string;
+    /**
+     * URL linking to a resource or website.
+     * @type {string}
+     * @memberof Checkout
+     */
+    'url': string;
+    /**
+     * A unique identifier for a customer object.
+     * @type {string}
+     * @memberof Checkout
+     */
+    'customerId'?: string;
+    /**
+     * A unique identifier for the payment object.
+     * @type {string}
+     * @memberof Checkout
+     */
+    'paymentId'?: string;
+    /**
+     * A unique identifier for the group payment object.
+     * @type {string}
+     * @memberof Checkout
+     */
+    'groupPaymentId'?: string;
     /**
      * 
-     * @type {Money}
-     * @memberof CashPaymentDetails
+     * @type {CheckoutPageOptions}
+     * @memberof Checkout
      */
-    'changeBackMoney'?: Money;
+    'checkoutPageOptions'?: CheckoutPageOptions;
+    /**
+     * The date and time when the checkout session was created
+     * @type {string}
+     * @memberof Checkout
+     */
+    'createdAt'?: string;
+    /**
+     * The date and time when the checkout session was last modified/updated
+     * @type {string}
+     * @memberof Checkout
+     */
+    'updatedAt'?: string;
+    /**
+     * A unique identifier set by a developer to help reconcile this object with any internal systems
+     * @type {string}
+     * @memberof Checkout
+     */
+    'referenceId'?: string;
+    /**
+     * A Key-value object to hold additional data
+     * @type {{ [key: string]: string; }}
+     * @memberof Checkout
+     */
+    'metaData'?: { [key: string]: string; };
 }
 /**
  * 
  * @export
- * @interface CheckoutLineItemCreationParam
+ * @interface CheckoutBatchGetRequest
  */
-export interface CheckoutLineItemCreationParam {
-    /**
-     * Item can be created inline if neccessary
-     * @type {string | ItemCreationParams}
-     * @memberof CheckoutLineItemCreationParam
-     */
-    'item': string | ItemCreationParams;
+export interface CheckoutBatchGetRequest {
     /**
      * 
-     * @type {number}
-     * @memberof CheckoutLineItemCreationParam
+     * @type {Array<string>}
+     * @memberof CheckoutBatchGetRequest
      */
-    'quantity': number;
+    'checkoutIds': Array<string>;
+}
+/**
+ * 
+ * @export
+ * @interface CheckoutCreateRequest
+ */
+export interface CheckoutCreateRequest {
+    /**
+     * A list of items the customer is purchasing.
+     * @type {Array<LineItemCreateRequest>}
+     * @memberof CheckoutCreateRequest
+     */
+    'lineItemParams': Array<LineItemCreateRequest>;
     /**
      * 
-     * @type {AdjustableQuantity}
-     * @memberof CheckoutLineItemCreationParam
+     * @type {CheckoutCreateRequestCustomer}
+     * @memberof CheckoutCreateRequest
      */
-    'adjustableQuantity'?: AdjustableQuantity;
+    'customer'?: CheckoutCreateRequestCustomer;
+    /**
+     * The date and time at which the checkout session will expire. If undefined the checkout session will expire after 7 days.
+     * @type {string}
+     * @memberof CheckoutCreateRequest
+     */
+    'expirationDate'?: string;
+    /**
+     * 
+     * @type {CheckoutPageOptions}
+     * @memberof CheckoutCreateRequest
+     */
+    'checkoutPageOptions'?: CheckoutPageOptions;
+    /**
+     * A Key-value object to hold additional data
+     * @type {{ [key: string]: string; }}
+     * @memberof CheckoutCreateRequest
+     */
+    'metaData'?: { [key: string]: string; };
+    /**
+     * A unique identifier set by a developer to help reconcile this object with any internal systems
+     * @type {string}
+     * @memberof CheckoutCreateRequest
+     */
+    'referenceId'?: string;
+}
+/**
+ * Can be either an existing customer identifier or a customer object.  If this is provided, the customer’s email, name, card details, and address will be pre-filled on the Checkout page. If this is undefined, the checkout will create a new customer object based on information provided during the checkout flow.
+ * @export
+ * @interface CheckoutCreateRequestCustomer
+ */
+export interface CheckoutCreateRequestCustomer {
+    /**
+     * 
+     * @type {string}
+     * @memberof CheckoutCreateRequestCustomer
+     */
+    'firstName': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CheckoutCreateRequestCustomer
+     */
+    'lastName'?: string;
+    /**
+     * Email address. See [RFC 5322](https://datatracker.ietf.org/doc/html/rfc5322)
+     * @type {string}
+     * @memberof CheckoutCreateRequestCustomer
+     */
+    'email': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CheckoutCreateRequestCustomer
+     */
+    'phoneNumber'?: string;
+    /**
+     * 
+     * @type {Language}
+     * @memberof CheckoutCreateRequestCustomer
+     */
+    'language'?: Language;
+    /**
+     * 
+     * @type {string}
+     * @memberof CheckoutCreateRequestCustomer
+     */
+    'referenceId'?: string;
+    /**
+     * A Key-value object to hold additional data
+     * @type {{ [key: string]: string; }}
+     * @memberof CheckoutCreateRequestCustomer
+     */
+    'metaData'?: { [key: string]: string; };
 }
 /**
  * 
@@ -714,12 +767,6 @@ export interface CheckoutLineItemCreationParam {
  * @interface CheckoutPageOptions
  */
 export interface CheckoutPageOptions {
-    /**
-     * 
-     * @type {CaptureMethod}
-     * @memberof CheckoutPageOptions
-     */
-    'captureMethod': CaptureMethod;
     /**
      * URL linking to a resource or website.
      * @type {string}
@@ -739,363 +786,107 @@ export interface CheckoutPageOptions {
      */
     'expireUrl'?: string;
     /**
-     * 
-     * @type {object}
-     * @memberof CheckoutPageOptions
-     */
-    'enableGroupPayments'?: object;
-    /**
-     * 
-     * @type {object}
-     * @memberof CheckoutPageOptions
-     */
-    'enableTips'?: object;
-    /**
-     * 
-     * @type {object}
-     * @memberof CheckoutPageOptions
-     */
-    'enableDiscounts'?: object;
-    /**
-     * Will pre-apply an array of discount codes Discounts have to be enabled first.
-     * @type {Array<string>}
-     * @memberof CheckoutPageOptions
-     */
-    'discountCodes'?: Array<string>;
-    /**
-     * 
+     * The payment methods which are available to customers to pay through
      * @type {Array<PaymentMethod>}
      * @memberof CheckoutPageOptions
+     * @deprecated
      */
     'paymentMethods'?: Array<PaymentMethod>;
     /**
      * 
-     * @type {CheckoutStyle}
+     * @type {ColorScheme}
      * @memberof CheckoutPageOptions
      */
-    'style'?: CheckoutStyle;
+    'style'?: ColorScheme;
     /**
-     * 
-     * @type {object}
+     * If true the customer will not be able to change their basket in the checkout
+     * @type {boolean}
      * @memberof CheckoutPageOptions
      */
-    'showEditItemsPage'?: object;
+    'disableEditOrders'?: boolean;
 }
 /**
- * 
- * @export
- * @interface CheckoutSession
- */
-export interface CheckoutSession {
-    /**
-     * 
-     * @type {string}
-     * @memberof CheckoutSession
-     */
-    'id': string;
-    /**
-     * 
-     * @type {CheckoutStatus}
-     * @memberof CheckoutSession
-     */
-    'status': CheckoutStatus;
-    /**
-     * 
-     * @type {string}
-     * @memberof CheckoutSession
-     */
-    'expirationDate': string;
-    /**
-     * User will populate data in checkout session if provided
-     * @type {string}
-     * @memberof CheckoutSession
-     */
-    'customerId'?: string;
-    /**
-     * The order associated with the checkout session
-     * @type {string}
-     * @memberof CheckoutSession
-     */
-    'orderId': string;
-    /**
-     * The payment associated with the checkout session Could be either single payment or group payment
-     * @type {string}
-     * @memberof CheckoutSession
-     */
-    'paymentId'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof CheckoutSession
-     */
-    'groupPaymentId'?: string;
-    /**
-     * 
-     * @type {CheckoutPageOptions}
-     * @memberof CheckoutSession
-     */
-    'checkoutOptions': CheckoutPageOptions;
-    /**
-     * URL linking to a resource or website.
-     * @type {string}
-     * @memberof CheckoutSession
-     */
-    'url': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof CheckoutSession
-     */
-    'createdAt'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof CheckoutSession
-     */
-    'updatedAt'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof CheckoutSession
-     */
-    'version'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof CheckoutSession
-     */
-    'referenceId'?: string;
-    /**
-     * 
-     * @type {{ [key: string]: string; }}
-     * @memberof CheckoutSession
-     */
-    'metaData'?: { [key: string]: string; };
-}
-/**
- * 
- * @export
- * @interface CheckoutSessionCreationParams
- */
-export interface CheckoutSessionCreationParams {
-    /**
-     * 
-     * @type {Array<CheckoutLineItemCreationParam>}
-     * @memberof CheckoutSessionCreationParams
-     */
-    'lineItemParams': Array<CheckoutLineItemCreationParam>;
-    /**
-     * 
-     * @type {string}
-     * @memberof CheckoutSessionCreationParams
-     */
-    'referenceId'?: string;
-    /**
-     * 
-     * @type {CustomerCreationParams | string}
-     * @memberof CheckoutSessionCreationParams
-     */
-    'customer'?: CustomerCreationParams | string;
-    /**
-     * 
-     * @type {string}
-     * @memberof CheckoutSessionCreationParams
-     */
-    'expirationDate'?: string;
-    /**
-     * 
-     * @type {CheckoutPageOptions}
-     * @memberof CheckoutSessionCreationParams
-     */
-    'checkoutPageOptions': CheckoutPageOptions;
-    /**
-     * 
-     * @type {{ [key: string]: string; }}
-     * @memberof CheckoutSessionCreationParams
-     */
-    'metaData'?: { [key: string]: string; };
-}
-/**
- * 
+ * Indicates the state of the checkout session.  PENDING (The checkout session is still in progress) COMPLETED (The checkout session was completed successfully) CANCELLED (The checkout session was cancelled) EXPIRED (The checkout session was not completed by the `expirationDate`, if there is one)
  * @export
  * @enum {string}
  */
 
-export const CheckoutStatus = {
-    Expired: 'EXPIRED',
-    Cancelled: 'CANCELLED',
-    Pending: 'PENDING'
-} as const;
-
-export type CheckoutStatus = typeof CheckoutStatus[keyof typeof CheckoutStatus];
+export enum CheckoutStatus {
+    PENDING = 'PENDING',
+    COMPLETED = 'COMPLETED',
+    EXPIRED = 'EXPIRED',
+    CANCELLED = 'CANCELLED'
+}
 
 
 /**
  * 
  * @export
- * @interface CheckoutStyle
+ * @interface CheckoutUpdateRequest
  */
-export interface CheckoutStyle {
+export interface CheckoutUpdateRequest {
+    /**
+     * 
+     * @type {CheckoutPageOptions}
+     * @memberof CheckoutUpdateRequest
+     */
+    'checkoutPageOptions'?: CheckoutPageOptions;
+    /**
+     * A Key-value object to hold additional data
+     * @type {{ [key: string]: string; }}
+     * @memberof CheckoutUpdateRequest
+     */
+    'metaData'?: { [key: string]: string; };
+    /**
+     * A unique identifier set by a developer to help reconcile this object with any internal systems
+     * @type {string}
+     * @memberof CheckoutUpdateRequest
+     */
+    'referenceId'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface ColorScheme
+ */
+export interface ColorScheme {
     /**
      * 
      * @type {string}
-     * @memberof CheckoutStyle
+     * @memberof ColorScheme
      */
     'secondaryColor': string;
     /**
      * 
      * @type {string}
-     * @memberof CheckoutStyle
+     * @memberof ColorScheme
      */
     'primaryColor': string;
 }
 /**
  * 
  * @export
- * @interface ClientCreationParams
+ * @interface CompanyContactDetails
  */
-export interface ClientCreationParams {
+export interface CompanyContactDetails {
+    /**
+     * Email address. See [RFC 5322](https://datatracker.ietf.org/doc/html/rfc5322)
+     * @type {string}
+     * @memberof CompanyContactDetails
+     */
+    'email': string;
+    /**
+     * 
+     * @type {Address}
+     * @memberof CompanyContactDetails
+     */
+    'address'?: Address;
     /**
      * 
      * @type {string}
-     * @memberof ClientCreationParams
+     * @memberof CompanyContactDetails
      */
-    'name': string;
-    /**
-     * URL linking to a resource or website.
-     * @type {string}
-     * @memberof ClientCreationParams
-     */
-    'logoUrl'?: string;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof ClientCreationParams
-     */
-    'redirectUris'?: Array<string>;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof ClientCreationParams
-     */
-    'scopes': Array<string>;
-}
-/**
- * Client response will automatically give bool values determining if client is verified or not
- * @export
- * @interface ClientResponse
- */
-export interface ClientResponse {
-    /**
-     * 
-     * @type {string}
-     * @memberof ClientResponse
-     */
-    'id': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ClientResponse
-     */
-    'name': string;
-    /**
-     * URL linking to a resource or website.
-     * @type {string}
-     * @memberof ClientResponse
-     */
-    'logoUrl'?: string;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof ClientResponse
-     */
-    'redirectUris'?: Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof ClientResponse
-     */
-    'secretKey': string;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof ClientResponse
-     */
-    'scopes': Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof ClientResponse
-     */
-    'ownerId'?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ClientResponse
-     */
-    'verified': boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ClientResponse
-     */
-    'trusted': boolean;
-}
-/**
- * 
- * @export
- * @interface ClientResponseAllOf
- */
-export interface ClientResponseAllOf {
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ClientResponseAllOf
-     */
-    'verified': boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ClientResponseAllOf
-     */
-    'trusted': boolean;
-}
-/**
- * 
- * @export
- * @interface ConnectRecord
- */
-export interface ConnectRecord {
-    /**
-     * 
-     * @type {string}
-     * @memberof ConnectRecord
-     */
-    'accountId': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ConnectRecord
-     */
-    'service': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ConnectRecord
-     */
-    'accessToken': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ConnectRecord
-     */
-    'refreshToken': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ConnectRecord
-     */
-    'expiresAt': string;
+    'phoneNumber'?: string;
 }
 /**
  * 
@@ -1103,261 +894,320 @@ export interface ConnectRecord {
  * @enum {string}
  */
 
-export const Country = {
-    Af: 'AF',
-    Ax: 'AX',
-    Al: 'AL',
-    Dz: 'DZ',
-    As: 'AS',
-    Ad: 'AD',
-    Ao: 'AO',
-    Ai: 'AI',
-    Aq: 'AQ',
-    Ag: 'AG',
-    Ar: 'AR',
-    Am: 'AM',
-    Aw: 'AW',
-    Au: 'AU',
-    At: 'AT',
-    Az: 'AZ',
-    Bs: 'BS',
-    Bh: 'BH',
-    Bd: 'BD',
-    Bb: 'BB',
-    By: 'BY',
-    Be: 'BE',
-    Bz: 'BZ',
-    Bj: 'BJ',
-    Bm: 'BM',
-    Bt: 'BT',
-    Bo: 'BO',
-    Bq: 'BQ',
-    Ba: 'BA',
-    Bw: 'BW',
-    Bv: 'BV',
-    Br: 'BR',
-    Io: 'IO',
-    Bn: 'BN',
-    Bg: 'BG',
-    Bf: 'BF',
-    Bi: 'BI',
-    Kh: 'KH',
-    Cm: 'CM',
-    Ca: 'CA',
-    Cv: 'CV',
-    Ky: 'KY',
-    Cf: 'CF',
-    Td: 'TD',
-    Cl: 'CL',
-    Cn: 'CN',
-    Cx: 'CX',
-    Cc: 'CC',
-    Co: 'CO',
-    Km: 'KM',
-    Cg: 'CG',
-    Cd: 'CD',
-    Ck: 'CK',
-    Cr: 'CR',
-    Ci: 'CI',
-    Hr: 'HR',
-    Cu: 'CU',
-    Cw: 'CW',
-    Cy: 'CY',
-    Cz: 'CZ',
-    Dk: 'DK',
-    Dj: 'DJ',
-    Dm: 'DM',
-    Do: 'DO',
-    Ec: 'EC',
-    Eg: 'EG',
-    Sv: 'SV',
-    Gq: 'GQ',
-    Er: 'ER',
-    Ee: 'EE',
-    Et: 'ET',
-    Fk: 'FK',
-    Fo: 'FO',
-    Fj: 'FJ',
-    Fi: 'FI',
-    Fr: 'FR',
-    Gf: 'GF',
-    Pf: 'PF',
-    Tf: 'TF',
-    Ga: 'GA',
-    Gm: 'GM',
-    Ge: 'GE',
-    De: 'DE',
-    Gh: 'GH',
-    Gi: 'GI',
-    Gr: 'GR',
-    Gl: 'GL',
-    Gd: 'GD',
-    Gp: 'GP',
-    Gu: 'GU',
-    Gt: 'GT',
-    Gg: 'GG',
-    Gn: 'GN',
-    Gw: 'GW',
-    Gy: 'GY',
-    Ht: 'HT',
-    Hm: 'HM',
-    Va: 'VA',
-    Hn: 'HN',
-    Hk: 'HK',
-    Hu: 'HU',
-    Is: 'IS',
-    In: 'IN',
-    Id: 'ID',
-    Ir: 'IR',
-    Iq: 'IQ',
-    Ie: 'IE',
-    Im: 'IM',
-    Il: 'IL',
-    It: 'IT',
-    Jm: 'JM',
-    Jp: 'JP',
-    Je: 'JE',
-    Jo: 'JO',
-    Kz: 'KZ',
-    Ke: 'KE',
-    Ki: 'KI',
-    Kr: 'KR',
-    Kp: 'KP',
-    Kw: 'KW',
-    Kg: 'KG',
-    La: 'LA',
-    Lv: 'LV',
-    Lb: 'LB',
-    Ls: 'LS',
-    Lr: 'LR',
-    Ly: 'LY',
-    Li: 'LI',
-    Lt: 'LT',
-    Lu: 'LU',
-    Mo: 'MO',
-    Mk: 'MK',
-    Mg: 'MG',
-    Mw: 'MW',
-    My: 'MY',
-    Mv: 'MV',
-    Ml: 'ML',
-    Mt: 'MT',
-    Mh: 'MH',
-    Mq: 'MQ',
-    Mr: 'MR',
-    Mu: 'MU',
-    Yt: 'YT',
-    Mx: 'MX',
-    Fm: 'FM',
-    Md: 'MD',
-    Mc: 'MC',
-    Mn: 'MN',
-    Me: 'ME',
-    Ms: 'MS',
-    Ma: 'MA',
-    Mz: 'MZ',
-    Mm: 'MM',
-    Na: 'NA',
-    Nr: 'NR',
-    Np: 'NP',
-    Nl: 'NL',
-    Nc: 'NC',
-    Nz: 'NZ',
-    Ni: 'NI',
-    Ne: 'NE',
-    Ng: 'NG',
-    Nu: 'NU',
-    Nf: 'NF',
-    Mp: 'MP',
-    False: 'false',
-    Om: 'OM',
-    Pk: 'PK',
-    Pw: 'PW',
-    Ps: 'PS',
-    Pa: 'PA',
-    Pg: 'PG',
-    Py: 'PY',
-    Pe: 'PE',
-    Ph: 'PH',
-    Pn: 'PN',
-    Pl: 'PL',
-    Pt: 'PT',
-    Pr: 'PR',
-    Qa: 'QA',
-    Re: 'RE',
-    Ro: 'RO',
-    Ru: 'RU',
-    Rw: 'RW',
-    Bl: 'BL',
-    Sh: 'SH',
-    Kn: 'KN',
-    Lc: 'LC',
-    Mf: 'MF',
-    Pm: 'PM',
-    Vc: 'VC',
-    Ws: 'WS',
-    Sm: 'SM',
-    St: 'ST',
-    Sa: 'SA',
-    Sn: 'SN',
-    Rs: 'RS',
-    Sc: 'SC',
-    Sl: 'SL',
-    Sg: 'SG',
-    Sx: 'SX',
-    Sk: 'SK',
-    Si: 'SI',
-    Sb: 'SB',
-    So: 'SO',
-    Za: 'ZA',
-    Gs: 'GS',
-    Ss: 'SS',
-    Es: 'ES',
-    Lk: 'LK',
-    Sd: 'SD',
-    Sr: 'SR',
-    Sj: 'SJ',
-    Sz: 'SZ',
-    Se: 'SE',
-    Ch: 'CH',
-    Sy: 'SY',
-    Tw: 'TW',
-    Tj: 'TJ',
-    Tz: 'TZ',
-    Th: 'TH',
-    Tl: 'TL',
-    Tg: 'TG',
-    Tk: 'TK',
-    To: 'TO',
-    Tt: 'TT',
-    Tn: 'TN',
-    Tr: 'TR',
-    Tm: 'TM',
-    Tc: 'TC',
-    Tv: 'TV',
-    Ug: 'UG',
-    Ua: 'UA',
-    Ae: 'AE',
-    Gb: 'GB',
-    Us: 'US',
-    Um: 'UM',
-    Uy: 'UY',
-    Uz: 'UZ',
-    Vu: 'VU',
-    Ve: 'VE',
-    Vn: 'VN',
-    Vg: 'VG',
-    Vi: 'VI',
-    Wf: 'WF',
-    Eh: 'EH',
-    Ye: 'YE',
-    Zm: 'ZM',
-    Zw: 'ZW'
-} as const;
-
-export type Country = typeof Country[keyof typeof Country];
+export enum Country {
+    AF = 'AF',
+    AX = 'AX',
+    AL = 'AL',
+    DZ = 'DZ',
+    AS = 'AS',
+    AD = 'AD',
+    AO = 'AO',
+    AI = 'AI',
+    AQ = 'AQ',
+    AG = 'AG',
+    AR = 'AR',
+    AM = 'AM',
+    AW = 'AW',
+    AU = 'AU',
+    AT = 'AT',
+    AZ = 'AZ',
+    BS = 'BS',
+    BH = 'BH',
+    BD = 'BD',
+    BB = 'BB',
+    BY = 'BY',
+    BE = 'BE',
+    BZ = 'BZ',
+    BJ = 'BJ',
+    BM = 'BM',
+    BT = 'BT',
+    BO = 'BO',
+    BQ = 'BQ',
+    BA = 'BA',
+    BW = 'BW',
+    BV = 'BV',
+    BR = 'BR',
+    IO = 'IO',
+    BN = 'BN',
+    BG = 'BG',
+    BF = 'BF',
+    BI = 'BI',
+    KH = 'KH',
+    CM = 'CM',
+    CA = 'CA',
+    CV = 'CV',
+    KY = 'KY',
+    CF = 'CF',
+    TD = 'TD',
+    CL = 'CL',
+    CN = 'CN',
+    CX = 'CX',
+    CC = 'CC',
+    CO = 'CO',
+    KM = 'KM',
+    CG = 'CG',
+    CD = 'CD',
+    CK = 'CK',
+    CR = 'CR',
+    CI = 'CI',
+    HR = 'HR',
+    CU = 'CU',
+    CW = 'CW',
+    CY = 'CY',
+    CZ = 'CZ',
+    DK = 'DK',
+    DJ = 'DJ',
+    DM = 'DM',
+    DO = 'DO',
+    EC = 'EC',
+    EG = 'EG',
+    SV = 'SV',
+    GQ = 'GQ',
+    ER = 'ER',
+    EE = 'EE',
+    ET = 'ET',
+    FK = 'FK',
+    FO = 'FO',
+    FJ = 'FJ',
+    FI = 'FI',
+    FR = 'FR',
+    GF = 'GF',
+    PF = 'PF',
+    TF = 'TF',
+    GA = 'GA',
+    GM = 'GM',
+    GE = 'GE',
+    DE = 'DE',
+    GH = 'GH',
+    GI = 'GI',
+    GR = 'GR',
+    GL = 'GL',
+    GD = 'GD',
+    GP = 'GP',
+    GU = 'GU',
+    GT = 'GT',
+    GG = 'GG',
+    GN = 'GN',
+    GW = 'GW',
+    GY = 'GY',
+    HT = 'HT',
+    HM = 'HM',
+    VA = 'VA',
+    HN = 'HN',
+    HK = 'HK',
+    HU = 'HU',
+    IS = 'IS',
+    IN = 'IN',
+    ID = 'ID',
+    IR = 'IR',
+    IQ = 'IQ',
+    IE = 'IE',
+    IM = 'IM',
+    IL = 'IL',
+    IT = 'IT',
+    JM = 'JM',
+    JP = 'JP',
+    JE = 'JE',
+    JO = 'JO',
+    KZ = 'KZ',
+    KE = 'KE',
+    KI = 'KI',
+    KR = 'KR',
+    KP = 'KP',
+    KW = 'KW',
+    KG = 'KG',
+    LA = 'LA',
+    LV = 'LV',
+    LB = 'LB',
+    LS = 'LS',
+    LR = 'LR',
+    LY = 'LY',
+    LI = 'LI',
+    LT = 'LT',
+    LU = 'LU',
+    MO = 'MO',
+    MK = 'MK',
+    MG = 'MG',
+    MW = 'MW',
+    MY = 'MY',
+    MV = 'MV',
+    ML = 'ML',
+    MT = 'MT',
+    MH = 'MH',
+    MQ = 'MQ',
+    MR = 'MR',
+    MU = 'MU',
+    YT = 'YT',
+    MX = 'MX',
+    FM = 'FM',
+    MD = 'MD',
+    MC = 'MC',
+    MN = 'MN',
+    ME = 'ME',
+    MS = 'MS',
+    MA = 'MA',
+    MZ = 'MZ',
+    MM = 'MM',
+    NA = 'NA',
+    NR = 'NR',
+    NP = 'NP',
+    NL = 'NL',
+    NC = 'NC',
+    NZ = 'NZ',
+    NI = 'NI',
+    NE = 'NE',
+    NG = 'NG',
+    NU = 'NU',
+    NF = 'NF',
+    MP = 'MP',
+    FALSE = 'false',
+    OM = 'OM',
+    PK = 'PK',
+    PW = 'PW',
+    PS = 'PS',
+    PA = 'PA',
+    PG = 'PG',
+    PY = 'PY',
+    PE = 'PE',
+    PH = 'PH',
+    PN = 'PN',
+    PL = 'PL',
+    PT = 'PT',
+    PR = 'PR',
+    QA = 'QA',
+    RE = 'RE',
+    RO = 'RO',
+    RU = 'RU',
+    RW = 'RW',
+    BL = 'BL',
+    SH = 'SH',
+    KN = 'KN',
+    LC = 'LC',
+    MF = 'MF',
+    PM = 'PM',
+    VC = 'VC',
+    WS = 'WS',
+    SM = 'SM',
+    ST = 'ST',
+    SA = 'SA',
+    SN = 'SN',
+    RS = 'RS',
+    SC = 'SC',
+    SL = 'SL',
+    SG = 'SG',
+    SX = 'SX',
+    SK = 'SK',
+    SI = 'SI',
+    SB = 'SB',
+    SO = 'SO',
+    ZA = 'ZA',
+    GS = 'GS',
+    SS = 'SS',
+    ES = 'ES',
+    LK = 'LK',
+    SD = 'SD',
+    SR = 'SR',
+    SJ = 'SJ',
+    SZ = 'SZ',
+    SE = 'SE',
+    CH = 'CH',
+    SY = 'SY',
+    TW = 'TW',
+    TJ = 'TJ',
+    TZ = 'TZ',
+    TH = 'TH',
+    TL = 'TL',
+    TG = 'TG',
+    TK = 'TK',
+    TO = 'TO',
+    TT = 'TT',
+    TN = 'TN',
+    TR = 'TR',
+    TM = 'TM',
+    TC = 'TC',
+    TV = 'TV',
+    UG = 'UG',
+    UA = 'UA',
+    AE = 'AE',
+    GB = 'GB',
+    US = 'US',
+    UM = 'UM',
+    UY = 'UY',
+    UZ = 'UZ',
+    VU = 'VU',
+    VE = 'VE',
+    VN = 'VN',
+    VG = 'VG',
+    VI = 'VI',
+    WF = 'WF',
+    EH = 'EH',
+    YE = 'YE',
+    ZM = 'ZM',
+    ZW = 'ZW'
+}
 
 
+/**
+ * 
+ * @export
+ * @interface CreateCustomerRequest
+ */
+export interface CreateCustomerRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateCustomerRequest
+     */
+    'firstName': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateCustomerRequest
+     */
+    'lastName'?: string;
+    /**
+     * Email address. See [RFC 5322](https://datatracker.ietf.org/doc/html/rfc5322)
+     * @type {string}
+     * @memberof CreateCustomerRequest
+     */
+    'email': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateCustomerRequest
+     */
+    'phoneNumber'?: string;
+    /**
+     * URL linking to a resource or website.
+     * @type {string}
+     * @memberof CreateCustomerRequest
+     */
+    'avatarUrl'?: string;
+    /**
+     * 
+     * @type {Address}
+     * @memberof CreateCustomerRequest
+     */
+    'address'?: Address;
+    /**
+     * 
+     * @type {Language}
+     * @memberof CreateCustomerRequest
+     */
+    'language'?: Language;
+    /**
+     * A unique identifier set by a developer to help reconcile this object with any internal systems
+     * @type {string}
+     * @memberof CreateCustomerRequest
+     */
+    'referenceId'?: string;
+    /**
+     * A Key-value object to hold additional data
+     * @type {{ [key: string]: string; }}
+     * @memberof CreateCustomerRequest
+     */
+    'metaData'?: { [key: string]: string; };
+}
 /**
  * 
  * @export
@@ -1365,35 +1215,35 @@ export type Country = typeof Country[keyof typeof Country];
  */
 export interface CreateGroupPaymentRequest {
     /**
-     * 
+     * This can be any unique identifier. It is required to protect against accidental duplicate calls, which may cause unintended consequences.
      * @type {string}
      * @memberof CreateGroupPaymentRequest
      */
     'idempotencyKey': string;
     /**
-     * Can either be a customerId or customer object
-     * @type {string | CustomerCreationParams}
+     * 
+     * @type {CreateGroupPaymentRequestCustomer}
      * @memberof CreateGroupPaymentRequest
      */
-    'customer': string | CustomerCreationParams;
+    'customer': CreateGroupPaymentRequestCustomer;
     /**
-     * 
-     * @type {string}
-     * @memberof CreateGroupPaymentRequest
-     */
-    'groupId'?: string;
-    /**
-     * 
+     * A unique identifier for the order object.
      * @type {string}
      * @memberof CreateGroupPaymentRequest
      */
     'orderId'?: string;
     /**
-     * 
+     * A unique identifier for the checkout session object.
      * @type {string}
      * @memberof CreateGroupPaymentRequest
      */
     'checkoutId'?: string;
+    /**
+     * If group payment splitType is not BY_ITEM this flag is ignored. If the splitType is BY_ITEM then when this flag is true, the order will be fixed for every member that joins. e.g. if there is 1 ticket in the order, and 3 people join the group, the ticket quantity increases to 3, and they will each be allocated a single ticket to pay for
+     * @type {boolean}
+     * @memberof CreateGroupPaymentRequest
+     */
+    'fixedPricePerPerson'?: boolean;
     /**
      * 
      * @type {SplitType}
@@ -1407,17 +1257,18 @@ export interface CreateGroupPaymentRequest {
      */
     'splitAllocation'?: number;
     /**
-     * 
+     * Requires splitType to be CUSTOM. Contains a mapping from customers to their share of the total amount. {customerId -> money}
      * @type {{ [key: string]: Money; }}
      * @memberof CreateGroupPaymentRequest
+     * @deprecated
      */
     'customAllocation'?: { [key: string]: Money; };
     /**
-     * 
-     * @type {{ [key: string]: Array<string>; }}
+     * Requires splitType to be BY_ITEM. Contains a mapping from customers to the items they have selected  to pay for. {customerId -> items[]}
+     * @type {{ [key: string]: Array<AllocatedItem>; }}
      * @memberof CreateGroupPaymentRequest
      */
-    'itemAllocation'?: { [key: string]: Array<string>; };
+    'itemAllocation'?: { [key: string]: Array<AllocatedItem>; };
     /**
      * 
      * @type {Money}
@@ -1425,13 +1276,7 @@ export interface CreateGroupPaymentRequest {
      */
     'amountMoney': Money;
     /**
-     * 
-     * @type {Money}
-     * @memberof CreateGroupPaymentRequest
-     */
-    'tipMoney'?: Money;
-    /**
-     * 
+     * The date and time at which the group payment will expire. If undefined the group payment will expire after 7 days.
      * @type {string}
      * @memberof CreateGroupPaymentRequest
      */
@@ -1455,17 +1300,73 @@ export interface CreateGroupPaymentRequest {
      */
     'statementDescriptionIdentifier'?: string;
     /**
-     * 
-     * @type {string}
+     * This field should no longer be used
+     * @type {boolean}
      * @memberof CreateGroupPaymentRequest
+     * @deprecated
      */
-    'note'?: string;
+    'createdByMerchant'?: boolean;
     /**
-     * 
+     * A unique identifier set by a developer to help reconcile this object with any internal systems
      * @type {string}
      * @memberof CreateGroupPaymentRequest
      */
     'referenceId'?: string;
+    /**
+     * A Key-value object to hold additional data
+     * @type {{ [key: string]: string; }}
+     * @memberof CreateGroupPaymentRequest
+     */
+    'metaData'?: { [key: string]: string; };
+}
+/**
+ * 
+ * @export
+ * @interface CreateGroupPaymentRequestCustomer
+ */
+export interface CreateGroupPaymentRequestCustomer {
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateGroupPaymentRequestCustomer
+     */
+    'firstName': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateGroupPaymentRequestCustomer
+     */
+    'lastName'?: string;
+    /**
+     * Email address. See [RFC 5322](https://datatracker.ietf.org/doc/html/rfc5322)
+     * @type {string}
+     * @memberof CreateGroupPaymentRequestCustomer
+     */
+    'email': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateGroupPaymentRequestCustomer
+     */
+    'phoneNumber'?: string;
+    /**
+     * 
+     * @type {Language}
+     * @memberof CreateGroupPaymentRequestCustomer
+     */
+    'language'?: Language;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateGroupPaymentRequestCustomer
+     */
+    'referenceId'?: string;
+    /**
+     * A Key-value object to hold additional data
+     * @type {{ [key: string]: string; }}
+     * @memberof CreateGroupPaymentRequestCustomer
+     */
+    'metaData'?: { [key: string]: string; };
 }
 /**
  * 
@@ -1474,29 +1375,11 @@ export interface CreateGroupPaymentRequest {
  */
 export interface CreatePaymentRequest {
     /**
-     * 
+     * This can be any unique identifier. It is required to protect against accidental duplicate calls, which may cause unintended consequences.
      * @type {string}
      * @memberof CreatePaymentRequest
      */
     'idempotencyKey': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof CreatePaymentRequest
-     */
-    'userId'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof CreatePaymentRequest
-     */
-    'orderId'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof CreatePaymentRequest
-     */
-    'paymentToken': string;
     /**
      * 
      * @type {Money}
@@ -1504,23 +1387,11 @@ export interface CreatePaymentRequest {
      */
     'amountMoney': Money;
     /**
-     * 
-     * @type {Money}
+     * The id/token for the source of the payment. This can be a generated card nonce or the id to a saved customers card.
+     * @type {string}
      * @memberof CreatePaymentRequest
      */
-    'tipMoney'?: Money;
-    /**
-     * 
-     * @type {Money}
-     * @memberof CreatePaymentRequest
-     */
-    'sellerFee'?: Money;
-    /**
-     * 
-     * @type {Address}
-     * @memberof CreatePaymentRequest
-     */
-    'billingAddress'?: Address;
+    'paymentToken': string;
     /**
      * 
      * @type {Address}
@@ -1529,22 +1400,40 @@ export interface CreatePaymentRequest {
     'shippingAddress'?: Address;
     /**
      * 
+     * @type {Address}
+     * @memberof CreatePaymentRequest
+     */
+    'billingAddress'?: Address;
+    /**
+     * A unique identifier for a customer object.
+     * @type {string}
+     * @memberof CreatePaymentRequest
+     */
+    'userId'?: string;
+    /**
+     * A unique identifier for a customer object.
+     * @type {string}
+     * @memberof CreatePaymentRequest
+     */
+    'customerId'?: string;
+    /**
+     * A unique identifier for the order object.
+     * @type {string}
+     * @memberof CreatePaymentRequest
+     */
+    'orderId'?: string;
+    /**
+     * If set to true, this payment will be completed (captured) automatically. If set to false, this payment is held in an approved (authorised) state until either explicitly completed (captured) or canceled (voided)
      * @type {boolean}
      * @memberof CreatePaymentRequest
      */
     'autocomplete'?: boolean;
     /**
-     * 
+     * The date and time at which the payment will expire if autocomplete is set to false. If undefined the payment will attempt complete after 7 days.
      * @type {string}
      * @memberof CreatePaymentRequest
      */
     'expirationDate'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof CreatePaymentRequest
-     */
-    'verificationToken'?: string;
     /**
      * 
      * @type {string}
@@ -1556,13 +1445,19 @@ export interface CreatePaymentRequest {
      * @type {string}
      * @memberof CreatePaymentRequest
      */
-    'note'?: string;
+    'description'?: string;
     /**
-     * 
+     * A unique identifier set by a developer to help reconcile this object with any internal systems
      * @type {string}
      * @memberof CreatePaymentRequest
      */
     'referenceId'?: string;
+    /**
+     * A Key-value object to hold additional data
+     * @type {{ [key: string]: string; }}
+     * @memberof CreatePaymentRequest
+     */
+    'metaData'?: { [key: string]: string; };
 }
 /**
  * 
@@ -1570,167 +1465,165 @@ export interface CreatePaymentRequest {
  * @enum {string}
  */
 
-export const Currency = {
-    Aed: 'AED',
-    Afn: 'AFN',
-    All: 'ALL',
-    Amd: 'AMD',
-    Ang: 'ANG',
-    Aoa: 'AOA',
-    Ars: 'ARS',
-    Aud: 'AUD',
-    Awg: 'AWG',
-    Azn: 'AZN',
-    Bam: 'BAM',
-    Bbd: 'BBD',
-    Bdt: 'BDT',
-    Bgn: 'BGN',
-    Bhd: 'BHD',
-    Bif: 'BIF',
-    Bmd: 'BMD',
-    Bnd: 'BND',
-    Bob: 'BOB',
-    Brl: 'BRL',
-    Bsd: 'BSD',
-    Btn: 'BTN',
-    Bwp: 'BWP',
-    Byn: 'BYN',
-    Bzd: 'BZD',
-    Cad: 'CAD',
-    Cdf: 'CDF',
-    Chf: 'CHF',
-    Clp: 'CLP',
-    Cny: 'CNY',
-    Cop: 'COP',
-    Crc: 'CRC',
-    Cuc: 'CUC',
-    Cup: 'CUP',
-    Cve: 'CVE',
-    Czk: 'CZK',
-    Djf: 'DJF',
-    Dkk: 'DKK',
-    Dop: 'DOP',
-    Dzd: 'DZD',
-    Egp: 'EGP',
-    Ern: 'ERN',
-    Etb: 'ETB',
-    Eur: 'EUR',
-    Fjd: 'FJD',
-    Fkp: 'FKP',
-    Gbp: 'GBP',
-    Gel: 'GEL',
-    Ghs: 'GHS',
-    Gip: 'GIP',
-    Gmd: 'GMD',
-    Gnf: 'GNF',
-    Gtq: 'GTQ',
-    Gyd: 'GYD',
-    Hkd: 'HKD',
-    Hnl: 'HNL',
-    Hrk: 'HRK',
-    Htg: 'HTG',
-    Huf: 'HUF',
-    Idr: 'IDR',
-    Ils: 'ILS',
-    Inr: 'INR',
-    Iqd: 'IQD',
-    Irr: 'IRR',
-    Isk: 'ISK',
-    Jmd: 'JMD',
-    Jod: 'JOD',
-    Jpy: 'JPY',
-    Kes: 'KES',
-    Kgs: 'KGS',
-    Khr: 'KHR',
-    Kmf: 'KMF',
-    Kpw: 'KPW',
-    Krw: 'KRW',
-    Kwd: 'KWD',
-    Kyd: 'KYD',
-    Kzt: 'KZT',
-    Lak: 'LAK',
-    Lbp: 'LBP',
-    Lkr: 'LKR',
-    Lrd: 'LRD',
-    Lsl: 'LSL',
-    Lyd: 'LYD',
-    Mad: 'MAD',
-    Mdl: 'MDL',
-    Mga: 'MGA',
-    Mkd: 'MKD',
-    Mmk: 'MMK',
-    Mnt: 'MNT',
-    Mop: 'MOP',
-    Mru: 'MRU',
-    Mur: 'MUR',
-    Mvr: 'MVR',
-    Mwk: 'MWK',
-    Mxn: 'MXN',
-    Myr: 'MYR',
-    Mzn: 'MZN',
-    Nad: 'NAD',
-    Ngn: 'NGN',
-    Nio: 'NIO',
-    Nok: 'NOK',
-    Npr: 'NPR',
-    Nzd: 'NZD',
-    Omr: 'OMR',
-    Pab: 'PAB',
-    Pen: 'PEN',
-    Pgk: 'PGK',
-    Php: 'PHP',
-    Pkr: 'PKR',
-    Pln: 'PLN',
-    Pyg: 'PYG',
-    Qar: 'QAR',
-    Ron: 'RON',
-    Rsd: 'RSD',
-    Rub: 'RUB',
-    Rwf: 'RWF',
-    Sar: 'SAR',
-    Sbd: 'SBD',
-    Scr: 'SCR',
-    Sdg: 'SDG',
-    Sek: 'SEK',
-    Sgd: 'SGD',
-    Shp: 'SHP',
-    Sll: 'SLL',
-    Sos: 'SOS',
-    Srd: 'SRD',
-    Ssp: 'SSP',
-    Stn: 'STN',
-    Svc: 'SVC',
-    Syp: 'SYP',
-    Szl: 'SZL',
-    Thb: 'THB',
-    Tjs: 'TJS',
-    Tmt: 'TMT',
-    Tnd: 'TND',
-    Top: 'TOP',
-    Try: 'TRY',
-    Ttd: 'TTD',
-    Twd: 'TWD',
-    Tzs: 'TZS',
-    Uah: 'UAH',
-    Ugx: 'UGX',
-    Usd: 'USD',
-    Uyu: 'UYU',
-    Uzs: 'UZS',
-    Ves: 'VES',
-    Vnd: 'VND',
-    Vuv: 'VUV',
-    Wst: 'WST',
-    Xaf: 'XAF',
-    Xcd: 'XCD',
-    Xof: 'XOF',
-    Xpf: 'XPF',
-    Yer: 'YER',
-    Zar: 'ZAR',
-    Zmw: 'ZMW',
-    Zwl: 'ZWL'
-} as const;
-
-export type Currency = typeof Currency[keyof typeof Currency];
+export enum Currency {
+    AED = 'AED',
+    AFN = 'AFN',
+    ALL = 'ALL',
+    AMD = 'AMD',
+    ANG = 'ANG',
+    AOA = 'AOA',
+    ARS = 'ARS',
+    AUD = 'AUD',
+    AWG = 'AWG',
+    AZN = 'AZN',
+    BAM = 'BAM',
+    BBD = 'BBD',
+    BDT = 'BDT',
+    BGN = 'BGN',
+    BHD = 'BHD',
+    BIF = 'BIF',
+    BMD = 'BMD',
+    BND = 'BND',
+    BOB = 'BOB',
+    BRL = 'BRL',
+    BSD = 'BSD',
+    BTN = 'BTN',
+    BWP = 'BWP',
+    BYN = 'BYN',
+    BZD = 'BZD',
+    CAD = 'CAD',
+    CDF = 'CDF',
+    CHF = 'CHF',
+    CLP = 'CLP',
+    CNY = 'CNY',
+    COP = 'COP',
+    CRC = 'CRC',
+    CUC = 'CUC',
+    CUP = 'CUP',
+    CVE = 'CVE',
+    CZK = 'CZK',
+    DJF = 'DJF',
+    DKK = 'DKK',
+    DOP = 'DOP',
+    DZD = 'DZD',
+    EGP = 'EGP',
+    ERN = 'ERN',
+    ETB = 'ETB',
+    EUR = 'EUR',
+    FJD = 'FJD',
+    FKP = 'FKP',
+    GBP = 'GBP',
+    GEL = 'GEL',
+    GHS = 'GHS',
+    GIP = 'GIP',
+    GMD = 'GMD',
+    GNF = 'GNF',
+    GTQ = 'GTQ',
+    GYD = 'GYD',
+    HKD = 'HKD',
+    HNL = 'HNL',
+    HRK = 'HRK',
+    HTG = 'HTG',
+    HUF = 'HUF',
+    IDR = 'IDR',
+    ILS = 'ILS',
+    INR = 'INR',
+    IQD = 'IQD',
+    IRR = 'IRR',
+    ISK = 'ISK',
+    JMD = 'JMD',
+    JOD = 'JOD',
+    JPY = 'JPY',
+    KES = 'KES',
+    KGS = 'KGS',
+    KHR = 'KHR',
+    KMF = 'KMF',
+    KPW = 'KPW',
+    KRW = 'KRW',
+    KWD = 'KWD',
+    KYD = 'KYD',
+    KZT = 'KZT',
+    LAK = 'LAK',
+    LBP = 'LBP',
+    LKR = 'LKR',
+    LRD = 'LRD',
+    LSL = 'LSL',
+    LYD = 'LYD',
+    MAD = 'MAD',
+    MDL = 'MDL',
+    MGA = 'MGA',
+    MKD = 'MKD',
+    MMK = 'MMK',
+    MNT = 'MNT',
+    MOP = 'MOP',
+    MRU = 'MRU',
+    MUR = 'MUR',
+    MVR = 'MVR',
+    MWK = 'MWK',
+    MXN = 'MXN',
+    MYR = 'MYR',
+    MZN = 'MZN',
+    NAD = 'NAD',
+    NGN = 'NGN',
+    NIO = 'NIO',
+    NOK = 'NOK',
+    NPR = 'NPR',
+    NZD = 'NZD',
+    OMR = 'OMR',
+    PAB = 'PAB',
+    PEN = 'PEN',
+    PGK = 'PGK',
+    PHP = 'PHP',
+    PKR = 'PKR',
+    PLN = 'PLN',
+    PYG = 'PYG',
+    QAR = 'QAR',
+    RON = 'RON',
+    RSD = 'RSD',
+    RUB = 'RUB',
+    RWF = 'RWF',
+    SAR = 'SAR',
+    SBD = 'SBD',
+    SCR = 'SCR',
+    SDG = 'SDG',
+    SEK = 'SEK',
+    SGD = 'SGD',
+    SHP = 'SHP',
+    SLL = 'SLL',
+    SOS = 'SOS',
+    SRD = 'SRD',
+    SSP = 'SSP',
+    STN = 'STN',
+    SVC = 'SVC',
+    SYP = 'SYP',
+    SZL = 'SZL',
+    THB = 'THB',
+    TJS = 'TJS',
+    TMT = 'TMT',
+    TND = 'TND',
+    TOP = 'TOP',
+    TRY = 'TRY',
+    TTD = 'TTD',
+    TWD = 'TWD',
+    TZS = 'TZS',
+    UAH = 'UAH',
+    UGX = 'UGX',
+    USD = 'USD',
+    UYU = 'UYU',
+    UZS = 'UZS',
+    VES = 'VES',
+    VND = 'VND',
+    VUV = 'VUV',
+    WST = 'WST',
+    XAF = 'XAF',
+    XCD = 'XCD',
+    XOF = 'XOF',
+    XPF = 'XPF',
+    YER = 'YER',
+    ZAR = 'ZAR',
+    ZMW = 'ZMW',
+    ZWL = 'ZWL'
+}
 
 
 /**
@@ -1740,7 +1633,7 @@ export type Currency = typeof Currency[keyof typeof Currency];
  */
 export interface Customer {
     /**
-     * 
+     * A unique identifier for a customer object.
      * @type {string}
      * @memberof Customer
      */
@@ -1774,7 +1667,7 @@ export interface Customer {
      * @type {string}
      * @memberof Customer
      */
-    'imageUrl'?: string;
+    'avatarUrl'?: string;
     /**
      * 
      * @type {Address}
@@ -1783,22 +1676,35 @@ export interface Customer {
     'address'?: Address;
     /**
      * 
+     * @type {Language}
+     * @memberof Customer
+     */
+    'language'?: Language;
+    /**
+     * A unique identifier set by a developer to help reconcile this object with any internal systems
      * @type {string}
      * @memberof Customer
      */
-    'language'?: string;
+    'referenceId'?: string;
+    /**
+     * A Key-value object to hold additional data
+     * @type {{ [key: string]: string; }}
+     * @memberof Customer
+     */
+    'metaData'?: { [key: string]: string; };
+}
+/**
+ * 
+ * @export
+ * @interface CustomerBatchGetParams
+ */
+export interface CustomerBatchGetParams {
     /**
      * 
-     * @type {string}
-     * @memberof Customer
+     * @type {Array<string>}
+     * @memberof CustomerBatchGetParams
      */
-    'createdAt'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Customer
-     */
-    'updatedAt'?: string;
+    'customerIds': Array<string>;
 }
 /**
  * 
@@ -1832,10 +1738,22 @@ export interface CustomerCreationParams {
     'phoneNumber'?: string;
     /**
      * 
+     * @type {Language}
+     * @memberof CustomerCreationParams
+     */
+    'language'?: Language;
+    /**
+     * 
      * @type {string}
      * @memberof CustomerCreationParams
      */
-    'language'?: string;
+    'referenceId'?: string;
+    /**
+     * A Key-value object to hold additional data
+     * @type {{ [key: string]: string; }}
+     * @memberof CustomerCreationParams
+     */
+    'metaData'?: { [key: string]: string; };
 }
 /**
  * 
@@ -1865,181 +1783,6 @@ export interface DeviceDetails {
 /**
  * 
  * @export
- * @interface Discount
- */
-export interface Discount {
-    /**
-     * 
-     * @type {string}
-     * @memberof Discount
-     */
-    'id': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Discount
-     */
-    'code': string;
-    /**
-     * 
-     * @type {Money}
-     * @memberof Discount
-     */
-    'amountMoney': Money;
-}
-/**
- * 
- * @export
- * @enum {string}
- */
-
-export const DisplayType = {
-    Page: 'page',
-    Popup: 'popup',
-    Touch: 'touch',
-    Wap: 'wap'
-} as const;
-
-export type DisplayType = typeof DisplayType[keyof typeof DisplayType];
-
-
-/**
- * 
- * @export
- * @interface Dispute
- */
-export interface Dispute {
-    /**
-     * 
-     * @type {string}
-     * @memberof Dispute
-     */
-    'id': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Dispute
-     */
-    'paymentId': string;
-    /**
-     * 
-     * @type {Money}
-     * @memberof Dispute
-     */
-    'amountMoney': Money;
-    /**
-     * 
-     * @type {DisputeReason}
-     * @memberof Dispute
-     */
-    'reason': DisputeReason;
-    /**
-     * 
-     * @type {DisputeStatus}
-     * @memberof Dispute
-     */
-    'status': DisputeStatus;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof Dispute
-     */
-    'evidenceIds'?: Array<string>;
-    /**
-     * 
-     * @type {CardBrand}
-     * @memberof Dispute
-     */
-    'cardBrand'?: CardBrand;
-    /**
-     * 
-     * @type {string}
-     * @memberof Dispute
-     */
-    'brandDisputeId'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Dispute
-     */
-    'dueAt'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Dispute
-     */
-    'reportedAt'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Dispute
-     */
-    'locationId'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Dispute
-     */
-    'createdAt'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Dispute
-     */
-    'updatedAt'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof Dispute
-     */
-    'version'?: number;
-}
-/**
- * 
- * @export
- * @enum {string}
- */
-
-export const DisputeReason = {
-    AmountDiffers: 'AMOUNT_DIFFERS',
-    Cancelled: 'CANCELLED',
-    Duplicate: 'DUPLICATE',
-    NoKnowledge: 'NO_KNOWLEDGE',
-    NotAsDescribed: 'NOT_AS_DESCRIBED',
-    NotReceived: 'NOT_RECEIVED',
-    PaidByOtherMeans: 'PAID_BY_OTHER_MEANS',
-    CustomerRequestsCredit: 'CUSTOMER_REQUESTS_CREDIT',
-    EmvLiabilityShift: 'EMV_LIABILITY_SHIFT'
-} as const;
-
-export type DisputeReason = typeof DisputeReason[keyof typeof DisputeReason];
-
-
-/**
- * 
- * @export
- * @enum {string}
- */
-
-export const DisputeStatus = {
-    Unknown: 'UNKNOWN',
-    InquiryEvidenceRequired: 'INQUIRY_EVIDENCE_REQUIRED',
-    InquiryProcessing: 'INQUIRY_PROCESSING',
-    InquiryClosed: 'INQUIRY_CLOSED',
-    EvidenceRequired: 'EVIDENCE_REQUIRED',
-    Processing: 'PROCESSING',
-    Won: 'WON',
-    Lost: 'LOST',
-    Accepted: 'ACCEPTED',
-    WaitingThirdParty: 'WAITING_THIRD_PARTY'
-} as const;
-
-export type DisputeStatus = typeof DisputeStatus[keyof typeof DisputeStatus];
-
-
-/**
- * 
- * @export
  * @interface ETSITokenResponse
  */
 export interface ETSITokenResponse {
@@ -2056,6 +1799,12 @@ export interface ETSITokenResponse {
  * @interface Email
  */
 export interface Email {
+    /**
+     * 
+     * @type {string}
+     * @memberof Email
+     */
+    'referenceId': string;
     /**
      * 
      * @type {string}
@@ -2109,12 +1858,6 @@ export interface Email {
      * @type {string}
      * @memberof Email
      */
-    'referenceId'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Email
-     */
     'templateName'?: string;
     /**
      * 
@@ -2123,7 +1866,7 @@ export interface Email {
      */
     'variables'?: { [key: string]: string; };
     /**
-     * 
+     * A Key-value object to hold additional data
      * @type {{ [key: string]: string; }}
      * @memberof Email
      */
@@ -2135,6 +1878,24 @@ export interface Email {
  * @interface EmailCreationParams
  */
 export interface EmailCreationParams {
+    /**
+     * 
+     * @type {string}
+     * @memberof EmailCreationParams
+     */
+    'templateName': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof EmailCreationParams
+     */
+    'templateVersion'?: string;
+    /**
+     * 
+     * @type {{ [key: string]: string; }}
+     * @memberof EmailCreationParams
+     */
+    'variables'?: { [key: string]: string; };
     /**
      * 
      * @type {Array<string>}
@@ -2165,129 +1926,77 @@ export interface EmailCreationParams {
      * @memberof EmailCreationParams
      */
     'attachment'?: Array<Attachment>;
-    /**
-     * 
-     * @type {string}
-     * @memberof EmailCreationParams
-     */
-    'text': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof EmailCreationParams
-     */
-    'html': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof EmailCreationParams
-     */
-    'templateName': string;
-    /**
-     * 
-     * @type {{ [key: string]: string; }}
-     * @memberof EmailCreationParams
-     */
-    'variables'?: { [key: string]: string; };
 }
 /**
  * 
  * @export
- * @interface ExternalPaymentDetails
+ * @interface FindAndCountResultCheckout
  */
-export interface ExternalPaymentDetails {
+export interface FindAndCountResultCheckout {
     /**
      * 
-     * @type {string}
-     * @memberof ExternalPaymentDetails
+     * @type {Array<Checkout>}
+     * @memberof FindAndCountResultCheckout
      */
-    'type': string;
+    'data': Array<Checkout>;
     /**
      * 
-     * @type {string}
-     * @memberof ExternalPaymentDetails
+     * @type {number}
+     * @memberof FindAndCountResultCheckout
      */
-    'source': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ExternalPaymentDetails
-     */
-    'sourceId'?: string;
-    /**
-     * 
-     * @type {Money}
-     * @memberof ExternalPaymentDetails
-     */
-    'sourceFeeMoney'?: Money;
+    'count': number;
 }
 /**
  * 
  * @export
- * @interface Group
+ * @interface FindAndCountResultGroupPaymentRecord
  */
-export interface Group {
+export interface FindAndCountResultGroupPaymentRecord {
     /**
      * 
-     * @type {string}
-     * @memberof Group
+     * @type {Array<GroupPaymentRecord>}
+     * @memberof FindAndCountResultGroupPaymentRecord
      */
-    'id': string;
+    'data': Array<GroupPaymentRecord>;
     /**
      * 
-     * @type {string}
-     * @memberof Group
+     * @type {number}
+     * @memberof FindAndCountResultGroupPaymentRecord
      */
-    'ownerId': string;
+    'count': number;
+}
+/**
+ * 
+ * @export
+ * @interface GroupPaymentBatchGetParams
+ */
+export interface GroupPaymentBatchGetParams {
     /**
      * 
      * @type {Array<string>}
-     * @memberof Group
+     * @memberof GroupPaymentBatchGetParams
      */
-    'memberIds': Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof Group
-     */
-    'name'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Group
-     */
-    'createdAt'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Group
-     */
-    'updatedAt'?: string;
+    'groupPaymentIds': Array<string>;
 }
 /**
  * 
  * @export
- * @interface GroupCreationParams
+ * @interface GroupPaymentCancelRequestBody
  */
-export interface GroupCreationParams {
+export interface GroupPaymentCancelRequestBody {
     /**
-     * 
+     * The identifier for the customer who is cancelling a payment
      * @type {string}
-     * @memberof GroupCreationParams
+     * @memberof GroupPaymentCancelRequestBody
+     * @deprecated
      */
-    'ownerId': string;
+    'userId'?: string;
     /**
-     * 
-     * @type {Array<string>}
-     * @memberof GroupCreationParams
-     */
-    'memberIds'?: Array<string>;
-    /**
-     * 
+     * The identifier for the customer who is cancelling a payment
      * @type {string}
-     * @memberof GroupCreationParams
+     * @memberof GroupPaymentCancelRequestBody
      */
-    'name'?: string;
+    'customerId'?: string;
 }
 /**
  * 
@@ -2296,31 +2005,50 @@ export interface GroupCreationParams {
  */
 export interface GroupPaymentRecord {
     /**
-     * 
+     * A unique identifier for the merchant object
+     * @type {string}
+     * @memberof GroupPaymentRecord
+     */
+    'merchantId': string;
+    /**
+     * A unique identifier for the group payment object.
      * @type {string}
      * @memberof GroupPaymentRecord
      */
     'id': string;
     /**
-     * 
+     * Unique customer identifier of the customer who will be the admin/owner of the group payment
      * @type {string}
      * @memberof GroupPaymentRecord
      */
     'ownerId': string;
     /**
      * 
-     * @type {PaymentStatus}
+     * @type {GroupPaymentStatus}
      * @memberof GroupPaymentRecord
      */
-    'status': PaymentStatus;
+    'status': GroupPaymentStatus;
     /**
-     * 
+     * List of unique customer identifiers who have joined the group
      * @type {Array<string>}
      * @memberof GroupPaymentRecord
      */
     'memberIds': Array<string>;
     /**
-     * 
+     * This field is no longer supported
+     * @type {Array<string>}
+     * @memberof GroupPaymentRecord
+     * @deprecated
+     */
+    'createdMemberIds'?: Array<string>;
+    /**
+     * If group payment splitType is not BY_ITEM this flag is ignored. If the splitType is BY_ITEM then when this flag is true, the order will be fixed for every member that joins. e.g. if there is 1 ticket in the order, and 3 people join the group, the ticket quantity increases to 3, and they will each be allocated a single ticket to pay for
+     * @type {boolean}
+     * @memberof GroupPaymentRecord
+     */
+    'fixedPricePerPerson'?: boolean;
+    /**
+     * A mapping between customers and their respective payment records. A mapping will only be present once a customer has paid their share of the group. {customerId -> paymentId}
      * @type {{ [key: string]: string; }}
      * @memberof GroupPaymentRecord
      */
@@ -2338,29 +2066,30 @@ export interface GroupPaymentRecord {
      */
     'splitType': SplitType;
     /**
-     * 
+     * Requires splitType to be CUSTOM. Contains a mapping from customers to their share of the total amount. {customerId -> money}
      * @type {{ [key: string]: Money; }}
      * @memberof GroupPaymentRecord
+     * @deprecated
      */
     'customAllocation'?: { [key: string]: Money; };
     /**
-     * 
-     * @type {{ [key: string]: Array<string>; }}
+     * Requires splitType to be BY_ITEM. Contains a mapping from customers to the items they have selected  to pay for. {customerId -> items[]}
+     * @type {{ [key: string]: Array<AllocatedItem>; }}
      * @memberof GroupPaymentRecord
      */
-    'itemAllocation'?: { [key: string]: Array<string>; };
+    'itemAllocation'?: { [key: string]: Array<AllocatedItem>; };
     /**
-     * 
-     * @type {string}
-     * @memberof GroupPaymentRecord
-     */
-    'groupId'?: string;
-    /**
-     * 
+     * A unique identifier for the order object.
      * @type {string}
      * @memberof GroupPaymentRecord
      */
     'orderId'?: string;
+    /**
+     * A unique identifier for the checkout session object.
+     * @type {string}
+     * @memberof GroupPaymentRecord
+     */
+    'checkoutId'?: string;
     /**
      * 
      * @type {Money}
@@ -2378,12 +2107,6 @@ export interface GroupPaymentRecord {
      * @type {Money}
      * @memberof GroupPaymentRecord
      */
-    'tipMoney'?: Money;
-    /**
-     * 
-     * @type {Money}
-     * @memberof GroupPaymentRecord
-     */
     'approvedMoney'?: Money;
     /**
      * 
@@ -2392,25 +2115,14 @@ export interface GroupPaymentRecord {
      */
     'refundedMoney'?: Money;
     /**
-     * 
-     * @type {Money}
-     * @memberof GroupPaymentRecord
-     */
-    'groupAppFee'?: Money;
-    /**
-     * 
-     * @type {Money}
-     * @memberof GroupPaymentRecord
-     */
-    'totalAppFees'?: Money;
-    /**
-     * 
+     * A list of processing fees charged by gateways. Note that not all the gateways support this.
      * @type {Array<ProcessingFee>}
      * @memberof GroupPaymentRecord
+     * @deprecated
      */
     'processingFees'?: Array<ProcessingFee>;
     /**
-     * 
+     * List of unique refund record identifiers related to refunds given to members of this group
      * @type {Array<string>}
      * @memberof GroupPaymentRecord
      */
@@ -2422,17 +2134,11 @@ export interface GroupPaymentRecord {
      */
     'shippingAddress'?: Address;
     /**
-     * If the total payment is not made up by the group members by this date then the transaction will be cancelled. Default 7 days.
+     * The date and time at which the group payment will expire. If undefined the group payment will expire after 7 days.
      * @type {string}
      * @memberof GroupPaymentRecord
      */
     'expirationDate'?: string;
-    /**
-     * 
-     * @type {RiskEvaluation}
-     * @memberof GroupPaymentRecord
-     */
-    'riskEvaluation'?: RiskEvaluation;
     /**
      * 
      * @type {string}
@@ -2446,13 +2152,13 @@ export interface GroupPaymentRecord {
      */
     'note'?: string;
     /**
-     * 
+     * A unique identifier set by a developer to help reconcile this object with any internal systems
      * @type {string}
      * @memberof GroupPaymentRecord
      */
     'referenceId'?: string;
     /**
-     * 
+     * A Key-value object to hold additional data
      * @type {{ [key: string]: string; }}
      * @memberof GroupPaymentRecord
      */
@@ -2464,7 +2170,7 @@ export interface GroupPaymentRecord {
      */
     'url'?: string;
     /**
-     * The message is shown to everyone in the group when fully hosted by hands in
+     * 
      * @type {string}
      * @memberof GroupPaymentRecord
      */
@@ -2475,18 +2181,6 @@ export interface GroupPaymentRecord {
      * @memberof GroupPaymentRecord
      */
     'createdAt': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof GroupPaymentRecord
-     */
-    'updatedAt': string;
-    /**
-     * 
-     * @type {number}
-     * @memberof GroupPaymentRecord
-     */
-    'version': number;
 }
 /**
  * 
@@ -2495,17 +2189,11 @@ export interface GroupPaymentRecord {
  */
 export interface GroupPaymentRefundRequest {
     /**
-     * 
+     * This can be any unique identifier. It is required to protect against accidental duplicate calls, which may cause unintended consequences.
      * @type {string}
      * @memberof GroupPaymentRefundRequest
      */
     'idempotencyKey': string;
-    /**
-     * 
-     * @type {Money}
-     * @memberof GroupPaymentRefundRequest
-     */
-    'appFee'?: Money;
     /**
      * 
      * @type {string}
@@ -2514,182 +2202,20 @@ export interface GroupPaymentRefundRequest {
     'reason'?: string;
 }
 /**
- * 
+ * Indicates what state the group payment is in. PENDING (the group payment is still in progress) APPROVED (the total amount to capture has been authorised) COMPLETED (the total amount has been captured) EXPIRED (the total amount of the group was not authorised before the expirationDate, if there is one)
  * @export
- * @interface GroupPaymentUpdateParams
+ * @enum {string}
  */
-export interface GroupPaymentUpdateParams {
-    /**
-     * 
-     * @type {string}
-     * @memberof GroupPaymentUpdateParams
-     */
-    'groupId'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof GroupPaymentUpdateParams
-     */
-    'orderId'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof GroupPaymentUpdateParams
-     */
-    'checkoutId'?: string;
-    /**
-     * 
-     * @type {SplitType}
-     * @memberof GroupPaymentUpdateParams
-     */
-    'splitType'?: SplitType;
-    /**
-     * 
-     * @type {number}
-     * @memberof GroupPaymentUpdateParams
-     */
-    'splitAllocation'?: number;
-    /**
-     * 
-     * @type {{ [key: string]: Money; }}
-     * @memberof GroupPaymentUpdateParams
-     */
-    'customAllocation'?: { [key: string]: Money; };
-    /**
-     * 
-     * @type {{ [key: string]: Array<string>; }}
-     * @memberof GroupPaymentUpdateParams
-     */
-    'itemAllocation'?: { [key: string]: Array<string>; };
-    /**
-     * 
-     * @type {Money}
-     * @memberof GroupPaymentUpdateParams
-     */
-    'amountMoney'?: Money;
-    /**
-     * 
-     * @type {string}
-     * @memberof GroupPaymentUpdateParams
-     */
-    'expirationDate'?: string;
-    /**
-     * 
-     * @type {Address}
-     * @memberof GroupPaymentUpdateParams
-     */
-    'shippingAddress'?: Address;
-    /**
-     * If this is set to true, the group payment will be completed as soon as the total amount is made up  Defaults to true.
-     * @type {boolean}
-     * @memberof GroupPaymentUpdateParams
-     */
-    'autocomplete'?: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof GroupPaymentUpdateParams
-     */
-    'message'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof GroupPaymentUpdateParams
-     */
-    'statementDescriptionIdentifier'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof GroupPaymentUpdateParams
-     */
-    'note'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof GroupPaymentUpdateParams
-     */
-    'referenceId'?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof GroupPaymentUpdateParams
-     */
-    'emailNotification'?: boolean;
+
+export enum GroupPaymentStatus {
+    APPROVED = 'APPROVED',
+    PENDING = 'PENDING',
+    COMPLETED = 'COMPLETED',
+    CANCELLED = 'CANCELLED',
+    EXPIRED = 'EXPIRED'
 }
-/**
- * 
- * @export
- * @interface GroupPaymentUpdateParamsAllOf
- */
-export interface GroupPaymentUpdateParamsAllOf {
-    /**
-     * 
-     * @type {boolean}
-     * @memberof GroupPaymentUpdateParamsAllOf
-     */
-    'emailNotification'?: boolean;
-}
-/**
- * 
- * @export
- * @interface HtmlEmailCreationParams
- */
-export interface HtmlEmailCreationParams {
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof HtmlEmailCreationParams
-     */
-    'to': Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof HtmlEmailCreationParams
-     */
-    'subject': string;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof HtmlEmailCreationParams
-     */
-    'cc'?: Array<string>;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof HtmlEmailCreationParams
-     */
-    'bcc'?: Array<string>;
-    /**
-     * 
-     * @type {Array<Attachment>}
-     * @memberof HtmlEmailCreationParams
-     */
-    'attachment'?: Array<Attachment>;
-    /**
-     * 
-     * @type {string}
-     * @memberof HtmlEmailCreationParams
-     */
-    'html': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof HtmlEmailCreationParams
-     */
-    'text'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof HtmlEmailCreationParams
-     */
-    'templateName'?: string;
-    /**
-     * 
-     * @type {{ [key: string]: string; }}
-     * @memberof HtmlEmailCreationParams
-     */
-    'variables'?: { [key: string]: string; };
-}
+
+
 /**
  * 
  * @export
@@ -2703,20 +2229,6 @@ export interface IESGTokenResponse {
      */
     'issued_token_type'?: string;
 }
-/**
- * 
- * @export
- * @enum {string}
- */
-
-export const IETFResponseType = {
-    Code: 'code',
-    Token: 'token'
-} as const;
-
-export type IETFResponseType = typeof IETFResponseType[keyof typeof IETFResponseType];
-
-
 /**
  * 
  * @export
@@ -2743,10 +2255,10 @@ export interface IETFTokenResponse {
     'token_type'?: string;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof IETFTokenResponse
      */
-    'expires_in'?: number;
+    'expires_at'?: string;
     /**
      * 
      * @type {string}
@@ -2775,34 +2287,21 @@ export interface IETFTokenResponse {
 /**
  * 
  * @export
- * @interface InlineObject
+ * @interface InvitedMembersValue
  */
-export interface InlineObject {
+export interface InvitedMembersValue {
     /**
      * 
      * @type {string}
-     * @memberof InlineObject
+     * @memberof InvitedMembersValue
      */
-    'userId': string;
-}
-/**
- * 
- * @export
- * @interface InlineObject1
- */
-export interface InlineObject1 {
+    'inviteKey': string;
     /**
      * 
      * @type {Array<string>}
-     * @memberof InlineObject1
+     * @memberof InvitedMembersValue
      */
-    'scopes'?: Array<string>;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof InlineObject1
-     */
-    'resend'?: boolean;
+    'scopes': Array<string>;
 }
 /**
  * 
@@ -2811,19 +2310,13 @@ export interface InlineObject1 {
  */
 export interface Item {
     /**
-     * 
+     * A unique identifier for the item object.
      * @type {string}
      * @memberof Item
      */
     'id': string;
     /**
-     * 
-     * @type {string}
-     * @memberof Item
-     */
-    'sku'?: string;
-    /**
-     * 
+     * Name of the product/service being sold. This will be displayed to customers on web interfaces.
      * @type {string}
      * @memberof Item
      */
@@ -2835,23 +2328,17 @@ export interface Item {
      */
     'amountMoney': Money;
     /**
-     * Key-value pairs that help to differentiate variants
+     * The Stock Keeping Unit ([SKU](https://en.wikipedia.org/wiki/Stock_keeping_unit)) number of the product.  Merchants may use this to differentiate products and track inventory with their internal systems.
+     * @type {string}
+     * @memberof Item
+     */
+    'sku'?: string;
+    /**
+     * This stores key-value pairs to help distinguish variants of the same item
      * @type {{ [key: string]: string; }}
      * @memberof Item
      */
     'attributes'?: { [key: string]: string; };
-    /**
-     * 
-     * @type {ItemOrderDetails}
-     * @memberof Item
-     */
-    'orderDetails'?: ItemOrderDetails;
-    /**
-     * 
-     * @type {ItemInventoryDetails}
-     * @memberof Item
-     */
-    'inventoryDetails'?: ItemInventoryDetails;
     /**
      * Max 10 images per item. Default image is the first in array.
      * @type {Array<string>}
@@ -2859,270 +2346,146 @@ export interface Item {
      */
     'imageUrls'?: Array<string>;
     /**
-     * 300 word description of the item.
+     * A description of the product/service. This will be displayed to customers on web interfaces.
      * @type {string}
      * @memberof Item
      */
     'description'?: string;
     /**
-     * referenceId for merchant to use for internal system
+     * A unique identifier set by a developer to help reconcile this object with any internal systems
      * @type {string}
      * @memberof Item
      */
     'referenceId'?: string;
     /**
-     * 
+     * A Key-value object to hold additional data
      * @type {{ [key: string]: string; }}
      * @memberof Item
      */
     'metaData'?: { [key: string]: string; };
-    /**
-     * 
-     * @type {string}
-     * @memberof Item
-     */
-    'createdAt'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Item
-     */
-    'updatedAt'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof Item
-     */
-    'version'?: number;
 }
 /**
  * 
  * @export
- * @interface ItemCreationParams
+ * @interface ItemBatchGetRequest
  */
-export interface ItemCreationParams {
-    /**
-     * 
-     * @type {string}
-     * @memberof ItemCreationParams
-     */
-    'sku'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ItemCreationParams
-     */
-    'name': string;
-    /**
-     * 
-     * @type {Money}
-     * @memberof ItemCreationParams
-     */
-    'amountMoney': Money;
-    /**
-     * Key-value pairs that help to differentiate variants
-     * @type {{ [key: string]: string; }}
-     * @memberof ItemCreationParams
-     */
-    'attributes'?: { [key: string]: string; };
-    /**
-     * Max of 10 images per item. The first will always be the default.
-     * @type {Array<string>}
-     * @memberof ItemCreationParams
-     */
-    'imageUrls'?: Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof ItemCreationParams
-     */
-    'description'?: string;
-    /**
-     * 
-     * @type {ItemCreationParamsOrderDetails}
-     * @memberof ItemCreationParams
-     */
-    'orderDetails'?: ItemCreationParamsOrderDetails;
-    /**
-     * 
-     * @type {ItemCreationParamsInventoryDetails}
-     * @memberof ItemCreationParams
-     */
-    'inventoryDetails'?: ItemCreationParamsInventoryDetails;
-    /**
-     * 
-     * @type {{ [key: string]: string; }}
-     * @memberof ItemCreationParams
-     */
-    'metaData'?: { [key: string]: string; };
-    /**
-     * 
-     * @type {string}
-     * @memberof ItemCreationParams
-     */
-    'referenceId'?: string;
-}
-/**
- * 
- * @export
- * @interface ItemCreationParamsInventoryDetails
- */
-export interface ItemCreationParamsInventoryDetails {
-    /**
-     * 
-     * @type {number}
-     * @memberof ItemCreationParamsInventoryDetails
-     */
-    'unitsAvailable'?: number;
-    /**
-     * This will be shown on your Hands In catalogue
-     * @type {string}
-     * @memberof ItemCreationParamsInventoryDetails
-     */
-    'unitType'?: string;
-}
-/**
- * 
- * @export
- * @interface ItemCreationParamsOrderDetails
- */
-export interface ItemCreationParamsOrderDetails {
-    /**
-     * This will default to the units available if not provided
-     * @type {number}
-     * @memberof ItemCreationParamsOrderDetails
-     */
-    'maxUnitsPerOrder'?: number;
-    /**
-     * This will default to 0 if not provided
-     * @type {number}
-     * @memberof ItemCreationParamsOrderDetails
-     */
-    'minUnitsPerOrder'?: number;
-    /**
-     * Set to true if the item can be shipped
-     * @type {boolean}
-     * @memberof ItemCreationParamsOrderDetails
-     */
-    'isShippable'?: boolean;
-}
-/**
- * 
- * @export
- * @interface ItemInventoryDetails
- */
-export interface ItemInventoryDetails {
-    /**
-     * 
-     * @type {number}
-     * @memberof ItemInventoryDetails
-     */
-    'unitsAvailable'?: number;
-    /**
-     * This will be shown on your Hands In and checkout pages
-     * @type {string}
-     * @memberof ItemInventoryDetails
-     */
-    'unitType'?: string;
-}
-/**
- * 
- * @export
- * @interface ItemListParams
- */
-export interface ItemListParams {
+export interface ItemBatchGetRequest {
     /**
      * 
      * @type {Array<string>}
-     * @memberof ItemListParams
+     * @memberof ItemBatchGetRequest
      */
     'itemIds': Array<string>;
 }
 /**
- * Details used by the ordering service to determine limitations for orders
- * @export
- * @interface ItemOrderDetails
- */
-export interface ItemOrderDetails {
-    /**
-     * Set to true if item is must be shipped out
-     * @type {boolean}
-     * @memberof ItemOrderDetails
-     */
-    'isShippable'?: boolean;
-}
-/**
  * 
  * @export
- * @interface ItemUpdateParams
+ * @interface ItemCreateRequest
  */
-export interface ItemUpdateParams {
+export interface ItemCreateRequest {
     /**
-     * 
+     * Name of the product/service being sold. This will be displayed to customers on web interfaces.
      * @type {string}
-     * @memberof ItemUpdateParams
-     */
-    'sku'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ItemUpdateParams
+     * @memberof ItemCreateRequest
      */
     'name': string;
     /**
      * 
      * @type {Money}
-     * @memberof ItemUpdateParams
+     * @memberof ItemCreateRequest
      */
     'amountMoney': Money;
     /**
-     * Key-value pairs that help to differentiate variants
+     * A description of the product/service. This will be displayed to customers on web interfaces.
+     * @type {string}
+     * @memberof ItemCreateRequest
+     */
+    'description'?: string;
+    /**
+     * The Stock Keeping Unit ([SKU](https://en.wikipedia.org/wiki/Stock_keeping_unit)) number of the product.  Merchants may use this to differentiate products and track inventory with their internal systems.
+     * @type {string}
+     * @memberof ItemCreateRequest
+     */
+    'sku'?: string;
+    /**
+     * This stores key-value pairs to help distinguish variants of the same item
      * @type {{ [key: string]: string; }}
-     * @memberof ItemUpdateParams
+     * @memberof ItemCreateRequest
      */
     'attributes'?: { [key: string]: string; };
     /**
      * Max of 10 images per item. The first will always be the default.
      * @type {Array<string>}
-     * @memberof ItemUpdateParams
+     * @memberof ItemCreateRequest
      */
     'imageUrls'?: Array<string>;
     /**
-     * 
+     * A unique identifier set by a developer to help reconcile this object with any internal systems
      * @type {string}
-     * @memberof ItemUpdateParams
-     */
-    'description'?: string;
-    /**
-     * 
-     * @type {ItemCreationParamsOrderDetails}
-     * @memberof ItemUpdateParams
-     */
-    'orderDetails'?: ItemCreationParamsOrderDetails;
-    /**
-     * 
-     * @type {ItemCreationParamsInventoryDetails}
-     * @memberof ItemUpdateParams
-     */
-    'inventoryDetails'?: ItemCreationParamsInventoryDetails;
-    /**
-     * 
-     * @type {{ [key: string]: string; }}
-     * @memberof ItemUpdateParams
-     */
-    'metaData'?: { [key: string]: string; };
-    /**
-     * 
-     * @type {string}
-     * @memberof ItemUpdateParams
+     * @memberof ItemCreateRequest
      */
     'referenceId'?: string;
     /**
-     * 
-     * @type {number}
-     * @memberof ItemUpdateParams
+     * A Key-value object to hold additional data
+     * @type {{ [key: string]: string; }}
+     * @memberof ItemCreateRequest
      */
-    'atomicUnitChange'?: number;
+    'metaData'?: { [key: string]: string; };
+}
+/**
+ * 
+ * @export
+ * @interface ItemUpdateRequest
+ */
+export interface ItemUpdateRequest {
+    /**
+     * Name of the product/service being sold. This will be displayed to customers on web interfaces.
+     * @type {string}
+     * @memberof ItemUpdateRequest
+     */
+    'name'?: string;
+    /**
+     * 
+     * @type {Money}
+     * @memberof ItemUpdateRequest
+     */
+    'amountMoney'?: Money;
+    /**
+     * A description of the product/service. This will be displayed to customers on web interfaces.
+     * @type {string}
+     * @memberof ItemUpdateRequest
+     */
+    'description'?: string;
+    /**
+     * The Stock Keeping Unit ([SKU](https://en.wikipedia.org/wiki/Stock_keeping_unit)) number of the product.  Merchants may use this to differentiate products and track inventory with their internal systems.
+     * @type {string}
+     * @memberof ItemUpdateRequest
+     */
+    'sku'?: string;
+    /**
+     * This stores key-value pairs to help distinguish variants of the same item
+     * @type {{ [key: string]: string; }}
+     * @memberof ItemUpdateRequest
+     */
+    'attributes'?: { [key: string]: string; };
+    /**
+     * Max of 10 images per item. The first will always be the default.
+     * @type {Array<string>}
+     * @memberof ItemUpdateRequest
+     */
+    'imageUrls'?: Array<string>;
+    /**
+     * A unique identifier set by a developer to help reconcile this object with any internal systems
+     * @type {string}
+     * @memberof ItemUpdateRequest
+     */
+    'referenceId'?: string;
+    /**
+     * A Key-value object to hold additional data
+     * @type {{ [key: string]: string; }}
+     * @memberof ItemUpdateRequest
+     */
+    'metaData'?: { [key: string]: string; };
 }
 /**
  * 
@@ -3131,11 +2494,25 @@ export interface ItemUpdateParams {
  */
 export interface JoinGroupPaymentRequest {
     /**
-     * 
+     * Use customerId instead
+     * @type {string}
+     * @memberof JoinGroupPaymentRequest
+     * @deprecated
+     */
+    'userId'?: string;
+    /**
+     * A unique identifier for a customer object.
      * @type {string}
      * @memberof JoinGroupPaymentRequest
      */
-    'userId': string;
+    'customerId'?: string;
+    /**
+     * This field is no longer supported
+     * @type {boolean}
+     * @memberof JoinGroupPaymentRequest
+     * @deprecated
+     */
+    'joinedByMerchant'?: boolean;
 }
 /**
  * 
@@ -3144,13 +2521,13 @@ export interface JoinGroupPaymentRequest {
  */
 export interface KickGroupPaymentRequest {
     /**
-     * 
+     * A unique identifier for a customer object.
      * @type {string}
      * @memberof KickGroupPaymentRequest
      */
     'ownerId': string;
     /**
-     * 
+     * A unique identifier for a customer object.
      * @type {string}
      * @memberof KickGroupPaymentRequest
      */
@@ -3159,17 +2536,182 @@ export interface KickGroupPaymentRequest {
 /**
  * 
  * @export
+ * @enum {string}
+ */
+
+export enum Language {
+    AA = 'aa',
+    AB = 'ab',
+    AF = 'af',
+    AK = 'ak',
+    AM = 'am',
+    AR = 'ar',
+    AS = 'as',
+    AW = 'aw',
+    AY = 'ay',
+    AZ = 'az',
+    B1 = 'b1',
+    B2 = 'b2',
+    BA = 'ba',
+    BE = 'be',
+    BG = 'bg',
+    BH = 'bh',
+    BI = 'bi',
+    BL = 'bl',
+    BN = 'bn',
+    BO = 'bo',
+    BR = 'br',
+    CA = 'ca',
+    CB = 'cb',
+    CE = 'ce',
+    CO = 'co',
+    CS = 'cs',
+    CY = 'cy',
+    DA = 'da',
+    DE = 'de',
+    DK = 'dk',
+    DZ = 'dz',
+    EL = 'el',
+    EN = 'en',
+    EO = 'eo',
+    ES = 'es',
+    ET = 'et',
+    EU = 'eu',
+    FA = 'fa',
+    FI = 'fi',
+    FJ = 'fj',
+    FO = 'fo',
+    FR = 'fr',
+    FY = 'fy',
+    GA = 'ga',
+    GD = 'gd',
+    GL = 'gl',
+    GN = 'gn',
+    GU = 'gu',
+    HA = 'ha',
+    HI = 'hi',
+    HR = 'hr',
+    HT = 'ht',
+    HU = 'hu',
+    HY = 'hy',
+    IA = 'ia',
+    IE = 'ie',
+    IK = 'ik',
+    IN = 'in',
+    IS = 'is',
+    IT = 'it',
+    IW = 'iw',
+    JA = 'ja',
+    JI = 'ji',
+    JW = 'jw',
+    KA = 'ka',
+    KB = 'kb',
+    KI = 'ki',
+    KK = 'kk',
+    KL = 'kl',
+    KM = 'km',
+    KN = 'kn',
+    KO = 'ko',
+    KS = 'ks',
+    KU = 'ku',
+    KY = 'ky',
+    LA = 'la',
+    LB = 'lb',
+    LM = 'lm',
+    LN = 'ln',
+    LO = 'lo',
+    LT = 'lt',
+    LV = 'lv',
+    MG = 'mg',
+    MI = 'mi',
+    MK = 'mk',
+    ML = 'ml',
+    MN = 'mn',
+    MO = 'mo',
+    MR = 'mr',
+    MS = 'ms',
+    MT = 'mt',
+    MU = 'mu',
+    MW = 'mw',
+    MY = 'my',
+    NA = 'na',
+    NE = 'ne',
+    NL = 'nl',
+    FALSE = 'false',
+    OC = 'oc',
+    OM = 'om',
+    OR = 'or',
+    PA = 'pa',
+    PL = 'pl',
+    PS = 'ps',
+    PT = 'pt',
+    QU = 'qu',
+    RI = 'ri',
+    RM = 'rm',
+    RN = 'rn',
+    RO = 'ro',
+    RU = 'ru',
+    RW = 'rw',
+    SA = 'sa',
+    SD = 'sd',
+    SG = 'sg',
+    SH = 'sh',
+    SI = 'si',
+    SK = 'sk',
+    SL = 'sl',
+    SM = 'sm',
+    SN = 'sn',
+    SO = 'so',
+    SQ = 'sq',
+    SR = 'sr',
+    SS = 'ss',
+    ST = 'st',
+    SU = 'su',
+    SV = 'sv',
+    SW = 'sw',
+    TA = 'ta',
+    TE = 'te',
+    TG = 'tg',
+    TH = 'th',
+    TI = 'ti',
+    TK = 'tk',
+    TL = 'tl',
+    TM = 'tm',
+    TN = 'tn',
+    TO = 'to',
+    TR = 'tr',
+    TS = 'ts',
+    TT = 'tt',
+    TW = 'tw',
+    TZ = 'tz',
+    UG = 'ug',
+    UK = 'uk',
+    UR = 'ur',
+    UZ = 'uz',
+    VI = 'vi',
+    VO = 'vo',
+    WO = 'wo',
+    XH = 'xh',
+    YO = 'yo',
+    ZH = 'zh',
+    ZU = 'zu'
+}
+
+
+/**
+ * 
+ * @export
  * @interface LeaveGroupPaymentRequest
  */
 export interface LeaveGroupPaymentRequest {
     /**
-     * 
+     * A unique identifier for a customer object.
      * @type {string}
      * @memberof LeaveGroupPaymentRequest
      */
     'customerId': string;
     /**
-     * 
+     * A unique identifier for a customer object.
      * @type {string}
      * @memberof LeaveGroupPaymentRequest
      */
@@ -3183,28 +2725,16 @@ export interface LeaveGroupPaymentRequest {
 export interface LineItem {
     /**
      * 
-     * @type {PickItemOrAmountMoneyOrAttributesOrDescriptionOrIdOrMetaDataOrImageUrlsOrNameOrSkuOrOrderDetails}
+     * @type {Item}
      * @memberof LineItem
      */
-    'item': PickItemOrAmountMoneyOrAttributesOrDescriptionOrIdOrMetaDataOrImageUrlsOrNameOrSkuOrOrderDetails;
+    'item': Item;
     /**
      * 
      * @type {number}
      * @memberof LineItem
      */
     'quantity': number;
-    /**
-     * 
-     * @type {Money}
-     * @memberof LineItem
-     */
-    'taxAmount'?: Money;
-    /**
-     * 
-     * @type {Array<Tax>}
-     * @memberof LineItem
-     */
-    'taxes'?: Array<Tax>;
     /**
      * 
      * @type {Money}
@@ -3221,21 +2751,76 @@ export interface LineItem {
 /**
  * 
  * @export
- * @interface LineItemCreationParam
+ * @interface LineItemCreateRequest
  */
-export interface LineItemCreationParam {
+export interface LineItemCreateRequest {
     /**
-     * Item can be created inline if neccessary
-     * @type {string | ItemCreationParams}
-     * @memberof LineItemCreationParam
+     * 
+     * @type {LineItemCreateRequestItem}
+     * @memberof LineItemCreateRequest
      */
-    'item': string | ItemCreationParams;
+    'item': LineItemCreateRequestItem;
     /**
      * 
      * @type {number}
-     * @memberof LineItemCreationParam
+     * @memberof LineItemCreateRequest
      */
     'quantity': number;
+}
+/**
+ * Can be either an item identifier or item object.  Note: For dynamic orders (those that can change prices) you must provide an item identifier
+ * @export
+ * @interface LineItemCreateRequestItem
+ */
+export interface LineItemCreateRequestItem {
+    /**
+     * Name of the product/service being sold. This will be displayed to customers on web interfaces.
+     * @type {string}
+     * @memberof LineItemCreateRequestItem
+     */
+    'name': string;
+    /**
+     * 
+     * @type {Money}
+     * @memberof LineItemCreateRequestItem
+     */
+    'amountMoney': Money;
+    /**
+     * A description of the product/service. This will be displayed to customers on web interfaces.
+     * @type {string}
+     * @memberof LineItemCreateRequestItem
+     */
+    'description'?: string;
+    /**
+     * The Stock Keeping Unit ([SKU](https://en.wikipedia.org/wiki/Stock_keeping_unit)) number of the product.  Merchants may use this to differentiate products and track inventory with their internal systems.
+     * @type {string}
+     * @memberof LineItemCreateRequestItem
+     */
+    'sku'?: string;
+    /**
+     * This stores key-value pairs to help distinguish variants of the same item
+     * @type {{ [key: string]: string; }}
+     * @memberof LineItemCreateRequestItem
+     */
+    'attributes'?: { [key: string]: string; };
+    /**
+     * Max of 10 images per item. The first will always be the default.
+     * @type {Array<string>}
+     * @memberof LineItemCreateRequestItem
+     */
+    'imageUrls'?: Array<string>;
+    /**
+     * A unique identifier set by a developer to help reconcile this object with any internal systems
+     * @type {string}
+     * @memberof LineItemCreateRequestItem
+     */
+    'referenceId'?: string;
+    /**
+     * A Key-value object to hold additional data
+     * @type {{ [key: string]: string; }}
+     * @memberof LineItemCreateRequestItem
+     */
+    'metaData'?: { [key: string]: string; };
 }
 /**
  * 
@@ -3261,6 +2846,19 @@ export interface LoginParams {
      * @memberof LoginParams
      */
     'scopes'?: Array<string>;
+}
+/**
+ * 
+ * @export
+ * @interface MembersValue
+ */
+export interface MembersValue {
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof MembersValue
+     */
+    'scopes': Array<string>;
 }
 /**
  * 
@@ -3302,37 +2900,6 @@ export interface MerchantApiKeySummary {
 /**
  * 
  * @export
- * @interface MerchantContactDetails
- */
-export interface MerchantContactDetails {
-    /**
-     * Email address. See [RFC 5322](https://datatracker.ietf.org/doc/html/rfc5322)
-     * @type {string}
-     * @memberof MerchantContactDetails
-     */
-    'email': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof MerchantContactDetails
-     */
-    'companyNumber'?: string;
-    /**
-     * 
-     * @type {Address}
-     * @memberof MerchantContactDetails
-     */
-    'address'?: Address;
-    /**
-     * 
-     * @type {string}
-     * @memberof MerchantContactDetails
-     */
-    'phoneNumber'?: string;
-}
-/**
- * 
- * @export
  * @interface MerchantDTO
  */
 export interface MerchantDTO {
@@ -3362,10 +2929,10 @@ export interface MerchantDTO {
     'logoUrl'?: string;
     /**
      * 
-     * @type {MerchantContactDetails}
+     * @type {CompanyContactDetails}
      * @memberof MerchantDTO
      */
-    'contactDetails': MerchantContactDetails;
+    'contactDetails': CompanyContactDetails;
     /**
      * 
      * @type {Array<MerchantApiKeySummary>}
@@ -3380,16 +2947,16 @@ export interface MerchantDTO {
     'testKeys': Array<MerchantApiKeySummary>;
     /**
      * 
-     * @type {{ [key: string]: object; }}
+     * @type {{ [key: string]: MembersValue; }}
      * @memberof MerchantDTO
      */
-    'team': { [key: string]: object; };
+    'team': { [key: string]: MembersValue; };
     /**
      * 
-     * @type {{ [key: string]: object; }}
+     * @type {{ [key: string]: InvitedMembersValue; }}
      * @memberof MerchantDTO
      */
-    'invites'?: { [key: string]: object; };
+    'invites'?: { [key: string]: InvitedMembersValue; };
     /**
      * 
      * @type {Currency}
@@ -3419,28 +2986,6 @@ export interface Money {
 /**
  * 
  * @export
- * @enum {string}
- */
-
-export const OAuthGrantType = {
-    AuthorizationCode: 'authorization_code',
-    RefreshToken: 'refresh_token',
-    ClientCredentials: 'client_credentials'
-} as const;
-
-export type OAuthGrantType = typeof OAuthGrantType[keyof typeof OAuthGrantType];
-
-
-/**
- * 
- * @export
- * @interface OAuthResponseType
- */
-export interface OAuthResponseType {
-}
-/**
- * 
- * @export
  * @interface OAuthTokenResponse
  */
 export interface OAuthTokenResponse {
@@ -3464,10 +3009,10 @@ export interface OAuthTokenResponse {
     'token_type'?: string;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof OAuthTokenResponse
      */
-    'expires_in'?: number;
+    'expires_at'?: string;
     /**
      * 
      * @type {string}
@@ -3520,248 +3065,22 @@ export interface OAuthTokenResponse {
 /**
  * 
  * @export
- * @interface OpenIDTokenResponse
+ * @interface OpenIdTokenResponse
  */
-export interface OpenIDTokenResponse {
+export interface OpenIdTokenResponse {
     /**
      * 
      * @type {string}
-     * @memberof OpenIDTokenResponse
+     * @memberof OpenIdTokenResponse
      */
     'id_token'?: string;
     /**
      * 
      * @type {string}
-     * @memberof OpenIDTokenResponse
+     * @memberof OpenIdTokenResponse
      */
     'session_state'?: string;
 }
-/**
- * 
- * @export
- * @interface OpenIdAddress
- */
-export interface OpenIdAddress {
-    /**
-     * 
-     * @type {string}
-     * @memberof OpenIdAddress
-     */
-    'country': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof OpenIdAddress
-     */
-    'postal_code': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof OpenIdAddress
-     */
-    'region': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof OpenIdAddress
-     */
-    'locality': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof OpenIdAddress
-     */
-    'street_address': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof OpenIdAddress
-     */
-    'formatted': string;
-}
-/**
- * 
- * @export
- * @interface OpenIdIdTokenData
- */
-export interface OpenIdIdTokenData {
-    /**
-     * 
-     * @type {string}
-     * @memberof OpenIdIdTokenData
-     */
-    'sub': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof OpenIdIdTokenData
-     */
-    'name'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof OpenIdIdTokenData
-     */
-    'given_name'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof OpenIdIdTokenData
-     */
-    'family_name'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof OpenIdIdTokenData
-     */
-    'middle_name'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof OpenIdIdTokenData
-     */
-    'nickname'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof OpenIdIdTokenData
-     */
-    'preferred_username'?: string;
-    /**
-     * URL linking to a resource or website.
-     * @type {string}
-     * @memberof OpenIdIdTokenData
-     */
-    'picture'?: string;
-    /**
-     * URL linking to a resource or website.
-     * @type {string}
-     * @memberof OpenIdIdTokenData
-     */
-    'profile'?: string;
-    /**
-     * URL linking to a resource or website.
-     * @type {string}
-     * @memberof OpenIdIdTokenData
-     */
-    'website'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof OpenIdIdTokenData
-     */
-    'gender'?: OpenIdIdTokenDataGenderEnum;
-    /**
-     * 
-     * @type {string}
-     * @memberof OpenIdIdTokenData
-     */
-    'birthdate'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof OpenIdIdTokenData
-     */
-    'zoneinfo'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof OpenIdIdTokenData
-     */
-    'locale'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof OpenIdIdTokenData
-     */
-    'updated_at'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof OpenIdIdTokenData
-     */
-    'phone_number'?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof OpenIdIdTokenData
-     */
-    'phone_number_verified'?: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof OpenIdIdTokenData
-     */
-    'email'?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof OpenIdIdTokenData
-     */
-    'email_verified'?: boolean;
-    /**
-     * 
-     * @type {OpenIdAddress}
-     * @memberof OpenIdIdTokenData
-     */
-    'address'?: OpenIdAddress;
-    /**
-     * 
-     * @type {string}
-     * @memberof OpenIdIdTokenData
-     */
-    'auth_time'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof OpenIdIdTokenData
-     */
-    'nonce'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof OpenIdIdTokenData
-     */
-    'acr'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof OpenIdIdTokenData
-     */
-    'amr'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof OpenIdIdTokenData
-     */
-    'azp'?: string;
-}
-
-export const OpenIdIdTokenDataGenderEnum = {
-    Female: 'female',
-    Male: 'male'
-} as const;
-
-export type OpenIdIdTokenDataGenderEnum = typeof OpenIdIdTokenDataGenderEnum[keyof typeof OpenIdIdTokenDataGenderEnum];
-
-/**
- * 
- * @export
- * @enum {string}
- */
-
-export const OpenIdResponseType = {
-    IdToken: 'id_token',
-    IdTokenToken: 'id_token token',
-    CodeIdTokenToken: 'code id_token token',
-    CodeIdToken: 'code id_token',
-    CodeToken: 'code token',
-    None: 'none'
-} as const;
-
-export type OpenIdResponseType = typeof OpenIdResponseType[keyof typeof OpenIdResponseType];
-
-
 /**
  * 
  * @export
@@ -3769,7 +3088,7 @@ export type OpenIdResponseType = typeof OpenIdResponseType[keyof typeof OpenIdRe
  */
 export interface Order {
     /**
-     * 
+     * A unique identifier for the order object.
      * @type {string}
      * @memberof Order
      */
@@ -3799,29 +3118,17 @@ export interface Order {
      */
     'subtotalMoney': Money;
     /**
-     * 
-     * @type {Money}
+     * A unique identifier for the payment object.
+     * @type {string}
      * @memberof Order
      */
-    'discountMoney'?: Money;
+    'paymentId'?: string;
     /**
-     * 
-     * @type {Money}
+     * A unique identifier for the group payment object.
+     * @type {string}
      * @memberof Order
      */
-    'tipMoney'?: Money;
-    /**
-     * 
-     * @type {Array<Tax>}
-     * @memberof Order
-     */
-    'taxes'?: Array<Tax>;
-    /**
-     * 
-     * @type {Array<Discount>}
-     * @memberof Order
-     */
-    'discounts'?: Array<Discount>;
+    'groupPaymentId'?: string;
     /**
      * 
      * @type {Address}
@@ -3829,217 +3136,211 @@ export interface Order {
      */
     'shippingAddress'?: Address;
     /**
-     * 
+     * A unique identifier set by a developer to help reconcile this object with any internal systems
+     * @type {string}
+     * @memberof Order
+     */
+    'referenceId'?: string;
+    /**
+     * A Key-value object to hold additional data
      * @type {{ [key: string]: string; }}
      * @memberof Order
      */
     'metaData'?: { [key: string]: string; };
     /**
-     * 
+     * The date and time the order was created
      * @type {string}
      * @memberof Order
      */
     'createdAt'?: string;
     /**
-     * 
+     * The date and time the order was last updated/modified
      * @type {string}
      * @memberof Order
      */
     'updatedAt'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof Order
-     */
-    'version'?: number;
 }
 /**
  * 
  * @export
- * @interface OrderCreationParams
+ * @interface OrderBatchGetRequest
  */
-export interface OrderCreationParams {
-    /**
-     * 
-     * @type {Array<LineItemCreationParam>}
-     * @memberof OrderCreationParams
-     */
-    'lineItemParams': Array<LineItemCreationParam>;
+export interface OrderBatchGetRequest {
     /**
      * 
      * @type {Array<string>}
-     * @memberof OrderCreationParams
+     * @memberof OrderBatchGetRequest
      */
-    'discountCodes'?: Array<string>;
+    'orderIds': Array<string>;
+}
+/**
+ * 
+ * @export
+ * @interface OrderCreateRequest
+ */
+export interface OrderCreateRequest {
     /**
-     * Customer who is paying for the order
-     * @type {string | CustomerCreationParams}
-     * @memberof OrderCreationParams
+     * This is a list of items that will make up the total order
+     * @type {Array<LineItemCreateRequest>}
+     * @memberof OrderCreateRequest
      */
-    'customer'?: string | CustomerCreationParams;
+    'lineItemParams': Array<LineItemCreateRequest>;
     /**
      * 
      * @type {Address}
-     * @memberof OrderCreationParams
+     * @memberof OrderCreateRequest
      */
     'shippingAddress'?: Address;
     /**
-     * 
+     * A unique identifier set by a developer to help reconcile this object with any internal systems
+     * @type {string}
+     * @memberof OrderCreateRequest
+     */
+    'referenceId'?: string;
+    /**
+     * A Key-value object to hold additional data
      * @type {{ [key: string]: string; }}
-     * @memberof OrderCreationParams
+     * @memberof OrderCreateRequest
      */
     'metaData'?: { [key: string]: string; };
 }
 /**
- * 
+ * Indicates the state of an order  PENDING (The order is still in progress) COMPLETED (The order will automatically transition to this state when it has been paid for) CANCELLED (The order was cancelled before it was paid for) FULFILLED (The order has been fulfilled/delivered) RETURNED (The order has been returned)
  * @export
  * @enum {string}
  */
 
-export const OrderStatus = {
-    Pending: 'PENDING',
-    Completed: 'COMPLETED',
-    Cancelled: 'CANCELLED',
-    Fulfilled: 'FULFILLED',
-    Returned: 'RETURNED'
-} as const;
-
-export type OrderStatus = typeof OrderStatus[keyof typeof OrderStatus];
+export enum OrderStatus {
+    PENDING = 'PENDING',
+    COMPLETED = 'COMPLETED',
+    CANCELLED = 'CANCELLED',
+    FULFILLED = 'FULFILLED',
+    RETURNED = 'RETURNED'
+}
 
 
 /**
- * Make all properties in T optional
+ * The order in which objects are returned by
  * @export
- * @interface PartialOmitGroupPaymentCreationParamsCustomerOrIdempotencyKey
+ * @enum {string}
  */
-export interface PartialOmitGroupPaymentCreationParamsCustomerOrIdempotencyKey {
+
+export enum OrderType {
+    ASCENDING = 'ASCENDING',
+    DESCENDING = 'DESCENDING'
+}
+
+
+/**
+ * 
+ * @export
+ * @interface OrderUpdateRequest
+ */
+export interface OrderUpdateRequest {
     /**
-     * 
-     * @type {string}
-     * @memberof PartialOmitGroupPaymentCreationParamsCustomerOrIdempotencyKey
+     * This is a list of items that will make up the total order
+     * @type {Array<LineItemCreateRequest>}
+     * @memberof OrderUpdateRequest
      */
-    'groupId'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PartialOmitGroupPaymentCreationParamsCustomerOrIdempotencyKey
-     */
-    'orderId'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PartialOmitGroupPaymentCreationParamsCustomerOrIdempotencyKey
-     */
-    'checkoutId'?: string;
-    /**
-     * 
-     * @type {SplitType}
-     * @memberof PartialOmitGroupPaymentCreationParamsCustomerOrIdempotencyKey
-     */
-    'splitType'?: SplitType;
-    /**
-     * 
-     * @type {number}
-     * @memberof PartialOmitGroupPaymentCreationParamsCustomerOrIdempotencyKey
-     */
-    'splitAllocation'?: number;
-    /**
-     * 
-     * @type {{ [key: string]: Money; }}
-     * @memberof PartialOmitGroupPaymentCreationParamsCustomerOrIdempotencyKey
-     */
-    'customAllocation'?: { [key: string]: Money; };
-    /**
-     * 
-     * @type {{ [key: string]: Array<string>; }}
-     * @memberof PartialOmitGroupPaymentCreationParamsCustomerOrIdempotencyKey
-     */
-    'itemAllocation'?: { [key: string]: Array<string>; };
-    /**
-     * 
-     * @type {Money}
-     * @memberof PartialOmitGroupPaymentCreationParamsCustomerOrIdempotencyKey
-     */
-    'amountMoney'?: Money;
-    /**
-     * 
-     * @type {string}
-     * @memberof PartialOmitGroupPaymentCreationParamsCustomerOrIdempotencyKey
-     */
-    'expirationDate'?: string;
+    'lineItemParams': Array<LineItemCreateRequest>;
     /**
      * 
      * @type {Address}
-     * @memberof PartialOmitGroupPaymentCreationParamsCustomerOrIdempotencyKey
+     * @memberof OrderUpdateRequest
      */
     'shippingAddress'?: Address;
     /**
-     * If this is set to true, the group payment will be completed as soon as the total amount is made up  Defaults to true.
-     * @type {boolean}
-     * @memberof PartialOmitGroupPaymentCreationParamsCustomerOrIdempotencyKey
-     */
-    'autocomplete'?: boolean;
-    /**
-     * 
+     * A unique identifier set by a developer to help reconcile this object with any internal systems
      * @type {string}
-     * @memberof PartialOmitGroupPaymentCreationParamsCustomerOrIdempotencyKey
-     */
-    'message'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PartialOmitGroupPaymentCreationParamsCustomerOrIdempotencyKey
-     */
-    'statementDescriptionIdentifier'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PartialOmitGroupPaymentCreationParamsCustomerOrIdempotencyKey
-     */
-    'note'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PartialOmitGroupPaymentCreationParamsCustomerOrIdempotencyKey
+     * @memberof OrderUpdateRequest
      */
     'referenceId'?: string;
+    /**
+     * A Key-value object to hold additional data
+     * @type {{ [key: string]: string; }}
+     * @memberof OrderUpdateRequest
+     */
+    'metaData'?: { [key: string]: string; };
 }
 /**
  * Make all properties in T optional
  * @export
- * @interface PartialOrderCreationParams
+ * @interface PartialConnectRecord
  */
-export interface PartialOrderCreationParams {
+export interface PartialConnectRecord {
     /**
      * 
-     * @type {Array<LineItemCreationParam>}
-     * @memberof PartialOrderCreationParams
+     * @type {string}
+     * @memberof PartialConnectRecord
      */
-    'lineItemParams'?: Array<LineItemCreationParam>;
+    'accountId'?: string;
     /**
      * 
-     * @type {Array<string>}
-     * @memberof PartialOrderCreationParams
+     * @type {string}
+     * @memberof PartialConnectRecord
      */
-    'discountCodes'?: Array<string>;
-    /**
-     * Customer who is paying for the order
-     * @type {string | CustomerCreationParams}
-     * @memberof PartialOrderCreationParams
-     */
-    'customer'?: string | CustomerCreationParams;
+    'service'?: string;
     /**
      * 
-     * @type {Address}
-     * @memberof PartialOrderCreationParams
+     * @type {string}
+     * @memberof PartialConnectRecord
      */
-    'shippingAddress'?: Address;
+    'accessToken'?: string;
     /**
      * 
+     * @type {string}
+     * @memberof PartialConnectRecord
+     */
+    'refreshToken'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PartialConnectRecord
+     */
+    'expiresAt'?: string;
+    /**
+     * A Key-value object to hold additional data
      * @type {{ [key: string]: string; }}
-     * @memberof PartialOrderCreationParams
+     * @memberof PartialConnectRecord
      */
     'metaData'?: { [key: string]: string; };
+}
+/**
+ * Make all properties in T optional
+ * @export
+ * @interface PartialMerchantCreationParams
+ */
+export interface PartialMerchantCreationParams {
+    /**
+     * 
+     * @type {string}
+     * @memberof PartialMerchantCreationParams
+     */
+    'name'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PartialMerchantCreationParams
+     */
+    'description'?: string;
+    /**
+     * 
+     * @type {CompanyContactDetails}
+     * @memberof PartialMerchantCreationParams
+     */
+    'contactDetails'?: CompanyContactDetails;
+    /**
+     * URL linking to a resource or website.
+     * @type {string}
+     * @memberof PartialMerchantCreationParams
+     */
+    'logoUrl'?: string;
+    /**
+     * 
+     * @type {Currency}
+     * @memberof PartialMerchantCreationParams
+     */
+    'defaultCurrency'?: Currency;
 }
 /**
  * 
@@ -4073,35 +3374,23 @@ export interface PasswordResetParams {
  */
 export interface PayIntoGroupPaymentRequest {
     /**
-     * 
+     * This can be any unique identifier. It is required to protect against accidental duplicate calls, which may cause unintended consequences.
      * @type {string}
      * @memberof PayIntoGroupPaymentRequest
      */
     'idempotencyKey': string;
     /**
-     * 
+     * The id/token for the source of the payment. This can be a generated card nonce or the id to a saved customers card.
      * @type {string}
      * @memberof PayIntoGroupPaymentRequest
      */
     'paymentToken': string;
     /**
-     * 
+     * A unique identifier for a customer object.
      * @type {string}
      * @memberof PayIntoGroupPaymentRequest
      */
     'customerId': string;
-    /**
-     * 
-     * @type {Money}
-     * @memberof PayIntoGroupPaymentRequest
-     */
-    'tipMoney'?: Money;
-    /**
-     * 
-     * @type {Money}
-     * @memberof PayIntoGroupPaymentRequest
-     */
-    'appFee'?: Money;
     /**
      * 
      * @type {Address}
@@ -4109,29 +3398,17 @@ export interface PayIntoGroupPaymentRequest {
      */
     'billingAddress'?: Address;
     /**
-     * 
-     * @type {string}
-     * @memberof PayIntoGroupPaymentRequest
-     */
-    'verificationToken'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PayIntoGroupPaymentRequest
-     */
-    'statementDescriptionIdentifier'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PayIntoGroupPaymentRequest
-     */
-    'note'?: string;
-    /**
-     * 
+     * A unique identifier set by a developer to help reconcile this object with any internal systems
      * @type {string}
      * @memberof PayIntoGroupPaymentRequest
      */
     'referenceId'?: string;
+    /**
+     * A Key-value object to hold additional data
+     * @type {{ [key: string]: string; }}
+     * @memberof PayIntoGroupPaymentRequest
+     */
+    'metaData'?: { [key: string]: string; };
 }
 /**
  * 
@@ -4165,19 +3442,15 @@ export interface PaymentError {
     'field'?: string;
 }
 /**
- * 
+ * The payment method of which payments will be captured from
  * @export
  * @enum {string}
  */
 
-export const PaymentMethod = {
-    Card: 'CARD',
-    BankAccount: 'BANK_ACCOUNT',
-    Cash: 'CASH',
-    External: 'EXTERNAL'
-} as const;
-
-export type PaymentMethod = typeof PaymentMethod[keyof typeof PaymentMethod];
+export enum PaymentMethod {
+    CARD = 'CARD',
+    OTHER = 'OTHER'
+}
 
 
 /**
@@ -4187,29 +3460,23 @@ export type PaymentMethod = typeof PaymentMethod[keyof typeof PaymentMethod];
  */
 export interface PaymentRecord {
     /**
-     * 
+     * A unique identifier for the payment object.
      * @type {string}
      * @memberof PaymentRecord
      */
     'id': string;
     /**
      * 
-     * @type {string}
+     * @type {PaymentStatus}
      * @memberof PaymentRecord
      */
-    'customerId'?: string;
+    'status': PaymentStatus;
     /**
      * 
-     * @type {string}
+     * @type {PaymentMethod}
      * @memberof PaymentRecord
      */
-    'orderId'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PaymentRecord
-     */
-    'groupPaymentId'?: string;
+    'paymentMethod': PaymentMethod;
     /**
      * 
      * @type {Money}
@@ -4227,12 +3494,6 @@ export interface PaymentRecord {
      * @type {Money}
      * @memberof PaymentRecord
      */
-    'tipMoney'?: Money;
-    /**
-     * 
-     * @type {Money}
-     * @memberof PaymentRecord
-     */
     'approvedMoney'?: Money;
     /**
      * 
@@ -4241,41 +3502,42 @@ export interface PaymentRecord {
      */
     'refundedMoney'?: Money;
     /**
-     * 
-     * @type {Money}
-     * @memberof PaymentRecord
-     */
-    'appFee'?: Money;
-    /**
-     * 
+     * A list of processing fees charged by gateways.  Note: Not all the gateways support this.
      * @type {Array<ProcessingFee>}
      * @memberof PaymentRecord
+     * @deprecated
      */
     'processingFees'?: Array<ProcessingFee>;
     /**
-     * 
+     * List of unique refund record identifiers related to this payment
      * @type {Array<string>}
      * @memberof PaymentRecord
      */
     'refundIds'?: Array<string>;
     /**
-     * 
-     * @type {PaymentStatus}
-     * @memberof PaymentRecord
-     */
-    'status': PaymentStatus;
-    /**
-     * 
+     * The date and time at which the payment will expire if autocomplete is set to false. If undefined the payment will attempt complete after 7 days.
      * @type {string}
      * @memberof PaymentRecord
      */
     'expirationDate'?: string;
     /**
-     * 
-     * @type {PaymentMethod}
+     * A unique identifier for a customer object.
+     * @type {string}
      * @memberof PaymentRecord
      */
-    'paymentMethod': PaymentMethod;
+    'customerId'?: string;
+    /**
+     * A unique identifier for a customer object.
+     * @type {string}
+     * @memberof PaymentRecord
+     */
+    'orderId'?: string;
+    /**
+     * A unique identifier for the group payment object.
+     * @type {string}
+     * @memberof PaymentRecord
+     */
+    'groupPaymentId'?: string;
     /**
      * 
      * @type {CardPaymentDetails}
@@ -4284,94 +3546,16 @@ export interface PaymentRecord {
     'cardDetails'?: CardPaymentDetails;
     /**
      * 
-     * @type {BankAccountPaymentDetails}
-     * @memberof PaymentRecord
-     */
-    'bankAccountDetails'?: BankAccountPaymentDetails;
-    /**
-     * 
-     * @type {CashPaymentDetails}
-     * @memberof PaymentRecord
-     */
-    'cashDetails'?: CashPaymentDetails;
-    /**
-     * 
-     * @type {ExternalPaymentDetails}
-     * @memberof PaymentRecord
-     */
-    'externalDetails'?: ExternalPaymentDetails;
-    /**
-     * 
-     * @type {string}
-     * @memberof PaymentRecord
-     */
-    'locationId'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PaymentRecord
-     */
-    'referenceId'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PaymentRecord
-     */
-    'employeeId'?: string;
-    /**
-     * 
-     * @type {RiskEvaluation}
-     * @memberof PaymentRecord
-     */
-    'riskEvaluation'?: RiskEvaluation;
-    /**
-     * 
-     * @type {string}
-     * @memberof PaymentRecord
-     */
-    'buyerEmailAddress'?: string;
-    /**
-     * 
-     * @type {Address}
-     * @memberof PaymentRecord
-     */
-    'billingAddress'?: Address;
-    /**
-     * 
      * @type {Address}
      * @memberof PaymentRecord
      */
     'shippingAddress'?: Address;
     /**
      * 
-     * @type {Array<string>}
+     * @type {Address}
      * @memberof PaymentRecord
      */
-    'capabilities'?: Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof PaymentRecord
-     */
-    'receiptNumber'?: string;
-    /**
-     * URL linking to a resource or website.
-     * @type {string}
-     * @memberof PaymentRecord
-     */
-    'receiptUrl'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PaymentRecord
-     */
-    'versionToken'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PaymentRecord
-     */
-    'note'?: string;
+    'billingAddress'?: Address;
     /**
      * 
      * @type {string}
@@ -4383,19 +3567,37 @@ export interface PaymentRecord {
      * @type {string}
      * @memberof PaymentRecord
      */
+    'description'?: string;
+    /**
+     * A unique identifier set by a developer to help reconcile this object with any internal systems
+     * @type {string}
+     * @memberof PaymentRecord
+     */
+    'referenceId'?: string;
+    /**
+     * A Key-value object to hold additional data
+     * @type {{ [key: string]: string; }}
+     * @memberof PaymentRecord
+     */
+    'metaData'?: { [key: string]: string; };
+    /**
+     * If set to true, this payment will be completed (captured) automatically. If set to false, this payment is held in an approved (authorised) state until either explicitly completed (captured) or canceled (voided)
+     * @type {boolean}
+     * @memberof PaymentRecord
+     */
+    'autocomplete'?: boolean;
+    /**
+     * Date and time the payment was created
+     * @type {string}
+     * @memberof PaymentRecord
+     */
     'createdAt': string;
     /**
-     * 
+     * Date and time the payment was last updated/modified
      * @type {string}
      * @memberof PaymentRecord
      */
     'updatedAt': string;
-    /**
-     * 
-     * @type {number}
-     * @memberof PaymentRecord
-     */
-    'version': number;
 }
 /**
  * 
@@ -4404,7 +3606,7 @@ export interface PaymentRecord {
  */
 export interface PaymentRefundRequest {
     /**
-     * 
+     * This can be any unique identifier. It is required to protect against accidental duplicate calls, which may cause unintended consequences.
      * @type {string}
      * @memberof PaymentRefundRequest
      */
@@ -4417,172 +3619,60 @@ export interface PaymentRefundRequest {
     'amountMoney': Money;
     /**
      * 
-     * @type {Money}
-     * @memberof PaymentRefundRequest
-     */
-    'appFee'?: Money;
-    /**
-     * 
      * @type {string}
      * @memberof PaymentRefundRequest
      */
     'reason'?: string;
 }
 /**
- * 
+ * Indicates the state of the payment  APPROVED (the payment has been authorised) PENDING (the payment is still being processed) COMPLETED (the payment has been captured) FAILED (the payment failed to authorise/capture) CANCELLED (the payment has been voided)
  * @export
  * @enum {string}
  */
 
-export const PaymentStatus = {
-    Approved: 'APPROVED',
-    Pending: 'PENDING',
-    Completed: 'COMPLETED',
-    Cancelled: 'CANCELLED',
-    Failed: 'FAILED'
-} as const;
-
-export type PaymentStatus = typeof PaymentStatus[keyof typeof PaymentStatus];
-
-
-/**
- * From T, pick a set of properties whose keys are in the union K
- * @export
- * @interface PickClientExcludeKeyofClientVerifiedSigOrTrustedSig
- */
-export interface PickClientExcludeKeyofClientVerifiedSigOrTrustedSig {
-    /**
-     * 
-     * @type {string}
-     * @memberof PickClientExcludeKeyofClientVerifiedSigOrTrustedSig
-     */
-    'id': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PickClientExcludeKeyofClientVerifiedSigOrTrustedSig
-     */
-    'name': string;
-    /**
-     * URL linking to a resource or website.
-     * @type {string}
-     * @memberof PickClientExcludeKeyofClientVerifiedSigOrTrustedSig
-     */
-    'logoUrl'?: string;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof PickClientExcludeKeyofClientVerifiedSigOrTrustedSig
-     */
-    'redirectUris'?: Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof PickClientExcludeKeyofClientVerifiedSigOrTrustedSig
-     */
-    'secretKey': string;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof PickClientExcludeKeyofClientVerifiedSigOrTrustedSig
-     */
-    'scopes': Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof PickClientExcludeKeyofClientVerifiedSigOrTrustedSig
-     */
-    'ownerId'?: string;
+export enum PaymentStatus {
+    APPROVED = 'APPROVED',
+    PENDING = 'PENDING',
+    COMPLETED = 'COMPLETED',
+    CANCELLED = 'CANCELLED',
+    FAILED = 'FAILED'
 }
+
+
 /**
  * From T, pick a set of properties whose keys are in the union K
  * @export
- * @interface PickItemOrAmountMoneyOrAttributesOrDescriptionOrIdOrMetaDataOrImageUrlsOrNameOrSkuOrOrderDetails
+ * @interface PickMerchantNameOrDescriptionOrContactDetailsOrLogoUrlOrDefaultCurrency
  */
-export interface PickItemOrAmountMoneyOrAttributesOrDescriptionOrIdOrMetaDataOrImageUrlsOrNameOrSkuOrOrderDetails {
+export interface PickMerchantNameOrDescriptionOrContactDetailsOrLogoUrlOrDefaultCurrency {
     /**
      * 
      * @type {string}
-     * @memberof PickItemOrAmountMoneyOrAttributesOrDescriptionOrIdOrMetaDataOrImageUrlsOrNameOrSkuOrOrderDetails
-     */
-    'id': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PickItemOrAmountMoneyOrAttributesOrDescriptionOrIdOrMetaDataOrImageUrlsOrNameOrSkuOrOrderDetails
+     * @memberof PickMerchantNameOrDescriptionOrContactDetailsOrLogoUrlOrDefaultCurrency
      */
     'name': string;
     /**
      * 
-     * @type {Money}
-     * @memberof PickItemOrAmountMoneyOrAttributesOrDescriptionOrIdOrMetaDataOrImageUrlsOrNameOrSkuOrOrderDetails
-     */
-    'amountMoney': Money;
-    /**
-     * Key-value pairs that help to differentiate variants
-     * @type {{ [key: string]: string; }}
-     * @memberof PickItemOrAmountMoneyOrAttributesOrDescriptionOrIdOrMetaDataOrImageUrlsOrNameOrSkuOrOrderDetails
-     */
-    'attributes'?: { [key: string]: string; };
-    /**
-     * 300 word description of the item.
      * @type {string}
-     * @memberof PickItemOrAmountMoneyOrAttributesOrDescriptionOrIdOrMetaDataOrImageUrlsOrNameOrSkuOrOrderDetails
+     * @memberof PickMerchantNameOrDescriptionOrContactDetailsOrLogoUrlOrDefaultCurrency
      */
     'description'?: string;
     /**
      * 
-     * @type {{ [key: string]: string; }}
-     * @memberof PickItemOrAmountMoneyOrAttributesOrDescriptionOrIdOrMetaDataOrImageUrlsOrNameOrSkuOrOrderDetails
+     * @type {CompanyContactDetails}
+     * @memberof PickMerchantNameOrDescriptionOrContactDetailsOrLogoUrlOrDefaultCurrency
      */
-    'metaData'?: { [key: string]: string; };
-    /**
-     * Max 10 images per item. Default image is the first in array.
-     * @type {Array<string>}
-     * @memberof PickItemOrAmountMoneyOrAttributesOrDescriptionOrIdOrMetaDataOrImageUrlsOrNameOrSkuOrOrderDetails
-     */
-    'imageUrls'?: Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof PickItemOrAmountMoneyOrAttributesOrDescriptionOrIdOrMetaDataOrImageUrlsOrNameOrSkuOrOrderDetails
-     */
-    'sku'?: string;
-    /**
-     * 
-     * @type {ItemOrderDetails}
-     * @memberof PickItemOrAmountMoneyOrAttributesOrDescriptionOrIdOrMetaDataOrImageUrlsOrNameOrSkuOrOrderDetails
-     */
-    'orderDetails'?: ItemOrderDetails;
-}
-/**
- * From T, pick a set of properties whose keys are in the union K
- * @export
- * @interface PickMerchantNameOrContactDetailsOrLogoUrlOrDefaultCurrency
- */
-export interface PickMerchantNameOrContactDetailsOrLogoUrlOrDefaultCurrency {
-    /**
-     * 
-     * @type {string}
-     * @memberof PickMerchantNameOrContactDetailsOrLogoUrlOrDefaultCurrency
-     */
-    'name': string;
+    'contactDetails': CompanyContactDetails;
     /**
      * URL linking to a resource or website.
      * @type {string}
-     * @memberof PickMerchantNameOrContactDetailsOrLogoUrlOrDefaultCurrency
+     * @memberof PickMerchantNameOrDescriptionOrContactDetailsOrLogoUrlOrDefaultCurrency
      */
     'logoUrl'?: string;
     /**
      * 
-     * @type {MerchantContactDetails}
-     * @memberof PickMerchantNameOrContactDetailsOrLogoUrlOrDefaultCurrency
-     */
-    'contactDetails': MerchantContactDetails;
-    /**
-     * 
      * @type {Currency}
-     * @memberof PickMerchantNameOrContactDetailsOrLogoUrlOrDefaultCurrency
+     * @memberof PickMerchantNameOrDescriptionOrContactDetailsOrLogoUrlOrDefaultCurrency
      */
     'defaultCurrency': Currency;
 }
@@ -4592,12 +3682,6 @@ export interface PickMerchantNameOrContactDetailsOrLogoUrlOrDefaultCurrency {
  * @interface ProcessingFee
  */
 export interface ProcessingFee {
-    /**
-     * 
-     * @type {string}
-     * @memberof ProcessingFee
-     */
-    'effectiveAt'?: string;
     /**
      * 
      * @type {string}
@@ -4614,33 +3698,17 @@ export interface ProcessingFee {
 /**
  * 
  * @export
- * @enum {string}
- */
-
-export const PromptType = {
-    Consent: 'consent',
-    SelectAccount: 'select_account',
-    Login: 'login',
-    None: 'none'
-} as const;
-
-export type PromptType = typeof PromptType[keyof typeof PromptType];
-
-
-/**
- * 
- * @export
  * @interface RefundRecord
  */
 export interface RefundRecord {
     /**
-     * 
+     * A unique identifier for the refund object.
      * @type {string}
      * @memberof RefundRecord
      */
     'id': string;
     /**
-     * 
+     * A unique identifier for the payment object.
      * @type {string}
      * @memberof RefundRecord
      */
@@ -4653,20 +3721,15 @@ export interface RefundRecord {
     'amountMoney': Money;
     /**
      * 
-     * @type {Money}
-     * @memberof RefundRecord
-     */
-    'appFee'?: Money;
-    /**
-     * 
      * @type {RefundStatus}
      * @memberof RefundRecord
      */
     'status': RefundStatus;
     /**
-     * 
+     * A list of processing fees charged by gateways.  Note: Not all the gateways support this.
      * @type {Array<ProcessingFee>}
      * @memberof RefundRecord
+     * @deprecated
      */
     'processingFees'?: Array<ProcessingFee>;
     /**
@@ -4674,34 +3737,44 @@ export interface RefundRecord {
      * @type {string}
      * @memberof RefundRecord
      */
-    'locationId'?: string;
+    'reason'?: string;
     /**
-     * 
+     * A unique identifier set by a developer to help reconcile this object with any internal systems
+     * @type {string}
+     * @memberof RefundRecord
+     */
+    'referenceId'?: string;
+    /**
+     * A Key-value object to hold additional data
+     * @type {{ [key: string]: string; }}
+     * @memberof RefundRecord
+     */
+    'metaData'?: { [key: string]: string; };
+    /**
+     * Date and time the refund was created
      * @type {string}
      * @memberof RefundRecord
      */
     'createdAt'?: string;
     /**
-     * 
+     * Date and time the refund was last updated/modified
      * @type {string}
      * @memberof RefundRecord
      */
     'updatedAt'?: string;
 }
 /**
- * 
+ * Indicates the state of the refund  PENDING (The refund is still being processed) COMPLETED (The refund has been processed) REJECTED (The refund was rejected by the merchant) FAILED (The refund failed to go through, e.g. the card network failed to process the refund)
  * @export
  * @enum {string}
  */
 
-export const RefundStatus = {
-    Pending: 'PENDING',
-    Completed: 'COMPLETED',
-    Rejected: 'REJECTED',
-    Failed: 'FAILED'
-} as const;
-
-export type RefundStatus = typeof RefundStatus[keyof typeof RefundStatus];
+export enum RefundStatus {
+    PENDING = 'PENDING',
+    COMPLETED = 'COMPLETED',
+    REJECTED = 'REJECTED',
+    FAILED = 'FAILED'
+}
 
 
 /**
@@ -4738,824 +3811,428 @@ export interface RequestResetParams {
 /**
  * 
  * @export
- * @interface RiskEvaluation
+ * @enum {string}
  */
-export interface RiskEvaluation {
+
+export enum Service {
+    SQUARE = 'square',
+    STRIPE = 'stripe',
+    SHUTTLE = 'shuttle'
+}
+
+
+/**
+ * 
+ * @export
+ * @enum {string}
+ */
+
+export enum ShuttleEvent {
+    PAYMENT_SUCCESS = 'PAYMENT.SUCCESS',
+    PAYMENT_FAILED = 'PAYMENT.FAILED',
+    PAYMENT_PENDING = 'PAYMENT.PENDING',
+    PAYMENT_UPDATE = 'PAYMENT.UPDATE',
+    CAPTURE_SUCCESS = 'CAPTURE.SUCCESS',
+    CAPTURE_FAILED = 'CAPTURE.FAILED',
+    CAPTURE_PENDING = 'CAPTURE.PENDING',
+    VOID_SUCCESS = 'VOID.SUCCESS',
+    VOID_FAILED = 'VOID.FAILED',
+    REFUND_SUCCESS = 'REFUND.SUCCESS',
+    REFUND_FAILED = 'REFUND.FAILED',
+    REFUND_PENDING = 'REFUND.PENDING',
+    CONTRACT_START = 'CONTRACT.START',
+    CONTRACT_UPDATE = 'CONTRACT.UPDATE',
+    CONTRACT_COMPLETE = 'CONTRACT.COMPLETE',
+    CONTRACT_NOTE = 'CONTRACT.NOTE',
+    CHARGE_CREATED = 'CHARGE.CREATED',
+    CHARGE_UPDATE = 'CHARGE.UPDATE',
+    CHARGE_WRITTENOFF = 'CHARGE.WRITTENOFF',
+    CHARGE_COMPLETE = 'CHARGE.COMPLETE',
+    ACCOUNT_CREATED = 'ACCOUNT.CREATED',
+    ACCOUNT_UPDATE = 'ACCOUNT.UPDATE',
+    PAYMENT_METHOD_CREATED = 'PAYMENT_METHOD.CREATED',
+    PAYMENT_METHOD_UPDATE = 'PAYMENT_METHOD.UPDATE',
+    PAYMENT_METHOD_ARCHIVE = 'PAYMENT_METHOD.ARCHIVE',
+    GATEWAY_CREATED = 'GATEWAY.CREATED',
+    GATEWAY_UPDATE = 'GATEWAY.UPDATE',
+    GATEWAY_ARCHIVE = 'GATEWAY.ARCHIVE',
+    LEGAL_ENTITY_ROUTE_CREATED = 'LEGAL_ENTITY_ROUTE.CREATED',
+    LEGAL_ENTITY_ROUTE_ARCHIVE = 'LEGAL_ENTITY_ROUTE.ARCHIVE',
+    INSTANCE_CREATED = 'INSTANCE.CREATED',
+    INSTANCE_UPDATE = 'INSTANCE.UPDATE',
+    INSTANCE_ARCHIVE = 'INSTANCE.ARCHIVE'
+}
+
+
+/**
+ * 
+ * @export
+ * @interface ShuttleEventRequestBody
+ */
+export interface ShuttleEventRequestBody {
     /**
      * 
      * @type {string}
-     * @memberof RiskEvaluation
+     * @memberof ShuttleEventRequestBody
      */
-    'createdAt'?: string;
+    'key': string;
     /**
      * 
-     * @type {RiskLevel}
-     * @memberof RiskEvaluation
+     * @type {string}
+     * @memberof ShuttleEventRequestBody
      */
-    'riskLevel': RiskLevel;
+    'application': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShuttleEventRequestBody
+     */
+    'instance_key': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShuttleEventRequestBody
+     */
+    'client': string;
+    /**
+     * 
+     * @type {ShuttleEvent}
+     * @memberof ShuttleEventRequestBody
+     */
+    'action': ShuttleEvent;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShuttleEventRequestBody
+     */
+    'payment'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShuttleEventRequestBody
+     */
+    'capture'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShuttleEventRequestBody
+     */
+    'transaction'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShuttleEventRequestBody
+     */
+    'contract'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShuttleEventRequestBody
+     */
+    'created': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShuttleEventRequestBody
+     */
+    'account'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShuttleEventRequestBody
+     */
+    'payment_method'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShuttleEventRequestBody
+     */
+    'payment_type'?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ShuttleEventRequestBody
+     */
+    'sandbox'?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShuttleEventRequestBody
+     */
+    'gateway'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShuttleEventRequestBody
+     */
+    'refund'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShuttleEventRequestBody
+     */
+    'charge'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShuttleEventRequestBody
+     */
+    'legal_entity_route'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShuttleEventRequestBody
+     */
+    'void'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShuttleEventRequestBody
+     */
+    'deprecated'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShuttleEventRequestBody
+     */
+    'deprecated_comment'?: string;
 }
 /**
  * 
  * @export
- * @enum {string}
+ * @interface Sms
  */
-
-export const RiskLevel = {
-    Low: 'LOW',
-    Moderate: 'MODERATE',
-    High: 'HIGH'
-} as const;
-
-export type RiskLevel = typeof RiskLevel[keyof typeof RiskLevel];
-
-
-/**
- * 
- * @export
- * @enum {string}
- */
-
-export const Service = {
-    Square: 'square',
-    Stripe: 'stripe'
-} as const;
-
-export type Service = typeof Service[keyof typeof Service];
-
-
-/**
- * 
- * @export
- * @enum {string}
- */
-
-export const SplitType = {
-    Equal: 'EQUAL',
-    ByItem: 'BY_ITEM',
-    Custom: 'CUSTOM'
-} as const;
-
-export type SplitType = typeof SplitType[keyof typeof SplitType];
-
-
-/**
- * 
- * @export
- * @interface Sublocality
- */
-export interface Sublocality {
+export interface Sms {
     /**
      * 
      * @type {string}
-     * @memberof Sublocality
-     */
-    'sublocality1': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Sublocality
-     */
-    'sublocality2'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Sublocality
-     */
-    'sublocality3'?: string;
-}
-/**
- * 
- * @export
- * @interface Tax
- */
-export interface Tax {
-    /**
-     * 
-     * @type {string}
-     * @memberof Tax
+     * @memberof Sms
      */
     'id': string;
     /**
      * 
      * @type {string}
-     * @memberof Tax
+     * @memberof Sms
      */
-    'code': string;
-    /**
-     * 
-     * @type {Money}
-     * @memberof Tax
-     */
-    'amountMoney': Money;
-}
-/**
- * 
- * @export
- * @interface TemplateEmailCreationParams
- */
-export interface TemplateEmailCreationParams {
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof TemplateEmailCreationParams
-     */
-    'to': Array<string>;
+    'referenceId'?: string;
     /**
      * 
      * @type {string}
-     * @memberof TemplateEmailCreationParams
+     * @memberof Sms
      */
-    'subject': string;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof TemplateEmailCreationParams
-     */
-    'cc'?: Array<string>;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof TemplateEmailCreationParams
-     */
-    'bcc'?: Array<string>;
-    /**
-     * 
-     * @type {Array<Attachment>}
-     * @memberof TemplateEmailCreationParams
-     */
-    'attachment'?: Array<Attachment>;
+    'from': string;
     /**
      * 
      * @type {string}
-     * @memberof TemplateEmailCreationParams
+     * @memberof Sms
      */
-    'html'?: string;
+    'to': string;
     /**
      * 
      * @type {string}
-     * @memberof TemplateEmailCreationParams
+     * @memberof Sms
      */
     'text'?: string;
     /**
-     * 
-     * @type {string}
-     * @memberof TemplateEmailCreationParams
-     */
-    'templateName': string;
-    /**
-     * 
+     * A Key-value object to hold additional data
      * @type {{ [key: string]: string; }}
-     * @memberof TemplateEmailCreationParams
+     * @memberof Sms
      */
-    'variables'?: { [key: string]: string; };
+    'metaData'?: { [key: string]: string; };
 }
 /**
  * 
  * @export
- * @interface TextEmailCreationParams
+ * @interface SmsCreationParams
  */
-export interface TextEmailCreationParams {
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof TextEmailCreationParams
-     */
-    'to': Array<string>;
+export interface SmsCreationParams {
     /**
      * 
      * @type {string}
-     * @memberof TextEmailCreationParams
+     * @memberof SmsCreationParams
      */
-    'subject': string;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof TextEmailCreationParams
-     */
-    'cc'?: Array<string>;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof TextEmailCreationParams
-     */
-    'bcc'?: Array<string>;
-    /**
-     * 
-     * @type {Array<Attachment>}
-     * @memberof TextEmailCreationParams
-     */
-    'attachment'?: Array<Attachment>;
+    'to': string;
     /**
      * 
      * @type {string}
-     * @memberof TextEmailCreationParams
+     * @memberof SmsCreationParams
      */
     'text': string;
+}
+/**
+ * Indicates what flow the group payment will take. EQUAL (The total amount is split evenly between each member of the group) BY_ITEM (Each member of the group pays for a selection of items) - (requires orderId to be provided) CUSTOM (Each member pays a selected amount of money)
+ * @export
+ * @enum {string}
+ */
+
+export enum SplitType {
+    EQUAL = 'EQUAL',
+    BY_ITEM = 'BY_ITEM',
+    CUSTOM = 'CUSTOM'
+}
+
+
+/**
+ * 
+ * @export
+ * @interface UpdateCustomerRequest
+ */
+export interface UpdateCustomerRequest {
     /**
      * 
      * @type {string}
-     * @memberof TextEmailCreationParams
+     * @memberof UpdateCustomerRequest
      */
-    'html'?: string;
+    'firstName'?: string;
     /**
      * 
      * @type {string}
-     * @memberof TextEmailCreationParams
+     * @memberof UpdateCustomerRequest
      */
-    'templateName'?: string;
+    'lastName'?: string;
+    /**
+     * Email address. See [RFC 5322](https://datatracker.ietf.org/doc/html/rfc5322)
+     * @type {string}
+     * @memberof UpdateCustomerRequest
+     */
+    'email'?: string;
     /**
      * 
+     * @type {string}
+     * @memberof UpdateCustomerRequest
+     */
+    'phoneNumber'?: string;
+    /**
+     * URL linking to a resource or website.
+     * @type {string}
+     * @memberof UpdateCustomerRequest
+     */
+    'avatarUrl'?: string;
+    /**
+     * 
+     * @type {Address}
+     * @memberof UpdateCustomerRequest
+     */
+    'address'?: Address;
+    /**
+     * 
+     * @type {Language}
+     * @memberof UpdateCustomerRequest
+     */
+    'language'?: Language;
+    /**
+     * A unique identifier set by a developer to help reconcile this object with any internal systems
+     * @type {string}
+     * @memberof UpdateCustomerRequest
+     */
+    'referenceId'?: string;
+    /**
+     * A Key-value object to hold additional data
      * @type {{ [key: string]: string; }}
-     * @memberof TextEmailCreationParams
+     * @memberof UpdateCustomerRequest
      */
-    'variables'?: { [key: string]: string; };
+    'metaData'?: { [key: string]: string; };
 }
-
 /**
- * AccountsApi - axios parameter creator
+ * 
  * @export
+ * @interface UpdateGroupPaymentRequest
  */
-export const AccountsApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * Supply an account JWT access token and delete the associated profile from it
-         * @summary Delete an account
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        _delete: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/accounts`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication account-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Create a Hands In account by supplying the necessary details
-         * @summary Create an account
-         * @param {AccountCreationParams} accountCreationParams 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        create: async (accountCreationParams: AccountCreationParams, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'accountCreationParams' is not null or undefined
-            assertParamExists('create', 'accountCreationParams', accountCreationParams)
-            const localVarPath = `/accounts`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(accountCreationParams, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Supply an account JWT access token and receive all profile data stored by Hands In
-         * @summary Retrieve account profile
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getProfile: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/accounts`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication account-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Supply an account JWT access token and retrieve the all the applications that are connected to this account
-         * @summary List connected account applications
-         * @param {string} [appName] 
-         * @param {number} [pageNum] 
-         * @param {number} [pageSize] 
-         * @param {number} [limit] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listApplications: async (appName?: string, pageNum?: number, pageSize?: number, limit?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/accounts/applications`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication account-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-            if (appName !== undefined) {
-                localVarQueryParameter['appName'] = appName;
-            }
-
-            if (pageNum !== undefined) {
-                localVarQueryParameter['pageNum'] = pageNum;
-            }
-
-            if (pageSize !== undefined) {
-                localVarQueryParameter['pageSize'] = pageSize;
-            }
-
-            if (limit !== undefined) {
-                localVarQueryParameter['limit'] = limit;
-            }
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * AccountsApi - functional programming interface
- * @export
- */
-export const AccountsApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = AccountsApiAxiosParamCreator(configuration)
-    return {
-        /**
-         * Supply an account JWT access token and delete the associated profile from it
-         * @summary Delete an account
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async _delete(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator._delete(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * Create a Hands In account by supplying the necessary details
-         * @summary Create an account
-         * @param {AccountCreationParams} accountCreationParams 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async create(accountCreationParams: AccountCreationParams, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccountDTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.create(accountCreationParams, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * Supply an account JWT access token and receive all profile data stored by Hands In
-         * @summary Retrieve account profile
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getProfile(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccountDTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getProfile(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * Supply an account JWT access token and retrieve the all the applications that are connected to this account
-         * @summary List connected account applications
-         * @param {string} [appName] 
-         * @param {number} [pageNum] 
-         * @param {number} [pageSize] 
-         * @param {number} [limit] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async listApplications(appName?: string, pageNum?: number, pageSize?: number, limit?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<AccountApp>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listApplications(appName, pageNum, pageSize, limit, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-    }
-};
-
-/**
- * AccountsApi - factory interface
- * @export
- */
-export const AccountsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = AccountsApiFp(configuration)
-    return {
-        /**
-         * Supply an account JWT access token and delete the associated profile from it
-         * @summary Delete an account
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        _delete(options?: any): AxiosPromise<void> {
-            return localVarFp._delete(options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Create a Hands In account by supplying the necessary details
-         * @summary Create an account
-         * @param {AccountCreationParams} accountCreationParams 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        create(accountCreationParams: AccountCreationParams, options?: any): AxiosPromise<AccountDTO> {
-            return localVarFp.create(accountCreationParams, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Supply an account JWT access token and receive all profile data stored by Hands In
-         * @summary Retrieve account profile
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getProfile(options?: any): AxiosPromise<AccountDTO> {
-            return localVarFp.getProfile(options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Supply an account JWT access token and retrieve the all the applications that are connected to this account
-         * @summary List connected account applications
-         * @param {string} [appName] 
-         * @param {number} [pageNum] 
-         * @param {number} [pageSize] 
-         * @param {number} [limit] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listApplications(appName?: string, pageNum?: number, pageSize?: number, limit?: number, options?: any): AxiosPromise<Array<AccountApp>> {
-            return localVarFp.listApplications(appName, pageNum, pageSize, limit, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * AccountsApi - object-oriented interface
- * @export
- * @class AccountsApi
- * @extends {BaseAPI}
- */
-export class AccountsApi extends BaseAPI {
+export interface UpdateGroupPaymentRequest {
     /**
-     * Supply an account JWT access token and delete the associated profile from it
-     * @summary Delete an account
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AccountsApi
+     * A unique identifier for the order object.
+     * @type {string}
+     * @memberof UpdateGroupPaymentRequest
      */
-    public _delete(options?: AxiosRequestConfig) {
-        return AccountsApiFp(this.configuration)._delete(options).then((request) => request(this.axios, this.basePath));
-    }
-
+    'orderId'?: string;
     /**
-     * Create a Hands In account by supplying the necessary details
-     * @summary Create an account
-     * @param {AccountCreationParams} accountCreationParams 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AccountsApi
+     * A unique identifier for the checkout session object.
+     * @type {string}
+     * @memberof UpdateGroupPaymentRequest
      */
-    public create(accountCreationParams: AccountCreationParams, options?: AxiosRequestConfig) {
-        return AccountsApiFp(this.configuration).create(accountCreationParams, options).then((request) => request(this.axios, this.basePath));
-    }
-
+    'checkoutId'?: string;
     /**
-     * Supply an account JWT access token and receive all profile data stored by Hands In
-     * @summary Retrieve account profile
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AccountsApi
+     * If group payment splitType is not BY_ITEM this flag is ignored. If the splitType is BY_ITEM then when this flag is true, the order will be fixed for every member that joins. e.g. if there is 1 ticket in the order, and 3 people join the group, the ticket quantity increases to 3, and they will each be allocated a single ticket to pay for
+     * @type {boolean}
+     * @memberof UpdateGroupPaymentRequest
      */
-    public getProfile(options?: AxiosRequestConfig) {
-        return AccountsApiFp(this.configuration).getProfile(options).then((request) => request(this.axios, this.basePath));
-    }
-
+    'fixedPricePerPerson'?: boolean;
     /**
-     * Supply an account JWT access token and retrieve the all the applications that are connected to this account
-     * @summary List connected account applications
-     * @param {string} [appName] 
-     * @param {number} [pageNum] 
-     * @param {number} [pageSize] 
-     * @param {number} [limit] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AccountsApi
+     * 
+     * @type {SplitType}
+     * @memberof UpdateGroupPaymentRequest
      */
-    public listApplications(appName?: string, pageNum?: number, pageSize?: number, limit?: number, options?: AxiosRequestConfig) {
-        return AccountsApiFp(this.configuration).listApplications(appName, pageNum, pageSize, limit, options).then((request) => request(this.axios, this.basePath));
-    }
+    'splitType'?: SplitType;
+    /**
+     * This field is no longer supported
+     * @type {Array<string>}
+     * @memberof UpdateGroupPaymentRequest
+     * @deprecated
+     */
+    'createdMemberIds'?: Array<string>;
+    /**
+     * 
+     * @type {Money}
+     * @memberof UpdateGroupPaymentRequest
+     */
+    'amountMoney'?: Money;
+    /**
+     * 
+     * @type {number}
+     * @memberof UpdateGroupPaymentRequest
+     */
+    'splitAllocation'?: number;
+    /**
+     * Requires splitType to be CUSTOM. Contains a mapping from customers to their share of the total amount. {customerId -> money}
+     * @type {{ [key: string]: Money; }}
+     * @memberof UpdateGroupPaymentRequest
+     * @deprecated
+     */
+    'customAllocation'?: { [key: string]: Money; };
+    /**
+     * Requires splitType to be BY_ITEM. Contains a mapping from customers to the items they have selected  to pay for. {customerId -> items[]}
+     * @type {{ [key: string]: Array<AllocatedItem>; }}
+     * @memberof UpdateGroupPaymentRequest
+     */
+    'itemAllocation'?: { [key: string]: Array<AllocatedItem>; };
+    /**
+     * 
+     * @type {Address}
+     * @memberof UpdateGroupPaymentRequest
+     */
+    'shippingAddress'?: Address;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateGroupPaymentRequest
+     */
+    'message'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateGroupPaymentRequest
+     */
+    'statementDescriptionIdentifier'?: string;
+    /**
+     * This field should no longer be used
+     * @type {boolean}
+     * @memberof UpdateGroupPaymentRequest
+     * @deprecated
+     */
+    'createdByMerchant'?: boolean;
+    /**
+     * A unique identifier set by a developer to help reconcile this object with any internal systems
+     * @type {string}
+     * @memberof UpdateGroupPaymentRequest
+     */
+    'referenceId'?: string;
+    /**
+     * A Key-value object to hold additional data
+     * @type {{ [key: string]: string; }}
+     * @memberof UpdateGroupPaymentRequest
+     */
+    'metaData'?: { [key: string]: string; };
 }
-
-
-/**
- * AuthenticationApi - axios parameter creator
- * @export
- */
-export const AuthenticationApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * Supply an email and password to recieve a JWT token which gives acts as an identification token for all resources hosted by Hands In
-         * @summary Login to your Hands In account
-         * @param {LoginParams} loginParams 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        login: async (loginParams: LoginParams, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'loginParams' is not null or undefined
-            assertParamExists('login', 'loginParams', loginParams)
-            const localVarPath = `/authentication/login`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(loginParams, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Requesting a password reset will email a link to the account enabling them to reset their password
-         * @summary Create a reset password request
-         * @param {RequestResetParams} requestResetParams 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        requestPasswordReset: async (requestResetParams: RequestResetParams, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'requestResetParams' is not null or undefined
-            assertParamExists('requestPasswordReset', 'requestResetParams', requestResetParams)
-            const localVarPath = `/authentication/request-reset`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(requestResetParams, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Reset account password
-         * @summary Reset password
-         * @param {string} resetToken 
-         * @param {PasswordResetParams} passwordResetParams 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        resetPassword: async (resetToken: string, passwordResetParams: PasswordResetParams, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'resetToken' is not null or undefined
-            assertParamExists('resetPassword', 'resetToken', resetToken)
-            // verify required parameter 'passwordResetParams' is not null or undefined
-            assertParamExists('resetPassword', 'passwordResetParams', passwordResetParams)
-            const localVarPath = `/authentication/reset`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (resetToken !== undefined) {
-                localVarQueryParameter['resetToken'] = resetToken;
-            }
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(passwordResetParams, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * AuthenticationApi - functional programming interface
- * @export
- */
-export const AuthenticationApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = AuthenticationApiAxiosParamCreator(configuration)
-    return {
-        /**
-         * Supply an email and password to recieve a JWT token which gives acts as an identification token for all resources hosted by Hands In
-         * @summary Login to your Hands In account
-         * @param {LoginParams} loginParams 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async login(loginParams: LoginParams, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OAuthTokenResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.login(loginParams, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * Requesting a password reset will email a link to the account enabling them to reset their password
-         * @summary Create a reset password request
-         * @param {RequestResetParams} requestResetParams 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async requestPasswordReset(requestResetParams: RequestResetParams, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OAuthTokenResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.requestPasswordReset(requestResetParams, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * Reset account password
-         * @summary Reset password
-         * @param {string} resetToken 
-         * @param {PasswordResetParams} passwordResetParams 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async resetPassword(resetToken: string, passwordResetParams: PasswordResetParams, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.resetPassword(resetToken, passwordResetParams, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-    }
-};
-
-/**
- * AuthenticationApi - factory interface
- * @export
- */
-export const AuthenticationApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = AuthenticationApiFp(configuration)
-    return {
-        /**
-         * Supply an email and password to recieve a JWT token which gives acts as an identification token for all resources hosted by Hands In
-         * @summary Login to your Hands In account
-         * @param {LoginParams} loginParams 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        login(loginParams: LoginParams, options?: any): AxiosPromise<OAuthTokenResponse> {
-            return localVarFp.login(loginParams, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Requesting a password reset will email a link to the account enabling them to reset their password
-         * @summary Create a reset password request
-         * @param {RequestResetParams} requestResetParams 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        requestPasswordReset(requestResetParams: RequestResetParams, options?: any): AxiosPromise<OAuthTokenResponse> {
-            return localVarFp.requestPasswordReset(requestResetParams, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Reset account password
-         * @summary Reset password
-         * @param {string} resetToken 
-         * @param {PasswordResetParams} passwordResetParams 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        resetPassword(resetToken: string, passwordResetParams: PasswordResetParams, options?: any): AxiosPromise<void> {
-            return localVarFp.resetPassword(resetToken, passwordResetParams, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * AuthenticationApi - object-oriented interface
- * @export
- * @class AuthenticationApi
- * @extends {BaseAPI}
- */
-export class AuthenticationApi extends BaseAPI {
-    /**
-     * Supply an email and password to recieve a JWT token which gives acts as an identification token for all resources hosted by Hands In
-     * @summary Login to your Hands In account
-     * @param {LoginParams} loginParams 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AuthenticationApi
-     */
-    public login(loginParams: LoginParams, options?: AxiosRequestConfig) {
-        return AuthenticationApiFp(this.configuration).login(loginParams, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Requesting a password reset will email a link to the account enabling them to reset their password
-     * @summary Create a reset password request
-     * @param {RequestResetParams} requestResetParams 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AuthenticationApi
-     */
-    public requestPasswordReset(requestResetParams: RequestResetParams, options?: AxiosRequestConfig) {
-        return AuthenticationApiFp(this.configuration).requestPasswordReset(requestResetParams, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Reset account password
-     * @summary Reset password
-     * @param {string} resetToken 
-     * @param {PasswordResetParams} passwordResetParams 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AuthenticationApi
-     */
-    public resetPassword(resetToken: string, passwordResetParams: PasswordResetParams, options?: AxiosRequestConfig) {
-        return AuthenticationApiFp(this.configuration).resetPassword(resetToken, passwordResetParams, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
 
 /**
  * CheckoutsApi - axios parameter creator
@@ -5566,13 +4243,13 @@ export const CheckoutsApiAxiosParamCreator = function (configuration?: Configura
         /**
          * Create a checkout session by supplying the correct parameters. When a customer pays on the checkout session an order will be created.
          * @summary Create a checkout session
-         * @param {CheckoutSessionCreationParams} checkoutSessionCreationParams 
+         * @param {CheckoutCreateRequest} checkoutCreateRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createCheckout: async (checkoutSessionCreationParams: CheckoutSessionCreationParams, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'checkoutSessionCreationParams' is not null or undefined
-            assertParamExists('createCheckout', 'checkoutSessionCreationParams', checkoutSessionCreationParams)
+        createCheckout: async (checkoutCreateRequest: CheckoutCreateRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'checkoutCreateRequest' is not null or undefined
+            assertParamExists('createCheckout', 'checkoutCreateRequest', checkoutCreateRequest)
             const localVarPath = `/checkouts`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -5588,10 +4265,6 @@ export const CheckoutsApiAxiosParamCreator = function (configuration?: Configura
             // authentication merchant-api-key required
             await setApiKeyToObject(localVarHeaderParameter, "x-api-key", configuration)
 
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
 
     
             localVarHeaderParameter['Content-Type'] = 'application/json';
@@ -5599,7 +4272,7 @@ export const CheckoutsApiAxiosParamCreator = function (configuration?: Configura
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(checkoutSessionCreationParams, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(checkoutCreateRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -5632,10 +4305,6 @@ export const CheckoutsApiAxiosParamCreator = function (configuration?: Configura
             // authentication merchant-api-key required
             await setApiKeyToObject(localVarHeaderParameter, "x-api-key", configuration)
 
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -5650,13 +4319,14 @@ export const CheckoutsApiAxiosParamCreator = function (configuration?: Configura
         /**
          * Retrieve a list of checkout sessions by supplying the correct parameters.
          * @summary List all checkout sessions
-         * @param {number} [pageNum] 
+         * @param {string} [startKey] 
+         * @param {any} [orderBy] 
+         * @param {OrderType} [orderType] 
          * @param {number} [pageSize] 
-         * @param {number} [limit] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listCheckouts: async (pageNum?: number, pageSize?: number, limit?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        listCheckouts: async (startKey?: string, orderBy?: any, orderType?: OrderType, pageSize?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/checkouts`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -5672,20 +4342,20 @@ export const CheckoutsApiAxiosParamCreator = function (configuration?: Configura
             // authentication merchant-api-key required
             await setApiKeyToObject(localVarHeaderParameter, "x-api-key", configuration)
 
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+            if (startKey !== undefined) {
+                localVarQueryParameter['startKey'] = startKey;
+            }
 
-            if (pageNum !== undefined) {
-                localVarQueryParameter['pageNum'] = pageNum;
+            if (orderBy !== undefined) {
+                localVarQueryParameter['orderBy'] = orderBy;
+            }
+
+            if (orderType !== undefined) {
+                localVarQueryParameter['orderType'] = orderType;
             }
 
             if (pageSize !== undefined) {
                 localVarQueryParameter['pageSize'] = pageSize;
-            }
-
-            if (limit !== undefined) {
-                localVarQueryParameter['limit'] = limit;
             }
 
 
@@ -5703,15 +4373,15 @@ export const CheckoutsApiAxiosParamCreator = function (configuration?: Configura
          * Update a checkout session by supplying the correct parameters.
          * @summary Update a checkout session
          * @param {string} checkoutId 
-         * @param {CheckoutSessionCreationParams} checkoutSessionCreationParams 
+         * @param {CheckoutUpdateRequest} checkoutUpdateRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateCheckout: async (checkoutId: string, checkoutSessionCreationParams: CheckoutSessionCreationParams, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        updateCheckout: async (checkoutId: string, checkoutUpdateRequest: CheckoutUpdateRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'checkoutId' is not null or undefined
             assertParamExists('updateCheckout', 'checkoutId', checkoutId)
-            // verify required parameter 'checkoutSessionCreationParams' is not null or undefined
-            assertParamExists('updateCheckout', 'checkoutSessionCreationParams', checkoutSessionCreationParams)
+            // verify required parameter 'checkoutUpdateRequest' is not null or undefined
+            assertParamExists('updateCheckout', 'checkoutUpdateRequest', checkoutUpdateRequest)
             const localVarPath = `/checkouts/{checkoutId}`
                 .replace(`{${"checkoutId"}}`, encodeURIComponent(String(checkoutId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -5728,10 +4398,6 @@ export const CheckoutsApiAxiosParamCreator = function (configuration?: Configura
             // authentication merchant-api-key required
             await setApiKeyToObject(localVarHeaderParameter, "x-api-key", configuration)
 
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
 
     
             localVarHeaderParameter['Content-Type'] = 'application/json';
@@ -5739,7 +4405,7 @@ export const CheckoutsApiAxiosParamCreator = function (configuration?: Configura
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(checkoutSessionCreationParams, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(checkoutUpdateRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -5759,12 +4425,12 @@ export const CheckoutsApiFp = function(configuration?: Configuration) {
         /**
          * Create a checkout session by supplying the correct parameters. When a customer pays on the checkout session an order will be created.
          * @summary Create a checkout session
-         * @param {CheckoutSessionCreationParams} checkoutSessionCreationParams 
+         * @param {CheckoutCreateRequest} checkoutCreateRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createCheckout(checkoutSessionCreationParams: CheckoutSessionCreationParams, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CheckoutSession>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createCheckout(checkoutSessionCreationParams, options);
+        async createCheckout(checkoutCreateRequest: CheckoutCreateRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Checkout>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createCheckout(checkoutCreateRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -5774,33 +4440,34 @@ export const CheckoutsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getCheckout(checkoutId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CheckoutSession>> {
+        async getCheckout(checkoutId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Checkout>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getCheckout(checkoutId, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * Retrieve a list of checkout sessions by supplying the correct parameters.
          * @summary List all checkout sessions
-         * @param {number} [pageNum] 
+         * @param {string} [startKey] 
+         * @param {any} [orderBy] 
+         * @param {OrderType} [orderType] 
          * @param {number} [pageSize] 
-         * @param {number} [limit] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listCheckouts(pageNum?: number, pageSize?: number, limit?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<CheckoutSession>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listCheckouts(pageNum, pageSize, limit, options);
+        async listCheckouts(startKey?: string, orderBy?: any, orderType?: OrderType, pageSize?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Checkout>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listCheckouts(startKey, orderBy, orderType, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * Update a checkout session by supplying the correct parameters.
          * @summary Update a checkout session
          * @param {string} checkoutId 
-         * @param {CheckoutSessionCreationParams} checkoutSessionCreationParams 
+         * @param {CheckoutUpdateRequest} checkoutUpdateRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updateCheckout(checkoutId: string, checkoutSessionCreationParams: CheckoutSessionCreationParams, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CheckoutSession>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateCheckout(checkoutId, checkoutSessionCreationParams, options);
+        async updateCheckout(checkoutId: string, checkoutUpdateRequest: CheckoutUpdateRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Checkout>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateCheckout(checkoutId, checkoutUpdateRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -5816,12 +4483,12 @@ export const CheckoutsApiFactory = function (configuration?: Configuration, base
         /**
          * Create a checkout session by supplying the correct parameters. When a customer pays on the checkout session an order will be created.
          * @summary Create a checkout session
-         * @param {CheckoutSessionCreationParams} checkoutSessionCreationParams 
+         * @param {CheckoutCreateRequest} checkoutCreateRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createCheckout(checkoutSessionCreationParams: CheckoutSessionCreationParams, options?: any): AxiosPromise<CheckoutSession> {
-            return localVarFp.createCheckout(checkoutSessionCreationParams, options).then((request) => request(axios, basePath));
+        createCheckout(checkoutCreateRequest: CheckoutCreateRequest, options?: any): AxiosPromise<Checkout> {
+            return localVarFp.createCheckout(checkoutCreateRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * Supply the unique dispute ID and receive corresponding checkout details.
@@ -5830,31 +4497,32 @@ export const CheckoutsApiFactory = function (configuration?: Configuration, base
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getCheckout(checkoutId: string, options?: any): AxiosPromise<CheckoutSession> {
+        getCheckout(checkoutId: string, options?: any): AxiosPromise<Checkout> {
             return localVarFp.getCheckout(checkoutId, options).then((request) => request(axios, basePath));
         },
         /**
          * Retrieve a list of checkout sessions by supplying the correct parameters.
          * @summary List all checkout sessions
-         * @param {number} [pageNum] 
+         * @param {string} [startKey] 
+         * @param {any} [orderBy] 
+         * @param {OrderType} [orderType] 
          * @param {number} [pageSize] 
-         * @param {number} [limit] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listCheckouts(pageNum?: number, pageSize?: number, limit?: number, options?: any): AxiosPromise<Array<CheckoutSession>> {
-            return localVarFp.listCheckouts(pageNum, pageSize, limit, options).then((request) => request(axios, basePath));
+        listCheckouts(startKey?: string, orderBy?: any, orderType?: OrderType, pageSize?: number, options?: any): AxiosPromise<Array<Checkout>> {
+            return localVarFp.listCheckouts(startKey, orderBy, orderType, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
          * Update a checkout session by supplying the correct parameters.
          * @summary Update a checkout session
          * @param {string} checkoutId 
-         * @param {CheckoutSessionCreationParams} checkoutSessionCreationParams 
+         * @param {CheckoutUpdateRequest} checkoutUpdateRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateCheckout(checkoutId: string, checkoutSessionCreationParams: CheckoutSessionCreationParams, options?: any): AxiosPromise<CheckoutSession> {
-            return localVarFp.updateCheckout(checkoutId, checkoutSessionCreationParams, options).then((request) => request(axios, basePath));
+        updateCheckout(checkoutId: string, checkoutUpdateRequest: CheckoutUpdateRequest, options?: any): AxiosPromise<Checkout> {
+            return localVarFp.updateCheckout(checkoutId, checkoutUpdateRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -5869,13 +4537,13 @@ export class CheckoutsApi extends BaseAPI {
     /**
      * Create a checkout session by supplying the correct parameters. When a customer pays on the checkout session an order will be created.
      * @summary Create a checkout session
-     * @param {CheckoutSessionCreationParams} checkoutSessionCreationParams 
+     * @param {CheckoutCreateRequest} checkoutCreateRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CheckoutsApi
      */
-    public createCheckout(checkoutSessionCreationParams: CheckoutSessionCreationParams, options?: AxiosRequestConfig) {
-        return CheckoutsApiFp(this.configuration).createCheckout(checkoutSessionCreationParams, options).then((request) => request(this.axios, this.basePath));
+    public createCheckout(checkoutCreateRequest: CheckoutCreateRequest, options?: AxiosRequestConfig) {
+        return CheckoutsApiFp(this.configuration).createCheckout(checkoutCreateRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -5893,28 +4561,29 @@ export class CheckoutsApi extends BaseAPI {
     /**
      * Retrieve a list of checkout sessions by supplying the correct parameters.
      * @summary List all checkout sessions
-     * @param {number} [pageNum] 
+     * @param {string} [startKey] 
+     * @param {any} [orderBy] 
+     * @param {OrderType} [orderType] 
      * @param {number} [pageSize] 
-     * @param {number} [limit] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CheckoutsApi
      */
-    public listCheckouts(pageNum?: number, pageSize?: number, limit?: number, options?: AxiosRequestConfig) {
-        return CheckoutsApiFp(this.configuration).listCheckouts(pageNum, pageSize, limit, options).then((request) => request(this.axios, this.basePath));
+    public listCheckouts(startKey?: string, orderBy?: any, orderType?: OrderType, pageSize?: number, options?: AxiosRequestConfig) {
+        return CheckoutsApiFp(this.configuration).listCheckouts(startKey, orderBy, orderType, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * Update a checkout session by supplying the correct parameters.
      * @summary Update a checkout session
      * @param {string} checkoutId 
-     * @param {CheckoutSessionCreationParams} checkoutSessionCreationParams 
+     * @param {CheckoutUpdateRequest} checkoutUpdateRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CheckoutsApi
      */
-    public updateCheckout(checkoutId: string, checkoutSessionCreationParams: CheckoutSessionCreationParams, options?: AxiosRequestConfig) {
-        return CheckoutsApiFp(this.configuration).updateCheckout(checkoutId, checkoutSessionCreationParams, options).then((request) => request(this.axios, this.basePath));
+    public updateCheckout(checkoutId: string, checkoutUpdateRequest: CheckoutUpdateRequest, options?: AxiosRequestConfig) {
+        return CheckoutsApiFp(this.configuration).updateCheckout(checkoutId, checkoutUpdateRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -5928,13 +4597,13 @@ export const CustomersApiAxiosParamCreator = function (configuration?: Configura
         /**
          * 
          * @summary Create a Customer
-         * @param {CustomerCreationParams} customerCreationParams 
+         * @param {CreateCustomerRequest} createCustomerRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createCustomer: async (customerCreationParams: CustomerCreationParams, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'customerCreationParams' is not null or undefined
-            assertParamExists('createCustomer', 'customerCreationParams', customerCreationParams)
+        createCustomer: async (createCustomerRequest: CreateCustomerRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'createCustomerRequest' is not null or undefined
+            assertParamExists('createCustomer', 'createCustomerRequest', createCustomerRequest)
             const localVarPath = `/customers`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -5950,10 +4619,6 @@ export const CustomersApiAxiosParamCreator = function (configuration?: Configura
             // authentication merchant-api-key required
             await setApiKeyToObject(localVarHeaderParameter, "x-api-key", configuration)
 
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
 
     
             localVarHeaderParameter['Content-Type'] = 'application/json';
@@ -5961,7 +4626,7 @@ export const CustomersApiAxiosParamCreator = function (configuration?: Configura
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(customerCreationParams, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(createCustomerRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -5994,10 +4659,6 @@ export const CustomersApiAxiosParamCreator = function (configuration?: Configura
             // authentication merchant-api-key required
             await setApiKeyToObject(localVarHeaderParameter, "x-api-key", configuration)
 
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -6010,7 +4671,7 @@ export const CustomersApiAxiosParamCreator = function (configuration?: Configura
             };
         },
         /**
-         * Supply the unique customer ID and recieve the corresponding customer.
+         * Supply a customer identifier to get the corresponding customer object.
          * @summary Retrieve a customer
          * @param {string} customerId 
          * @param {*} [options] Override http request option.
@@ -6035,15 +4696,107 @@ export const CustomersApiAxiosParamCreator = function (configuration?: Configura
             // authentication merchant-api-key required
             await setApiKeyToObject(localVarHeaderParameter, "x-api-key", configuration)
 
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Find customers that match the provided queries
+         * @summary List customers
+         * @param {string} [startKey] 
+         * @param {any} [orderBy] 
+         * @param {OrderType} [orderType] 
+         * @param {number} [pageSize] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listCustomers: async (startKey?: string, orderBy?: any, orderType?: OrderType, pageSize?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/customers`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication merchant-api-key required
+            await setApiKeyToObject(localVarHeaderParameter, "x-api-key", configuration)
+
+            if (startKey !== undefined) {
+                localVarQueryParameter['startKey'] = startKey;
+            }
+
+            if (orderBy !== undefined) {
+                localVarQueryParameter['orderBy'] = orderBy;
+            }
+
+            if (orderType !== undefined) {
+                localVarQueryParameter['orderType'] = orderType;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['pageSize'] = pageSize;
+            }
 
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Update a Customer
+         * @param {string} customerId 
+         * @param {UpdateCustomerRequest} updateCustomerRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateCustomer: async (customerId: string, updateCustomerRequest: UpdateCustomerRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'customerId' is not null or undefined
+            assertParamExists('updateCustomer', 'customerId', customerId)
+            // verify required parameter 'updateCustomerRequest' is not null or undefined
+            assertParamExists('updateCustomer', 'updateCustomerRequest', updateCustomerRequest)
+            const localVarPath = `/customers/{customerId}`
+                .replace(`{${"customerId"}}`, encodeURIComponent(String(customerId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication merchant-api-key required
+            await setApiKeyToObject(localVarHeaderParameter, "x-api-key", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(updateCustomerRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -6063,12 +4816,12 @@ export const CustomersApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Create a Customer
-         * @param {CustomerCreationParams} customerCreationParams 
+         * @param {CreateCustomerRequest} createCustomerRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createCustomer(customerCreationParams: CustomerCreationParams, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Customer>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createCustomer(customerCreationParams, options);
+        async createCustomer(createCustomerRequest: CreateCustomerRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Customer>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createCustomer(createCustomerRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -6083,7 +4836,7 @@ export const CustomersApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Supply the unique customer ID and recieve the corresponding customer.
+         * Supply a customer identifier to get the corresponding customer object.
          * @summary Retrieve a customer
          * @param {string} customerId 
          * @param {*} [options] Override http request option.
@@ -6091,6 +4844,32 @@ export const CustomersApiFp = function(configuration?: Configuration) {
          */
         async getCustomer(customerId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Customer>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getCustomer(customerId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Find customers that match the provided queries
+         * @summary List customers
+         * @param {string} [startKey] 
+         * @param {any} [orderBy] 
+         * @param {OrderType} [orderType] 
+         * @param {number} [pageSize] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listCustomers(startKey?: string, orderBy?: any, orderType?: OrderType, pageSize?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Customer>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listCustomers(startKey, orderBy, orderType, pageSize, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Update a Customer
+         * @param {string} customerId 
+         * @param {UpdateCustomerRequest} updateCustomerRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateCustomer(customerId: string, updateCustomerRequest: UpdateCustomerRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Customer>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateCustomer(customerId, updateCustomerRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -6106,12 +4885,12 @@ export const CustomersApiFactory = function (configuration?: Configuration, base
         /**
          * 
          * @summary Create a Customer
-         * @param {CustomerCreationParams} customerCreationParams 
+         * @param {CreateCustomerRequest} createCustomerRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createCustomer(customerCreationParams: CustomerCreationParams, options?: any): AxiosPromise<Customer> {
-            return localVarFp.createCustomer(customerCreationParams, options).then((request) => request(axios, basePath));
+        createCustomer(createCustomerRequest: CreateCustomerRequest, options?: any): AxiosPromise<Customer> {
+            return localVarFp.createCustomer(createCustomerRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -6124,7 +4903,7 @@ export const CustomersApiFactory = function (configuration?: Configuration, base
             return localVarFp.deleteCustomer(customerId, options).then((request) => request(axios, basePath));
         },
         /**
-         * Supply the unique customer ID and recieve the corresponding customer.
+         * Supply a customer identifier to get the corresponding customer object.
          * @summary Retrieve a customer
          * @param {string} customerId 
          * @param {*} [options] Override http request option.
@@ -6132,6 +4911,30 @@ export const CustomersApiFactory = function (configuration?: Configuration, base
          */
         getCustomer(customerId: string, options?: any): AxiosPromise<Customer> {
             return localVarFp.getCustomer(customerId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Find customers that match the provided queries
+         * @summary List customers
+         * @param {string} [startKey] 
+         * @param {any} [orderBy] 
+         * @param {OrderType} [orderType] 
+         * @param {number} [pageSize] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listCustomers(startKey?: string, orderBy?: any, orderType?: OrderType, pageSize?: number, options?: any): AxiosPromise<Array<Customer>> {
+            return localVarFp.listCustomers(startKey, orderBy, orderType, pageSize, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Update a Customer
+         * @param {string} customerId 
+         * @param {UpdateCustomerRequest} updateCustomerRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateCustomer(customerId: string, updateCustomerRequest: UpdateCustomerRequest, options?: any): AxiosPromise<Customer> {
+            return localVarFp.updateCustomer(customerId, updateCustomerRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -6146,13 +4949,13 @@ export class CustomersApi extends BaseAPI {
     /**
      * 
      * @summary Create a Customer
-     * @param {CustomerCreationParams} customerCreationParams 
+     * @param {CreateCustomerRequest} createCustomerRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CustomersApi
      */
-    public createCustomer(customerCreationParams: CustomerCreationParams, options?: AxiosRequestConfig) {
-        return CustomersApiFp(this.configuration).createCustomer(customerCreationParams, options).then((request) => request(this.axios, this.basePath));
+    public createCustomer(createCustomerRequest: CreateCustomerRequest, options?: AxiosRequestConfig) {
+        return CustomersApiFp(this.configuration).createCustomer(createCustomerRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -6168,7 +4971,7 @@ export class CustomersApi extends BaseAPI {
     }
 
     /**
-     * Supply the unique customer ID and recieve the corresponding customer.
+     * Supply a customer identifier to get the corresponding customer object.
      * @summary Retrieve a customer
      * @param {string} customerId 
      * @param {*} [options] Override http request option.
@@ -6178,275 +4981,33 @@ export class CustomersApi extends BaseAPI {
     public getCustomer(customerId: string, options?: AxiosRequestConfig) {
         return CustomersApiFp(this.configuration).getCustomer(customerId, options).then((request) => request(this.axios, this.basePath));
     }
-}
-
-
-/**
- * EmailsApi - axios parameter creator
- * @export
- */
-export const EmailsApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * Retrieve email details given the email ID
-         * @summary Retrieve an email
-         * @param {string} emailId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getEmail: async (emailId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'emailId' is not null or undefined
-            assertParamExists('getEmail', 'emailId', emailId)
-            const localVarPath = `/emails/{emailId}`
-                .replace(`{${"emailId"}}`, encodeURIComponent(String(emailId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication account-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Retrieve a list of emails given the required parameters
-         * @summary List emails
-         * @param {number} [pageNum] 
-         * @param {number} [pageSize] 
-         * @param {number} [limit] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listEmails: async (pageNum?: number, pageSize?: number, limit?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/emails`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication account-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-            if (pageNum !== undefined) {
-                localVarQueryParameter['pageNum'] = pageNum;
-            }
-
-            if (pageSize !== undefined) {
-                localVarQueryParameter['pageSize'] = pageSize;
-            }
-
-            if (limit !== undefined) {
-                localVarQueryParameter['limit'] = limit;
-            }
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Send an email from handsin by providing the parameters
-         * @summary Send an email
-         * @param {EmailCreationParams} emailCreationParams 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        sendEmail: async (emailCreationParams: EmailCreationParams, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'emailCreationParams' is not null or undefined
-            assertParamExists('sendEmail', 'emailCreationParams', emailCreationParams)
-            const localVarPath = `/emails`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication account-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(emailCreationParams, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * EmailsApi - functional programming interface
- * @export
- */
-export const EmailsApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = EmailsApiAxiosParamCreator(configuration)
-    return {
-        /**
-         * Retrieve email details given the email ID
-         * @summary Retrieve an email
-         * @param {string} emailId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getEmail(emailId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Email>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getEmail(emailId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * Retrieve a list of emails given the required parameters
-         * @summary List emails
-         * @param {number} [pageNum] 
-         * @param {number} [pageSize] 
-         * @param {number} [limit] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async listEmails(pageNum?: number, pageSize?: number, limit?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Email>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listEmails(pageNum, pageSize, limit, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * Send an email from handsin by providing the parameters
-         * @summary Send an email
-         * @param {EmailCreationParams} emailCreationParams 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async sendEmail(emailCreationParams: EmailCreationParams, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Email>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.sendEmail(emailCreationParams, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-    }
-};
-
-/**
- * EmailsApi - factory interface
- * @export
- */
-export const EmailsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = EmailsApiFp(configuration)
-    return {
-        /**
-         * Retrieve email details given the email ID
-         * @summary Retrieve an email
-         * @param {string} emailId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getEmail(emailId: string, options?: any): AxiosPromise<Email> {
-            return localVarFp.getEmail(emailId, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Retrieve a list of emails given the required parameters
-         * @summary List emails
-         * @param {number} [pageNum] 
-         * @param {number} [pageSize] 
-         * @param {number} [limit] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listEmails(pageNum?: number, pageSize?: number, limit?: number, options?: any): AxiosPromise<Array<Email>> {
-            return localVarFp.listEmails(pageNum, pageSize, limit, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Send an email from handsin by providing the parameters
-         * @summary Send an email
-         * @param {EmailCreationParams} emailCreationParams 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        sendEmail(emailCreationParams: EmailCreationParams, options?: any): AxiosPromise<Email> {
-            return localVarFp.sendEmail(emailCreationParams, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * EmailsApi - object-oriented interface
- * @export
- * @class EmailsApi
- * @extends {BaseAPI}
- */
-export class EmailsApi extends BaseAPI {
-    /**
-     * Retrieve email details given the email ID
-     * @summary Retrieve an email
-     * @param {string} emailId 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof EmailsApi
-     */
-    public getEmail(emailId: string, options?: AxiosRequestConfig) {
-        return EmailsApiFp(this.configuration).getEmail(emailId, options).then((request) => request(this.axios, this.basePath));
-    }
 
     /**
-     * Retrieve a list of emails given the required parameters
-     * @summary List emails
-     * @param {number} [pageNum] 
+     * Find customers that match the provided queries
+     * @summary List customers
+     * @param {string} [startKey] 
+     * @param {any} [orderBy] 
+     * @param {OrderType} [orderType] 
      * @param {number} [pageSize] 
-     * @param {number} [limit] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof EmailsApi
+     * @memberof CustomersApi
      */
-    public listEmails(pageNum?: number, pageSize?: number, limit?: number, options?: AxiosRequestConfig) {
-        return EmailsApiFp(this.configuration).listEmails(pageNum, pageSize, limit, options).then((request) => request(this.axios, this.basePath));
+    public listCustomers(startKey?: string, orderBy?: any, orderType?: OrderType, pageSize?: number, options?: AxiosRequestConfig) {
+        return CustomersApiFp(this.configuration).listCustomers(startKey, orderBy, orderType, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * Send an email from handsin by providing the parameters
-     * @summary Send an email
-     * @param {EmailCreationParams} emailCreationParams 
+     * 
+     * @summary Update a Customer
+     * @param {string} customerId 
+     * @param {UpdateCustomerRequest} updateCustomerRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof EmailsApi
+     * @memberof CustomersApi
      */
-    public sendEmail(emailCreationParams: EmailCreationParams, options?: AxiosRequestConfig) {
-        return EmailsApiFp(this.configuration).sendEmail(emailCreationParams, options).then((request) => request(this.axios, this.basePath));
+    public updateCustomer(customerId: string, updateCustomerRequest: UpdateCustomerRequest, options?: AxiosRequestConfig) {
+        return CustomersApiFp(this.configuration).updateCustomer(customerId, updateCustomerRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -6461,15 +5022,15 @@ export const GroupPaymentsApiAxiosParamCreator = function (configuration?: Confi
          * 
          * @summary Cancel a group payment
          * @param {string} groupPaymentId 
-         * @param {InlineObject} inlineObject 
+         * @param {GroupPaymentCancelRequestBody} groupPaymentCancelRequestBody 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        cancelGroupPayment: async (groupPaymentId: string, inlineObject: InlineObject, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        cancelGroupPayment: async (groupPaymentId: string, groupPaymentCancelRequestBody: GroupPaymentCancelRequestBody, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'groupPaymentId' is not null or undefined
             assertParamExists('cancelGroupPayment', 'groupPaymentId', groupPaymentId)
-            // verify required parameter 'inlineObject' is not null or undefined
-            assertParamExists('cancelGroupPayment', 'inlineObject', inlineObject)
+            // verify required parameter 'groupPaymentCancelRequestBody' is not null or undefined
+            assertParamExists('cancelGroupPayment', 'groupPaymentCancelRequestBody', groupPaymentCancelRequestBody)
             const localVarPath = `/group-payments/{groupPaymentId}/cancel`
                 .replace(`{${"groupPaymentId"}}`, encodeURIComponent(String(groupPaymentId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -6486,10 +5047,6 @@ export const GroupPaymentsApiAxiosParamCreator = function (configuration?: Confi
             // authentication merchant-api-key required
             await setApiKeyToObject(localVarHeaderParameter, "x-api-key", configuration)
 
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
 
     
             localVarHeaderParameter['Content-Type'] = 'application/json';
@@ -6497,7 +5054,7 @@ export const GroupPaymentsApiAxiosParamCreator = function (configuration?: Confi
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(inlineObject, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(groupPaymentCancelRequestBody, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -6529,10 +5086,6 @@ export const GroupPaymentsApiAxiosParamCreator = function (configuration?: Confi
             // authentication merchant-api-key required
             await setApiKeyToObject(localVarHeaderParameter, "x-api-key", configuration)
 
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
 
     
             localVarHeaderParameter['Content-Type'] = 'application/json';
@@ -6548,7 +5101,7 @@ export const GroupPaymentsApiAxiosParamCreator = function (configuration?: Confi
             };
         },
         /**
-         * Supply the unique group payment ID and recieve the corresponding group payment.
+         * Supply the unique group payment ID and receive the corresponding group payment.
          * @summary Retrieve a group payment
          * @param {string} groupPaymentId 
          * @param {*} [options] Override http request option.
@@ -6572,10 +5125,6 @@ export const GroupPaymentsApiAxiosParamCreator = function (configuration?: Confi
 
             // authentication merchant-api-key required
             await setApiKeyToObject(localVarHeaderParameter, "x-api-key", configuration)
-
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
 
     
@@ -6614,156 +5163,11 @@ export const GroupPaymentsApiAxiosParamCreator = function (configuration?: Confi
             // authentication merchant-api-key required
             await setApiKeyToObject(localVarHeaderParameter, "x-api-key", configuration)
 
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Join a group payment
-         * @param {string} groupPaymentId 
-         * @param {JoinGroupPaymentRequest} joinGroupPaymentRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        joinGroupPayment: async (groupPaymentId: string, joinGroupPaymentRequest: JoinGroupPaymentRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'groupPaymentId' is not null or undefined
-            assertParamExists('joinGroupPayment', 'groupPaymentId', groupPaymentId)
-            // verify required parameter 'joinGroupPaymentRequest' is not null or undefined
-            assertParamExists('joinGroupPayment', 'joinGroupPaymentRequest', joinGroupPaymentRequest)
-            const localVarPath = `/group-payments/{groupPaymentId}/join`
-                .replace(`{${"groupPaymentId"}}`, encodeURIComponent(String(groupPaymentId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication merchant-api-key required
-            await setApiKeyToObject(localVarHeaderParameter, "x-api-key", configuration)
-
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(joinGroupPaymentRequest, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Kick member from a group payment
-         * @param {string} groupPaymentId 
-         * @param {KickGroupPaymentRequest} kickGroupPaymentRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        kickGroupPayment: async (groupPaymentId: string, kickGroupPaymentRequest: KickGroupPaymentRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'groupPaymentId' is not null or undefined
-            assertParamExists('kickGroupPayment', 'groupPaymentId', groupPaymentId)
-            // verify required parameter 'kickGroupPaymentRequest' is not null or undefined
-            assertParamExists('kickGroupPayment', 'kickGroupPaymentRequest', kickGroupPaymentRequest)
-            const localVarPath = `/group-payments/{groupPaymentId}/kick`
-                .replace(`{${"groupPaymentId"}}`, encodeURIComponent(String(groupPaymentId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication merchant-api-key required
-            await setApiKeyToObject(localVarHeaderParameter, "x-api-key", configuration)
-
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(kickGroupPaymentRequest, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Leave a group payment
-         * @param {string} groupPaymentId 
-         * @param {LeaveGroupPaymentRequest} leaveGroupPaymentRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        leaveGroupPayment: async (groupPaymentId: string, leaveGroupPaymentRequest: LeaveGroupPaymentRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'groupPaymentId' is not null or undefined
-            assertParamExists('leaveGroupPayment', 'groupPaymentId', groupPaymentId)
-            // verify required parameter 'leaveGroupPaymentRequest' is not null or undefined
-            assertParamExists('leaveGroupPayment', 'leaveGroupPaymentRequest', leaveGroupPaymentRequest)
-            const localVarPath = `/group-payments/{groupPaymentId}/leave`
-                .replace(`{${"groupPaymentId"}}`, encodeURIComponent(String(groupPaymentId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication merchant-api-key required
-            await setApiKeyToObject(localVarHeaderParameter, "x-api-key", configuration)
-
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(leaveGroupPaymentRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -6773,13 +5177,14 @@ export const GroupPaymentsApiAxiosParamCreator = function (configuration?: Confi
         /**
          * 
          * @summary List all group payments
-         * @param {number} [pageNum] 
+         * @param {string} [startKey] 
+         * @param {any} [orderBy] 
+         * @param {OrderType} [orderType] 
          * @param {number} [pageSize] 
-         * @param {number} [limit] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listGroupPayments: async (pageNum?: number, pageSize?: number, limit?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        listGroupPayments: async (startKey?: string, orderBy?: any, orderType?: OrderType, pageSize?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/group-payments`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -6795,20 +5200,20 @@ export const GroupPaymentsApiAxiosParamCreator = function (configuration?: Confi
             // authentication merchant-api-key required
             await setApiKeyToObject(localVarHeaderParameter, "x-api-key", configuration)
 
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+            if (startKey !== undefined) {
+                localVarQueryParameter['startKey'] = startKey;
+            }
 
-            if (pageNum !== undefined) {
-                localVarQueryParameter['pageNum'] = pageNum;
+            if (orderBy !== undefined) {
+                localVarQueryParameter['orderBy'] = orderBy;
+            }
+
+            if (orderType !== undefined) {
+                localVarQueryParameter['orderType'] = orderType;
             }
 
             if (pageSize !== undefined) {
                 localVarQueryParameter['pageSize'] = pageSize;
-            }
-
-            if (limit !== undefined) {
-                localVarQueryParameter['limit'] = limit;
             }
 
 
@@ -6850,10 +5255,6 @@ export const GroupPaymentsApiAxiosParamCreator = function (configuration?: Confi
 
             // authentication merchant-api-key required
             await setApiKeyToObject(localVarHeaderParameter, "x-api-key", configuration)
-
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
 
     
@@ -6898,10 +5299,6 @@ export const GroupPaymentsApiAxiosParamCreator = function (configuration?: Confi
             // authentication merchant-api-key required
             await setApiKeyToObject(localVarHeaderParameter, "x-api-key", configuration)
 
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
 
     
             localVarHeaderParameter['Content-Type'] = 'application/json';
@@ -6920,15 +5317,15 @@ export const GroupPaymentsApiAxiosParamCreator = function (configuration?: Confi
          * 
          * @summary Update a group payment
          * @param {string} groupPaymentId 
-         * @param {GroupPaymentUpdateParams} groupPaymentUpdateParams 
+         * @param {UpdateGroupPaymentRequest} updateGroupPaymentRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateGroupPayment: async (groupPaymentId: string, groupPaymentUpdateParams: GroupPaymentUpdateParams, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        updateGroupPayment: async (groupPaymentId: string, updateGroupPaymentRequest: UpdateGroupPaymentRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'groupPaymentId' is not null or undefined
             assertParamExists('updateGroupPayment', 'groupPaymentId', groupPaymentId)
-            // verify required parameter 'groupPaymentUpdateParams' is not null or undefined
-            assertParamExists('updateGroupPayment', 'groupPaymentUpdateParams', groupPaymentUpdateParams)
+            // verify required parameter 'updateGroupPaymentRequest' is not null or undefined
+            assertParamExists('updateGroupPayment', 'updateGroupPaymentRequest', updateGroupPaymentRequest)
             const localVarPath = `/group-payments/{groupPaymentId}`
                 .replace(`{${"groupPaymentId"}}`, encodeURIComponent(String(groupPaymentId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -6945,10 +5342,6 @@ export const GroupPaymentsApiAxiosParamCreator = function (configuration?: Confi
             // authentication merchant-api-key required
             await setApiKeyToObject(localVarHeaderParameter, "x-api-key", configuration)
 
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
 
     
             localVarHeaderParameter['Content-Type'] = 'application/json';
@@ -6956,7 +5349,7 @@ export const GroupPaymentsApiAxiosParamCreator = function (configuration?: Confi
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(groupPaymentUpdateParams, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(updateGroupPaymentRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -6977,12 +5370,12 @@ export const GroupPaymentsApiFp = function(configuration?: Configuration) {
          * 
          * @summary Cancel a group payment
          * @param {string} groupPaymentId 
-         * @param {InlineObject} inlineObject 
+         * @param {GroupPaymentCancelRequestBody} groupPaymentCancelRequestBody 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async cancelGroupPayment(groupPaymentId: string, inlineObject: InlineObject, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupPaymentRecord>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.cancelGroupPayment(groupPaymentId, inlineObject, options);
+        async cancelGroupPayment(groupPaymentId: string, groupPaymentCancelRequestBody: GroupPaymentCancelRequestBody, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupPaymentRecord>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.cancelGroupPayment(groupPaymentId, groupPaymentCancelRequestBody, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -6997,7 +5390,7 @@ export const GroupPaymentsApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Supply the unique group payment ID and recieve the corresponding group payment.
+         * Supply the unique group payment ID and receive the corresponding group payment.
          * @summary Retrieve a group payment
          * @param {string} groupPaymentId 
          * @param {*} [options] Override http request option.
@@ -7020,51 +5413,16 @@ export const GroupPaymentsApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Join a group payment
-         * @param {string} groupPaymentId 
-         * @param {JoinGroupPaymentRequest} joinGroupPaymentRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async joinGroupPayment(groupPaymentId: string, joinGroupPaymentRequest: JoinGroupPaymentRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupPaymentRecord>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.joinGroupPayment(groupPaymentId, joinGroupPaymentRequest, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @summary Kick member from a group payment
-         * @param {string} groupPaymentId 
-         * @param {KickGroupPaymentRequest} kickGroupPaymentRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async kickGroupPayment(groupPaymentId: string, kickGroupPaymentRequest: KickGroupPaymentRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupPaymentRecord>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.kickGroupPayment(groupPaymentId, kickGroupPaymentRequest, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @summary Leave a group payment
-         * @param {string} groupPaymentId 
-         * @param {LeaveGroupPaymentRequest} leaveGroupPaymentRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async leaveGroupPayment(groupPaymentId: string, leaveGroupPaymentRequest: LeaveGroupPaymentRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupPaymentRecord>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.leaveGroupPayment(groupPaymentId, leaveGroupPaymentRequest, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
          * @summary List all group payments
-         * @param {number} [pageNum] 
+         * @param {string} [startKey] 
+         * @param {any} [orderBy] 
+         * @param {OrderType} [orderType] 
          * @param {number} [pageSize] 
-         * @param {number} [limit] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listGroupPayments(pageNum?: number, pageSize?: number, limit?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<GroupPaymentRecord>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listGroupPayments(pageNum, pageSize, limit, options);
+        async listGroupPayments(startKey?: string, orderBy?: any, orderType?: OrderType, pageSize?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<GroupPaymentRecord>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listGroupPayments(startKey, orderBy, orderType, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -7095,12 +5453,12 @@ export const GroupPaymentsApiFp = function(configuration?: Configuration) {
          * 
          * @summary Update a group payment
          * @param {string} groupPaymentId 
-         * @param {GroupPaymentUpdateParams} groupPaymentUpdateParams 
+         * @param {UpdateGroupPaymentRequest} updateGroupPaymentRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updateGroupPayment(groupPaymentId: string, groupPaymentUpdateParams: GroupPaymentUpdateParams, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupPaymentRecord>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateGroupPayment(groupPaymentId, groupPaymentUpdateParams, options);
+        async updateGroupPayment(groupPaymentId: string, updateGroupPaymentRequest: UpdateGroupPaymentRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupPaymentRecord>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateGroupPayment(groupPaymentId, updateGroupPaymentRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -7117,12 +5475,12 @@ export const GroupPaymentsApiFactory = function (configuration?: Configuration, 
          * 
          * @summary Cancel a group payment
          * @param {string} groupPaymentId 
-         * @param {InlineObject} inlineObject 
+         * @param {GroupPaymentCancelRequestBody} groupPaymentCancelRequestBody 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        cancelGroupPayment(groupPaymentId: string, inlineObject: InlineObject, options?: any): AxiosPromise<GroupPaymentRecord> {
-            return localVarFp.cancelGroupPayment(groupPaymentId, inlineObject, options).then((request) => request(axios, basePath));
+        cancelGroupPayment(groupPaymentId: string, groupPaymentCancelRequestBody: GroupPaymentCancelRequestBody, options?: any): AxiosPromise<GroupPaymentRecord> {
+            return localVarFp.cancelGroupPayment(groupPaymentId, groupPaymentCancelRequestBody, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -7135,7 +5493,7 @@ export const GroupPaymentsApiFactory = function (configuration?: Configuration, 
             return localVarFp.createGroupPayment(createGroupPaymentRequest, options).then((request) => request(axios, basePath));
         },
         /**
-         * Supply the unique group payment ID and recieve the corresponding group payment.
+         * Supply the unique group payment ID and receive the corresponding group payment.
          * @summary Retrieve a group payment
          * @param {string} groupPaymentId 
          * @param {*} [options] Override http request option.
@@ -7156,48 +5514,16 @@ export const GroupPaymentsApiFactory = function (configuration?: Configuration, 
         },
         /**
          * 
-         * @summary Join a group payment
-         * @param {string} groupPaymentId 
-         * @param {JoinGroupPaymentRequest} joinGroupPaymentRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        joinGroupPayment(groupPaymentId: string, joinGroupPaymentRequest: JoinGroupPaymentRequest, options?: any): AxiosPromise<GroupPaymentRecord> {
-            return localVarFp.joinGroupPayment(groupPaymentId, joinGroupPaymentRequest, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Kick member from a group payment
-         * @param {string} groupPaymentId 
-         * @param {KickGroupPaymentRequest} kickGroupPaymentRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        kickGroupPayment(groupPaymentId: string, kickGroupPaymentRequest: KickGroupPaymentRequest, options?: any): AxiosPromise<GroupPaymentRecord> {
-            return localVarFp.kickGroupPayment(groupPaymentId, kickGroupPaymentRequest, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Leave a group payment
-         * @param {string} groupPaymentId 
-         * @param {LeaveGroupPaymentRequest} leaveGroupPaymentRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        leaveGroupPayment(groupPaymentId: string, leaveGroupPaymentRequest: LeaveGroupPaymentRequest, options?: any): AxiosPromise<GroupPaymentRecord> {
-            return localVarFp.leaveGroupPayment(groupPaymentId, leaveGroupPaymentRequest, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
          * @summary List all group payments
-         * @param {number} [pageNum] 
+         * @param {string} [startKey] 
+         * @param {any} [orderBy] 
+         * @param {OrderType} [orderType] 
          * @param {number} [pageSize] 
-         * @param {number} [limit] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listGroupPayments(pageNum?: number, pageSize?: number, limit?: number, options?: any): AxiosPromise<Array<GroupPaymentRecord>> {
-            return localVarFp.listGroupPayments(pageNum, pageSize, limit, options).then((request) => request(axios, basePath));
+        listGroupPayments(startKey?: string, orderBy?: any, orderType?: OrderType, pageSize?: number, options?: any): AxiosPromise<Array<GroupPaymentRecord>> {
+            return localVarFp.listGroupPayments(startKey, orderBy, orderType, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
          * Collect a payment from an individual user that is intended to be part of a group payment.
@@ -7225,12 +5551,12 @@ export const GroupPaymentsApiFactory = function (configuration?: Configuration, 
          * 
          * @summary Update a group payment
          * @param {string} groupPaymentId 
-         * @param {GroupPaymentUpdateParams} groupPaymentUpdateParams 
+         * @param {UpdateGroupPaymentRequest} updateGroupPaymentRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateGroupPayment(groupPaymentId: string, groupPaymentUpdateParams: GroupPaymentUpdateParams, options?: any): AxiosPromise<GroupPaymentRecord> {
-            return localVarFp.updateGroupPayment(groupPaymentId, groupPaymentUpdateParams, options).then((request) => request(axios, basePath));
+        updateGroupPayment(groupPaymentId: string, updateGroupPaymentRequest: UpdateGroupPaymentRequest, options?: any): AxiosPromise<GroupPaymentRecord> {
+            return localVarFp.updateGroupPayment(groupPaymentId, updateGroupPaymentRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -7246,13 +5572,13 @@ export class GroupPaymentsApi extends BaseAPI {
      * 
      * @summary Cancel a group payment
      * @param {string} groupPaymentId 
-     * @param {InlineObject} inlineObject 
+     * @param {GroupPaymentCancelRequestBody} groupPaymentCancelRequestBody 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof GroupPaymentsApi
      */
-    public cancelGroupPayment(groupPaymentId: string, inlineObject: InlineObject, options?: AxiosRequestConfig) {
-        return GroupPaymentsApiFp(this.configuration).cancelGroupPayment(groupPaymentId, inlineObject, options).then((request) => request(this.axios, this.basePath));
+    public cancelGroupPayment(groupPaymentId: string, groupPaymentCancelRequestBody: GroupPaymentCancelRequestBody, options?: AxiosRequestConfig) {
+        return GroupPaymentsApiFp(this.configuration).cancelGroupPayment(groupPaymentId, groupPaymentCancelRequestBody, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -7268,7 +5594,7 @@ export class GroupPaymentsApi extends BaseAPI {
     }
 
     /**
-     * Supply the unique group payment ID and recieve the corresponding group payment.
+     * Supply the unique group payment ID and receive the corresponding group payment.
      * @summary Retrieve a group payment
      * @param {string} groupPaymentId 
      * @param {*} [options] Override http request option.
@@ -7293,55 +5619,17 @@ export class GroupPaymentsApi extends BaseAPI {
 
     /**
      * 
-     * @summary Join a group payment
-     * @param {string} groupPaymentId 
-     * @param {JoinGroupPaymentRequest} joinGroupPaymentRequest 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof GroupPaymentsApi
-     */
-    public joinGroupPayment(groupPaymentId: string, joinGroupPaymentRequest: JoinGroupPaymentRequest, options?: AxiosRequestConfig) {
-        return GroupPaymentsApiFp(this.configuration).joinGroupPayment(groupPaymentId, joinGroupPaymentRequest, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Kick member from a group payment
-     * @param {string} groupPaymentId 
-     * @param {KickGroupPaymentRequest} kickGroupPaymentRequest 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof GroupPaymentsApi
-     */
-    public kickGroupPayment(groupPaymentId: string, kickGroupPaymentRequest: KickGroupPaymentRequest, options?: AxiosRequestConfig) {
-        return GroupPaymentsApiFp(this.configuration).kickGroupPayment(groupPaymentId, kickGroupPaymentRequest, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Leave a group payment
-     * @param {string} groupPaymentId 
-     * @param {LeaveGroupPaymentRequest} leaveGroupPaymentRequest 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof GroupPaymentsApi
-     */
-    public leaveGroupPayment(groupPaymentId: string, leaveGroupPaymentRequest: LeaveGroupPaymentRequest, options?: AxiosRequestConfig) {
-        return GroupPaymentsApiFp(this.configuration).leaveGroupPayment(groupPaymentId, leaveGroupPaymentRequest, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
      * @summary List all group payments
-     * @param {number} [pageNum] 
+     * @param {string} [startKey] 
+     * @param {any} [orderBy] 
+     * @param {OrderType} [orderType] 
      * @param {number} [pageSize] 
-     * @param {number} [limit] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof GroupPaymentsApi
      */
-    public listGroupPayments(pageNum?: number, pageSize?: number, limit?: number, options?: AxiosRequestConfig) {
-        return GroupPaymentsApiFp(this.configuration).listGroupPayments(pageNum, pageSize, limit, options).then((request) => request(this.axios, this.basePath));
+    public listGroupPayments(startKey?: string, orderBy?: any, orderType?: OrderType, pageSize?: number, options?: AxiosRequestConfig) {
+        return GroupPaymentsApiFp(this.configuration).listGroupPayments(startKey, orderBy, orderType, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -7374,13 +5662,13 @@ export class GroupPaymentsApi extends BaseAPI {
      * 
      * @summary Update a group payment
      * @param {string} groupPaymentId 
-     * @param {GroupPaymentUpdateParams} groupPaymentUpdateParams 
+     * @param {UpdateGroupPaymentRequest} updateGroupPaymentRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof GroupPaymentsApi
      */
-    public updateGroupPayment(groupPaymentId: string, groupPaymentUpdateParams: GroupPaymentUpdateParams, options?: AxiosRequestConfig) {
-        return GroupPaymentsApiFp(this.configuration).updateGroupPayment(groupPaymentId, groupPaymentUpdateParams, options).then((request) => request(this.axios, this.basePath));
+    public updateGroupPayment(groupPaymentId: string, updateGroupPaymentRequest: UpdateGroupPaymentRequest, options?: AxiosRequestConfig) {
+        return GroupPaymentsApiFp(this.configuration).updateGroupPayment(groupPaymentId, updateGroupPaymentRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -7394,13 +5682,13 @@ export const ItemsApiAxiosParamCreator = function (configuration?: Configuration
         /**
          * Create an item by supplying the correct parameters.
          * @summary Create an item
-         * @param {ItemCreationParams} itemCreationParams 
+         * @param {ItemCreateRequest} itemCreateRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createItem: async (itemCreationParams: ItemCreationParams, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'itemCreationParams' is not null or undefined
-            assertParamExists('createItem', 'itemCreationParams', itemCreationParams)
+        createItem: async (itemCreateRequest: ItemCreateRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'itemCreateRequest' is not null or undefined
+            assertParamExists('createItem', 'itemCreateRequest', itemCreateRequest)
             const localVarPath = `/items`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -7416,10 +5704,6 @@ export const ItemsApiAxiosParamCreator = function (configuration?: Configuration
             // authentication merchant-api-key required
             await setApiKeyToObject(localVarHeaderParameter, "x-api-key", configuration)
 
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
 
     
             localVarHeaderParameter['Content-Type'] = 'application/json';
@@ -7427,48 +5711,7 @@ export const ItemsApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(itemCreationParams, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Update a item session by supplying the correct parameters.
-         * @summary Delete an item
-         * @param {string} itemId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteItem: async (itemId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'itemId' is not null or undefined
-            assertParamExists('deleteItem', 'itemId', itemId)
-            const localVarPath = `/items/{itemId}`
-                .replace(`{${"itemId"}}`, encodeURIComponent(String(itemId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication merchant-api-key required
-            await setApiKeyToObject(localVarHeaderParameter, "x-api-key", configuration)
-
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(itemCreateRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -7501,58 +5744,11 @@ export const ItemsApiAxiosParamCreator = function (configuration?: Configuration
             // authentication merchant-api-key required
             await setApiKeyToObject(localVarHeaderParameter, "x-api-key", configuration)
 
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Retrieve all items by supplying a list of their Ids. Please note, that if any Id\'s are not valid, then they will just be ignored (no error is thrown)
-         * @summary Retrieve multiple items
-         * @param {ItemListParams} itemListParams 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getItems: async (itemListParams: ItemListParams, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'itemListParams' is not null or undefined
-            assertParamExists('getItems', 'itemListParams', itemListParams)
-            const localVarPath = `/items/batch`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication merchant-api-key required
-            await setApiKeyToObject(localVarHeaderParameter, "x-api-key", configuration)
-
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(itemListParams, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -7562,13 +5758,14 @@ export const ItemsApiAxiosParamCreator = function (configuration?: Configuration
         /**
          * Retrieve a list of items by supplying the correct parameters.
          * @summary List all items
-         * @param {number} [pageNum] 
+         * @param {string} [startKey] 
+         * @param {any} [orderBy] 
+         * @param {OrderType} [orderType] 
          * @param {number} [pageSize] 
-         * @param {number} [limit] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listItems: async (pageNum?: number, pageSize?: number, limit?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        listItems: async (startKey?: string, orderBy?: any, orderType?: OrderType, pageSize?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/items`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -7584,20 +5781,20 @@ export const ItemsApiAxiosParamCreator = function (configuration?: Configuration
             // authentication merchant-api-key required
             await setApiKeyToObject(localVarHeaderParameter, "x-api-key", configuration)
 
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+            if (startKey !== undefined) {
+                localVarQueryParameter['startKey'] = startKey;
+            }
 
-            if (pageNum !== undefined) {
-                localVarQueryParameter['pageNum'] = pageNum;
+            if (orderBy !== undefined) {
+                localVarQueryParameter['orderBy'] = orderBy;
+            }
+
+            if (orderType !== undefined) {
+                localVarQueryParameter['orderType'] = orderType;
             }
 
             if (pageSize !== undefined) {
                 localVarQueryParameter['pageSize'] = pageSize;
-            }
-
-            if (limit !== undefined) {
-                localVarQueryParameter['limit'] = limit;
             }
 
 
@@ -7612,18 +5809,18 @@ export const ItemsApiAxiosParamCreator = function (configuration?: Configuration
             };
         },
         /**
-         * Update a item by supplying the correct parameters.
+         * Update an item by supplying the correct parameters.
          * @summary Update an item
          * @param {string} itemId 
-         * @param {ItemUpdateParams} itemUpdateParams 
+         * @param {ItemUpdateRequest} itemUpdateRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateItem: async (itemId: string, itemUpdateParams: ItemUpdateParams, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        updateItem: async (itemId: string, itemUpdateRequest: ItemUpdateRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'itemId' is not null or undefined
             assertParamExists('updateItem', 'itemId', itemId)
-            // verify required parameter 'itemUpdateParams' is not null or undefined
-            assertParamExists('updateItem', 'itemUpdateParams', itemUpdateParams)
+            // verify required parameter 'itemUpdateRequest' is not null or undefined
+            assertParamExists('updateItem', 'itemUpdateRequest', itemUpdateRequest)
             const localVarPath = `/items/{itemId}`
                 .replace(`{${"itemId"}}`, encodeURIComponent(String(itemId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -7640,10 +5837,6 @@ export const ItemsApiAxiosParamCreator = function (configuration?: Configuration
             // authentication merchant-api-key required
             await setApiKeyToObject(localVarHeaderParameter, "x-api-key", configuration)
 
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
 
     
             localVarHeaderParameter['Content-Type'] = 'application/json';
@@ -7651,7 +5844,7 @@ export const ItemsApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(itemUpdateParams, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(itemUpdateRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -7671,23 +5864,12 @@ export const ItemsApiFp = function(configuration?: Configuration) {
         /**
          * Create an item by supplying the correct parameters.
          * @summary Create an item
-         * @param {ItemCreationParams} itemCreationParams 
+         * @param {ItemCreateRequest} itemCreateRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createItem(itemCreationParams: ItemCreationParams, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Item>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createItem(itemCreationParams, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * Update a item session by supplying the correct parameters.
-         * @summary Delete an item
-         * @param {string} itemId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deleteItem(itemId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Item>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteItem(itemId, options);
+        async createItem(itemCreateRequest: ItemCreateRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Item>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createItem(itemCreateRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -7702,39 +5884,29 @@ export const ItemsApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Retrieve all items by supplying a list of their Ids. Please note, that if any Id\'s are not valid, then they will just be ignored (no error is thrown)
-         * @summary Retrieve multiple items
-         * @param {ItemListParams} itemListParams 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getItems(itemListParams: ItemListParams, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Item>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getItems(itemListParams, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
          * Retrieve a list of items by supplying the correct parameters.
          * @summary List all items
-         * @param {number} [pageNum] 
+         * @param {string} [startKey] 
+         * @param {any} [orderBy] 
+         * @param {OrderType} [orderType] 
          * @param {number} [pageSize] 
-         * @param {number} [limit] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listItems(pageNum?: number, pageSize?: number, limit?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Item>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listItems(pageNum, pageSize, limit, options);
+        async listItems(startKey?: string, orderBy?: any, orderType?: OrderType, pageSize?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Item>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listItems(startKey, orderBy, orderType, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Update a item by supplying the correct parameters.
+         * Update an item by supplying the correct parameters.
          * @summary Update an item
          * @param {string} itemId 
-         * @param {ItemUpdateParams} itemUpdateParams 
+         * @param {ItemUpdateRequest} itemUpdateRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updateItem(itemId: string, itemUpdateParams: ItemUpdateParams, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Item>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateItem(itemId, itemUpdateParams, options);
+        async updateItem(itemId: string, itemUpdateRequest: ItemUpdateRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Item>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateItem(itemId, itemUpdateRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -7750,22 +5922,12 @@ export const ItemsApiFactory = function (configuration?: Configuration, basePath
         /**
          * Create an item by supplying the correct parameters.
          * @summary Create an item
-         * @param {ItemCreationParams} itemCreationParams 
+         * @param {ItemCreateRequest} itemCreateRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createItem(itemCreationParams: ItemCreationParams, options?: any): AxiosPromise<Item> {
-            return localVarFp.createItem(itemCreationParams, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Update a item session by supplying the correct parameters.
-         * @summary Delete an item
-         * @param {string} itemId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteItem(itemId: string, options?: any): AxiosPromise<Item> {
-            return localVarFp.deleteItem(itemId, options).then((request) => request(axios, basePath));
+        createItem(itemCreateRequest: ItemCreateRequest, options?: any): AxiosPromise<Item> {
+            return localVarFp.createItem(itemCreateRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * Supply the unique dispute ID and receive corresponding item details.
@@ -7778,37 +5940,28 @@ export const ItemsApiFactory = function (configuration?: Configuration, basePath
             return localVarFp.getItem(itemId, options).then((request) => request(axios, basePath));
         },
         /**
-         * Retrieve all items by supplying a list of their Ids. Please note, that if any Id\'s are not valid, then they will just be ignored (no error is thrown)
-         * @summary Retrieve multiple items
-         * @param {ItemListParams} itemListParams 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getItems(itemListParams: ItemListParams, options?: any): AxiosPromise<Array<Item>> {
-            return localVarFp.getItems(itemListParams, options).then((request) => request(axios, basePath));
-        },
-        /**
          * Retrieve a list of items by supplying the correct parameters.
          * @summary List all items
-         * @param {number} [pageNum] 
+         * @param {string} [startKey] 
+         * @param {any} [orderBy] 
+         * @param {OrderType} [orderType] 
          * @param {number} [pageSize] 
-         * @param {number} [limit] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listItems(pageNum?: number, pageSize?: number, limit?: number, options?: any): AxiosPromise<Array<Item>> {
-            return localVarFp.listItems(pageNum, pageSize, limit, options).then((request) => request(axios, basePath));
+        listItems(startKey?: string, orderBy?: any, orderType?: OrderType, pageSize?: number, options?: any): AxiosPromise<Array<Item>> {
+            return localVarFp.listItems(startKey, orderBy, orderType, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
-         * Update a item by supplying the correct parameters.
+         * Update an item by supplying the correct parameters.
          * @summary Update an item
          * @param {string} itemId 
-         * @param {ItemUpdateParams} itemUpdateParams 
+         * @param {ItemUpdateRequest} itemUpdateRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateItem(itemId: string, itemUpdateParams: ItemUpdateParams, options?: any): AxiosPromise<Item> {
-            return localVarFp.updateItem(itemId, itemUpdateParams, options).then((request) => request(axios, basePath));
+        updateItem(itemId: string, itemUpdateRequest: ItemUpdateRequest, options?: any): AxiosPromise<Item> {
+            return localVarFp.updateItem(itemId, itemUpdateRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -7823,25 +5976,13 @@ export class ItemsApi extends BaseAPI {
     /**
      * Create an item by supplying the correct parameters.
      * @summary Create an item
-     * @param {ItemCreationParams} itemCreationParams 
+     * @param {ItemCreateRequest} itemCreateRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ItemsApi
      */
-    public createItem(itemCreationParams: ItemCreationParams, options?: AxiosRequestConfig) {
-        return ItemsApiFp(this.configuration).createItem(itemCreationParams, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Update a item session by supplying the correct parameters.
-     * @summary Delete an item
-     * @param {string} itemId 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ItemsApi
-     */
-    public deleteItem(itemId: string, options?: AxiosRequestConfig) {
-        return ItemsApiFp(this.configuration).deleteItem(itemId, options).then((request) => request(this.axios, this.basePath));
+    public createItem(itemCreateRequest: ItemCreateRequest, options?: AxiosRequestConfig) {
+        return ItemsApiFp(this.configuration).createItem(itemCreateRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -7857,991 +5998,31 @@ export class ItemsApi extends BaseAPI {
     }
 
     /**
-     * Retrieve all items by supplying a list of their Ids. Please note, that if any Id\'s are not valid, then they will just be ignored (no error is thrown)
-     * @summary Retrieve multiple items
-     * @param {ItemListParams} itemListParams 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ItemsApi
-     */
-    public getItems(itemListParams: ItemListParams, options?: AxiosRequestConfig) {
-        return ItemsApiFp(this.configuration).getItems(itemListParams, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
      * Retrieve a list of items by supplying the correct parameters.
      * @summary List all items
-     * @param {number} [pageNum] 
+     * @param {string} [startKey] 
+     * @param {any} [orderBy] 
+     * @param {OrderType} [orderType] 
      * @param {number} [pageSize] 
-     * @param {number} [limit] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ItemsApi
      */
-    public listItems(pageNum?: number, pageSize?: number, limit?: number, options?: AxiosRequestConfig) {
-        return ItemsApiFp(this.configuration).listItems(pageNum, pageSize, limit, options).then((request) => request(this.axios, this.basePath));
+    public listItems(startKey?: string, orderBy?: any, orderType?: OrderType, pageSize?: number, options?: AxiosRequestConfig) {
+        return ItemsApiFp(this.configuration).listItems(startKey, orderBy, orderType, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * Update a item by supplying the correct parameters.
+     * Update an item by supplying the correct parameters.
      * @summary Update an item
      * @param {string} itemId 
-     * @param {ItemUpdateParams} itemUpdateParams 
+     * @param {ItemUpdateRequest} itemUpdateRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ItemsApi
      */
-    public updateItem(itemId: string, itemUpdateParams: ItemUpdateParams, options?: AxiosRequestConfig) {
-        return ItemsApiFp(this.configuration).updateItem(itemId, itemUpdateParams, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-/**
- * MerchantApi - axios parameter creator
- * @export
- */
-export const MerchantApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * Provide a ID token to create a merchant. Receive a JWT access token that gives all scope to account.
-         * @summary Create a merchant account
-         * @param {PickMerchantNameOrContactDetailsOrLogoUrlOrDefaultCurrency} body 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createMerchant: async (body: PickMerchantNameOrContactDetailsOrLogoUrlOrDefaultCurrency, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'body' is not null or undefined
-            assertParamExists('createMerchant', 'body', body)
-            const localVarPath = `/merchants`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication account-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Delete a merchant account
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteMerchant: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/merchants`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Supply a merchant JWT token and retrieve merchant data
-         * @summary Retrieve merchant data
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getMerchant: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/merchants`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Invite a merchant account team
-         * @param {string} merchantId 
-         * @param {InlineObject1} inlineObject1 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        inviteMerchant: async (merchantId: string, inlineObject1: InlineObject1, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'merchantId' is not null or undefined
-            assertParamExists('inviteMerchant', 'merchantId', merchantId)
-            // verify required parameter 'inlineObject1' is not null or undefined
-            assertParamExists('inviteMerchant', 'inlineObject1', inlineObject1)
-            const localVarPath = `/merchants/{merchantId}/invite`
-                .replace(`{${"merchantId"}}`, encodeURIComponent(String(merchantId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(inlineObject1, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Supply both the id token for the account, aswell as the access token, which would have been provided to you, through a link or email.
-         * @summary Join a merchant account team
-         * @param {string} merchantId 
-         * @param {string} key 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        joinMerchant: async (merchantId: string, key: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'merchantId' is not null or undefined
-            assertParamExists('joinMerchant', 'merchantId', merchantId)
-            // verify required parameter 'key' is not null or undefined
-            assertParamExists('joinMerchant', 'key', key)
-            const localVarPath = `/merchants/{merchantId}/join`
-                .replace(`{${"merchantId"}}`, encodeURIComponent(String(merchantId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-            if (key !== undefined) {
-                localVarQueryParameter['key'] = key;
-            }
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Exchange an account access token to get a resource token Which gives access to all the merhant scopes you have permission for
-         * @summary Login to a merchant account
-         * @param {string} merchantId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        loginMerchant: async (merchantId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'merchantId' is not null or undefined
-            assertParamExists('loginMerchant', 'merchantId', merchantId)
-            const localVarPath = `/merchants/{merchantId}/token`
-                .replace(`{${"merchantId"}}`, encodeURIComponent(String(merchantId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication account-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Supply a merchant JWT token and email parameters to send an email through the handsin email service
-         * @summary Send an email
-         * @param {EmailCreationParams} emailCreationParams 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        sendEmailMerchant: async (emailCreationParams: EmailCreationParams, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'emailCreationParams' is not null or undefined
-            assertParamExists('sendEmailMerchant', 'emailCreationParams', emailCreationParams)
-            const localVarPath = `/merchants/sendEmail`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(emailCreationParams, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * MerchantApi - functional programming interface
- * @export
- */
-export const MerchantApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = MerchantApiAxiosParamCreator(configuration)
-    return {
-        /**
-         * Provide a ID token to create a merchant. Receive a JWT access token that gives all scope to account.
-         * @summary Create a merchant account
-         * @param {PickMerchantNameOrContactDetailsOrLogoUrlOrDefaultCurrency} body 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createMerchant(body: PickMerchantNameOrContactDetailsOrLogoUrlOrDefaultCurrency, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MerchantDTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createMerchant(body, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @summary Delete a merchant account
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deleteMerchant(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MerchantDTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteMerchant(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * Supply a merchant JWT token and retrieve merchant data
-         * @summary Retrieve merchant data
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getMerchant(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MerchantDTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getMerchant(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @summary Invite a merchant account team
-         * @param {string} merchantId 
-         * @param {InlineObject1} inlineObject1 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async inviteMerchant(merchantId: string, inlineObject1: InlineObject1, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MerchantDTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.inviteMerchant(merchantId, inlineObject1, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * Supply both the id token for the account, aswell as the access token, which would have been provided to you, through a link or email.
-         * @summary Join a merchant account team
-         * @param {string} merchantId 
-         * @param {string} key 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async joinMerchant(merchantId: string, key: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MerchantDTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.joinMerchant(merchantId, key, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * Exchange an account access token to get a resource token Which gives access to all the merhant scopes you have permission for
-         * @summary Login to a merchant account
-         * @param {string} merchantId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async loginMerchant(merchantId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OAuthTokenResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.loginMerchant(merchantId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * Supply a merchant JWT token and email parameters to send an email through the handsin email service
-         * @summary Send an email
-         * @param {EmailCreationParams} emailCreationParams 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async sendEmailMerchant(emailCreationParams: EmailCreationParams, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Email>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.sendEmailMerchant(emailCreationParams, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-    }
-};
-
-/**
- * MerchantApi - factory interface
- * @export
- */
-export const MerchantApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = MerchantApiFp(configuration)
-    return {
-        /**
-         * Provide a ID token to create a merchant. Receive a JWT access token that gives all scope to account.
-         * @summary Create a merchant account
-         * @param {PickMerchantNameOrContactDetailsOrLogoUrlOrDefaultCurrency} body 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createMerchant(body: PickMerchantNameOrContactDetailsOrLogoUrlOrDefaultCurrency, options?: any): AxiosPromise<MerchantDTO> {
-            return localVarFp.createMerchant(body, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Delete a merchant account
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteMerchant(options?: any): AxiosPromise<MerchantDTO> {
-            return localVarFp.deleteMerchant(options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Supply a merchant JWT token and retrieve merchant data
-         * @summary Retrieve merchant data
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getMerchant(options?: any): AxiosPromise<MerchantDTO> {
-            return localVarFp.getMerchant(options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Invite a merchant account team
-         * @param {string} merchantId 
-         * @param {InlineObject1} inlineObject1 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        inviteMerchant(merchantId: string, inlineObject1: InlineObject1, options?: any): AxiosPromise<MerchantDTO> {
-            return localVarFp.inviteMerchant(merchantId, inlineObject1, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Supply both the id token for the account, aswell as the access token, which would have been provided to you, through a link or email.
-         * @summary Join a merchant account team
-         * @param {string} merchantId 
-         * @param {string} key 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        joinMerchant(merchantId: string, key: string, options?: any): AxiosPromise<MerchantDTO> {
-            return localVarFp.joinMerchant(merchantId, key, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Exchange an account access token to get a resource token Which gives access to all the merhant scopes you have permission for
-         * @summary Login to a merchant account
-         * @param {string} merchantId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        loginMerchant(merchantId: string, options?: any): AxiosPromise<OAuthTokenResponse> {
-            return localVarFp.loginMerchant(merchantId, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Supply a merchant JWT token and email parameters to send an email through the handsin email service
-         * @summary Send an email
-         * @param {EmailCreationParams} emailCreationParams 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        sendEmailMerchant(emailCreationParams: EmailCreationParams, options?: any): AxiosPromise<Email> {
-            return localVarFp.sendEmailMerchant(emailCreationParams, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * MerchantApi - object-oriented interface
- * @export
- * @class MerchantApi
- * @extends {BaseAPI}
- */
-export class MerchantApi extends BaseAPI {
-    /**
-     * Provide a ID token to create a merchant. Receive a JWT access token that gives all scope to account.
-     * @summary Create a merchant account
-     * @param {PickMerchantNameOrContactDetailsOrLogoUrlOrDefaultCurrency} body 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof MerchantApi
-     */
-    public createMerchant(body: PickMerchantNameOrContactDetailsOrLogoUrlOrDefaultCurrency, options?: AxiosRequestConfig) {
-        return MerchantApiFp(this.configuration).createMerchant(body, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Delete a merchant account
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof MerchantApi
-     */
-    public deleteMerchant(options?: AxiosRequestConfig) {
-        return MerchantApiFp(this.configuration).deleteMerchant(options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Supply a merchant JWT token and retrieve merchant data
-     * @summary Retrieve merchant data
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof MerchantApi
-     */
-    public getMerchant(options?: AxiosRequestConfig) {
-        return MerchantApiFp(this.configuration).getMerchant(options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Invite a merchant account team
-     * @param {string} merchantId 
-     * @param {InlineObject1} inlineObject1 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof MerchantApi
-     */
-    public inviteMerchant(merchantId: string, inlineObject1: InlineObject1, options?: AxiosRequestConfig) {
-        return MerchantApiFp(this.configuration).inviteMerchant(merchantId, inlineObject1, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Supply both the id token for the account, aswell as the access token, which would have been provided to you, through a link or email.
-     * @summary Join a merchant account team
-     * @param {string} merchantId 
-     * @param {string} key 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof MerchantApi
-     */
-    public joinMerchant(merchantId: string, key: string, options?: AxiosRequestConfig) {
-        return MerchantApiFp(this.configuration).joinMerchant(merchantId, key, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Exchange an account access token to get a resource token Which gives access to all the merhant scopes you have permission for
-     * @summary Login to a merchant account
-     * @param {string} merchantId 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof MerchantApi
-     */
-    public loginMerchant(merchantId: string, options?: AxiosRequestConfig) {
-        return MerchantApiFp(this.configuration).loginMerchant(merchantId, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Supply a merchant JWT token and email parameters to send an email through the handsin email service
-     * @summary Send an email
-     * @param {EmailCreationParams} emailCreationParams 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof MerchantApi
-     */
-    public sendEmailMerchant(emailCreationParams: EmailCreationParams, options?: AxiosRequestConfig) {
-        return MerchantApiFp(this.configuration).sendEmailMerchant(emailCreationParams, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-/**
- * MerchantConnectApi - axios parameter creator
- * @export
- */
-export const MerchantConnectApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * Redirect merchant to payment service (e.g. square) authorisation page and connect service via Merchant Payment Connector
-         * @summary Connect to Merchant Payment Service
-         * @param {Service} service 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        authoriseMerchantPaymentConnect: async (service: Service, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'service' is not null or undefined
-            assertParamExists('authoriseMerchantPaymentConnect', 'service', service)
-            const localVarPath = `/merchant/{service}/connect`
-                .replace(`{${"service"}}`, encodeURIComponent(String(service)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Get Connection to Merchant Payment Service Properties
-         * @summary Get Merchant Payment Connection
-         * @param {Service} service 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getMerchantPaymentConnect: async (service: Service, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'service' is not null or undefined
-            assertParamExists('getMerchantPaymentConnect', 'service', service)
-            const localVarPath = `/merchant/{service}`
-                .replace(`{${"service"}}`, encodeURIComponent(String(service)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Obtain access token for merchant payment service account This is automatically hit by redirect url after authorizing payment service
-         * @summary Obtain Merchant Payment Connection
-         * @param {Service} service 
-         * @param {string} [code] 
-         * @param {string} [state] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        obtainMerchantPaymentConnect: async (service: Service, code?: string, state?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'service' is not null or undefined
-            assertParamExists('obtainMerchantPaymentConnect', 'service', service)
-            const localVarPath = `/merchant/{service}/obtain`
-                .replace(`{${"service"}}`, encodeURIComponent(String(service)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (code !== undefined) {
-                localVarQueryParameter['code'] = code;
-            }
-
-            if (state !== undefined) {
-                localVarQueryParameter['state'] = state;
-            }
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Re-Authorise Connection to Merchant Payment Service
-         * @summary Renew Merchant Payment Connection
-         * @param {Service} service 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        renewMerchantPaymentConnect: async (service: Service, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'service' is not null or undefined
-            assertParamExists('renewMerchantPaymentConnect', 'service', service)
-            const localVarPath = `/merchant/{service}/renew`
-                .replace(`{${"service"}}`, encodeURIComponent(String(service)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Revoke Connection Tokens to Merchant Payment Service
-         * @summary Revoke Merchant Payment Connection
-         * @param {Service} service 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        revokeMerchantPaymentConnect: async (service: Service, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'service' is not null or undefined
-            assertParamExists('revokeMerchantPaymentConnect', 'service', service)
-            const localVarPath = `/merchant/{service}/revoke`
-                .replace(`{${"service"}}`, encodeURIComponent(String(service)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * MerchantConnectApi - functional programming interface
- * @export
- */
-export const MerchantConnectApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = MerchantConnectApiAxiosParamCreator(configuration)
-    return {
-        /**
-         * Redirect merchant to payment service (e.g. square) authorisation page and connect service via Merchant Payment Connector
-         * @summary Connect to Merchant Payment Service
-         * @param {Service} service 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async authoriseMerchantPaymentConnect(service: Service, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.authoriseMerchantPaymentConnect(service, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * Get Connection to Merchant Payment Service Properties
-         * @summary Get Merchant Payment Connection
-         * @param {Service} service 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getMerchantPaymentConnect(service: Service, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ConnectRecord>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getMerchantPaymentConnect(service, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * Obtain access token for merchant payment service account This is automatically hit by redirect url after authorizing payment service
-         * @summary Obtain Merchant Payment Connection
-         * @param {Service} service 
-         * @param {string} [code] 
-         * @param {string} [state] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async obtainMerchantPaymentConnect(service: Service, code?: string, state?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.obtainMerchantPaymentConnect(service, code, state, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * Re-Authorise Connection to Merchant Payment Service
-         * @summary Renew Merchant Payment Connection
-         * @param {Service} service 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async renewMerchantPaymentConnect(service: Service, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ConnectRecord>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.renewMerchantPaymentConnect(service, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * Revoke Connection Tokens to Merchant Payment Service
-         * @summary Revoke Merchant Payment Connection
-         * @param {Service} service 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async revokeMerchantPaymentConnect(service: Service, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.revokeMerchantPaymentConnect(service, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-    }
-};
-
-/**
- * MerchantConnectApi - factory interface
- * @export
- */
-export const MerchantConnectApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = MerchantConnectApiFp(configuration)
-    return {
-        /**
-         * Redirect merchant to payment service (e.g. square) authorisation page and connect service via Merchant Payment Connector
-         * @summary Connect to Merchant Payment Service
-         * @param {Service} service 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        authoriseMerchantPaymentConnect(service: Service, options?: any): AxiosPromise<string> {
-            return localVarFp.authoriseMerchantPaymentConnect(service, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Get Connection to Merchant Payment Service Properties
-         * @summary Get Merchant Payment Connection
-         * @param {Service} service 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getMerchantPaymentConnect(service: Service, options?: any): AxiosPromise<ConnectRecord> {
-            return localVarFp.getMerchantPaymentConnect(service, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Obtain access token for merchant payment service account This is automatically hit by redirect url after authorizing payment service
-         * @summary Obtain Merchant Payment Connection
-         * @param {Service} service 
-         * @param {string} [code] 
-         * @param {string} [state] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        obtainMerchantPaymentConnect(service: Service, code?: string, state?: string, options?: any): AxiosPromise<void> {
-            return localVarFp.obtainMerchantPaymentConnect(service, code, state, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Re-Authorise Connection to Merchant Payment Service
-         * @summary Renew Merchant Payment Connection
-         * @param {Service} service 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        renewMerchantPaymentConnect(service: Service, options?: any): AxiosPromise<ConnectRecord> {
-            return localVarFp.renewMerchantPaymentConnect(service, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Revoke Connection Tokens to Merchant Payment Service
-         * @summary Revoke Merchant Payment Connection
-         * @param {Service} service 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        revokeMerchantPaymentConnect(service: Service, options?: any): AxiosPromise<void> {
-            return localVarFp.revokeMerchantPaymentConnect(service, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * MerchantConnectApi - object-oriented interface
- * @export
- * @class MerchantConnectApi
- * @extends {BaseAPI}
- */
-export class MerchantConnectApi extends BaseAPI {
-    /**
-     * Redirect merchant to payment service (e.g. square) authorisation page and connect service via Merchant Payment Connector
-     * @summary Connect to Merchant Payment Service
-     * @param {Service} service 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof MerchantConnectApi
-     */
-    public authoriseMerchantPaymentConnect(service: Service, options?: AxiosRequestConfig) {
-        return MerchantConnectApiFp(this.configuration).authoriseMerchantPaymentConnect(service, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Get Connection to Merchant Payment Service Properties
-     * @summary Get Merchant Payment Connection
-     * @param {Service} service 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof MerchantConnectApi
-     */
-    public getMerchantPaymentConnect(service: Service, options?: AxiosRequestConfig) {
-        return MerchantConnectApiFp(this.configuration).getMerchantPaymentConnect(service, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Obtain access token for merchant payment service account This is automatically hit by redirect url after authorizing payment service
-     * @summary Obtain Merchant Payment Connection
-     * @param {Service} service 
-     * @param {string} [code] 
-     * @param {string} [state] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof MerchantConnectApi
-     */
-    public obtainMerchantPaymentConnect(service: Service, code?: string, state?: string, options?: AxiosRequestConfig) {
-        return MerchantConnectApiFp(this.configuration).obtainMerchantPaymentConnect(service, code, state, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Re-Authorise Connection to Merchant Payment Service
-     * @summary Renew Merchant Payment Connection
-     * @param {Service} service 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof MerchantConnectApi
-     */
-    public renewMerchantPaymentConnect(service: Service, options?: AxiosRequestConfig) {
-        return MerchantConnectApiFp(this.configuration).renewMerchantPaymentConnect(service, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Revoke Connection Tokens to Merchant Payment Service
-     * @summary Revoke Merchant Payment Connection
-     * @param {Service} service 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof MerchantConnectApi
-     */
-    public revokeMerchantPaymentConnect(service: Service, options?: AxiosRequestConfig) {
-        return MerchantConnectApiFp(this.configuration).revokeMerchantPaymentConnect(service, options).then((request) => request(this.axios, this.basePath));
+    public updateItem(itemId: string, itemUpdateRequest: ItemUpdateRequest, options?: AxiosRequestConfig) {
+        return ItemsApiFp(this.configuration).updateItem(itemId, itemUpdateRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -8853,15 +6034,15 @@ export class MerchantConnectApi extends BaseAPI {
 export const OrdersApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * 
+         * Create an order with line items that can be fulfilled
          * @summary Create an order
-         * @param {OrderCreationParams} orderCreationParams 
+         * @param {OrderCreateRequest} orderCreateRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createOrder: async (orderCreationParams: OrderCreationParams, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'orderCreationParams' is not null or undefined
-            assertParamExists('createOrder', 'orderCreationParams', orderCreationParams)
+        createOrder: async (orderCreateRequest: OrderCreateRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'orderCreateRequest' is not null or undefined
+            assertParamExists('createOrder', 'orderCreateRequest', orderCreateRequest)
             const localVarPath = `/orders`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -8877,10 +6058,6 @@ export const OrdersApiAxiosParamCreator = function (configuration?: Configuratio
             // authentication merchant-api-key required
             await setApiKeyToObject(localVarHeaderParameter, "x-api-key", configuration)
 
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
 
     
             localVarHeaderParameter['Content-Type'] = 'application/json';
@@ -8888,7 +6065,7 @@ export const OrdersApiAxiosParamCreator = function (configuration?: Configuratio
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(orderCreationParams, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(orderCreateRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -8921,10 +6098,6 @@ export const OrdersApiAxiosParamCreator = function (configuration?: Configuratio
             // authentication merchant-api-key required
             await setApiKeyToObject(localVarHeaderParameter, "x-api-key", configuration)
 
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -8939,13 +6112,14 @@ export const OrdersApiAxiosParamCreator = function (configuration?: Configuratio
         /**
          * 
          * @summary List all Orders
-         * @param {number} [pageNum] 
+         * @param {string} [startKey] 
+         * @param {any} [orderBy] 
+         * @param {OrderType} [orderType] 
          * @param {number} [pageSize] 
-         * @param {number} [limit] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listOrders: async (pageNum?: number, pageSize?: number, limit?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        listOrders: async (startKey?: string, orderBy?: any, orderType?: OrderType, pageSize?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/orders`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -8961,20 +6135,20 @@ export const OrdersApiAxiosParamCreator = function (configuration?: Configuratio
             // authentication merchant-api-key required
             await setApiKeyToObject(localVarHeaderParameter, "x-api-key", configuration)
 
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+            if (startKey !== undefined) {
+                localVarQueryParameter['startKey'] = startKey;
+            }
 
-            if (pageNum !== undefined) {
-                localVarQueryParameter['pageNum'] = pageNum;
+            if (orderBy !== undefined) {
+                localVarQueryParameter['orderBy'] = orderBy;
+            }
+
+            if (orderType !== undefined) {
+                localVarQueryParameter['orderType'] = orderType;
             }
 
             if (pageSize !== undefined) {
                 localVarQueryParameter['pageSize'] = pageSize;
-            }
-
-            if (limit !== undefined) {
-                localVarQueryParameter['limit'] = limit;
             }
 
 
@@ -8992,15 +6166,15 @@ export const OrdersApiAxiosParamCreator = function (configuration?: Configuratio
          * 
          * @summary Update an order
          * @param {string} orderId 
-         * @param {PartialOrderCreationParams} body 
+         * @param {OrderUpdateRequest} orderUpdateRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateOrder: async (orderId: string, body: PartialOrderCreationParams, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        updateOrder: async (orderId: string, orderUpdateRequest: OrderUpdateRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'orderId' is not null or undefined
             assertParamExists('updateOrder', 'orderId', orderId)
-            // verify required parameter 'body' is not null or undefined
-            assertParamExists('updateOrder', 'body', body)
+            // verify required parameter 'orderUpdateRequest' is not null or undefined
+            assertParamExists('updateOrder', 'orderUpdateRequest', orderUpdateRequest)
             const localVarPath = `/orders/{orderId}`
                 .replace(`{${"orderId"}}`, encodeURIComponent(String(orderId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -9017,10 +6191,6 @@ export const OrdersApiAxiosParamCreator = function (configuration?: Configuratio
             // authentication merchant-api-key required
             await setApiKeyToObject(localVarHeaderParameter, "x-api-key", configuration)
 
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
 
     
             localVarHeaderParameter['Content-Type'] = 'application/json';
@@ -9028,7 +6198,7 @@ export const OrdersApiAxiosParamCreator = function (configuration?: Configuratio
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(orderUpdateRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -9046,14 +6216,14 @@ export const OrdersApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = OrdersApiAxiosParamCreator(configuration)
     return {
         /**
-         * 
+         * Create an order with line items that can be fulfilled
          * @summary Create an order
-         * @param {OrderCreationParams} orderCreationParams 
+         * @param {OrderCreateRequest} orderCreateRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createOrder(orderCreationParams: OrderCreationParams, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Order>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createOrder(orderCreationParams, options);
+        async createOrder(orderCreateRequest: OrderCreateRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Order>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createOrder(orderCreateRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -9070,26 +6240,27 @@ export const OrdersApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary List all Orders
-         * @param {number} [pageNum] 
+         * @param {string} [startKey] 
+         * @param {any} [orderBy] 
+         * @param {OrderType} [orderType] 
          * @param {number} [pageSize] 
-         * @param {number} [limit] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listOrders(pageNum?: number, pageSize?: number, limit?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Order>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listOrders(pageNum, pageSize, limit, options);
+        async listOrders(startKey?: string, orderBy?: any, orderType?: OrderType, pageSize?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Order>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listOrders(startKey, orderBy, orderType, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @summary Update an order
          * @param {string} orderId 
-         * @param {PartialOrderCreationParams} body 
+         * @param {OrderUpdateRequest} orderUpdateRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updateOrder(orderId: string, body: PartialOrderCreationParams, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Order>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateOrder(orderId, body, options);
+        async updateOrder(orderId: string, orderUpdateRequest: OrderUpdateRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Order>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateOrder(orderId, orderUpdateRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -9103,14 +6274,14 @@ export const OrdersApiFactory = function (configuration?: Configuration, basePat
     const localVarFp = OrdersApiFp(configuration)
     return {
         /**
-         * 
+         * Create an order with line items that can be fulfilled
          * @summary Create an order
-         * @param {OrderCreationParams} orderCreationParams 
+         * @param {OrderCreateRequest} orderCreateRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createOrder(orderCreationParams: OrderCreationParams, options?: any): AxiosPromise<Order> {
-            return localVarFp.createOrder(orderCreationParams, options).then((request) => request(axios, basePath));
+        createOrder(orderCreateRequest: OrderCreateRequest, options?: any): AxiosPromise<Order> {
+            return localVarFp.createOrder(orderCreateRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -9125,25 +6296,26 @@ export const OrdersApiFactory = function (configuration?: Configuration, basePat
         /**
          * 
          * @summary List all Orders
-         * @param {number} [pageNum] 
+         * @param {string} [startKey] 
+         * @param {any} [orderBy] 
+         * @param {OrderType} [orderType] 
          * @param {number} [pageSize] 
-         * @param {number} [limit] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listOrders(pageNum?: number, pageSize?: number, limit?: number, options?: any): AxiosPromise<Array<Order>> {
-            return localVarFp.listOrders(pageNum, pageSize, limit, options).then((request) => request(axios, basePath));
+        listOrders(startKey?: string, orderBy?: any, orderType?: OrderType, pageSize?: number, options?: any): AxiosPromise<Array<Order>> {
+            return localVarFp.listOrders(startKey, orderBy, orderType, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Update an order
          * @param {string} orderId 
-         * @param {PartialOrderCreationParams} body 
+         * @param {OrderUpdateRequest} orderUpdateRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateOrder(orderId: string, body: PartialOrderCreationParams, options?: any): AxiosPromise<Order> {
-            return localVarFp.updateOrder(orderId, body, options).then((request) => request(axios, basePath));
+        updateOrder(orderId: string, orderUpdateRequest: OrderUpdateRequest, options?: any): AxiosPromise<Order> {
+            return localVarFp.updateOrder(orderId, orderUpdateRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -9156,15 +6328,15 @@ export const OrdersApiFactory = function (configuration?: Configuration, basePat
  */
 export class OrdersApi extends BaseAPI {
     /**
-     * 
+     * Create an order with line items that can be fulfilled
      * @summary Create an order
-     * @param {OrderCreationParams} orderCreationParams 
+     * @param {OrderCreateRequest} orderCreateRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof OrdersApi
      */
-    public createOrder(orderCreationParams: OrderCreationParams, options?: AxiosRequestConfig) {
-        return OrdersApiFp(this.configuration).createOrder(orderCreationParams, options).then((request) => request(this.axios, this.basePath));
+    public createOrder(orderCreateRequest: OrderCreateRequest, options?: AxiosRequestConfig) {
+        return OrdersApiFp(this.configuration).createOrder(orderCreateRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -9182,28 +6354,29 @@ export class OrdersApi extends BaseAPI {
     /**
      * 
      * @summary List all Orders
-     * @param {number} [pageNum] 
+     * @param {string} [startKey] 
+     * @param {any} [orderBy] 
+     * @param {OrderType} [orderType] 
      * @param {number} [pageSize] 
-     * @param {number} [limit] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof OrdersApi
      */
-    public listOrders(pageNum?: number, pageSize?: number, limit?: number, options?: AxiosRequestConfig) {
-        return OrdersApiFp(this.configuration).listOrders(pageNum, pageSize, limit, options).then((request) => request(this.axios, this.basePath));
+    public listOrders(startKey?: string, orderBy?: any, orderType?: OrderType, pageSize?: number, options?: AxiosRequestConfig) {
+        return OrdersApiFp(this.configuration).listOrders(startKey, orderBy, orderType, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary Update an order
      * @param {string} orderId 
-     * @param {PartialOrderCreationParams} body 
+     * @param {OrderUpdateRequest} orderUpdateRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof OrdersApi
      */
-    public updateOrder(orderId: string, body: PartialOrderCreationParams, options?: AxiosRequestConfig) {
-        return OrdersApiFp(this.configuration).updateOrder(orderId, body, options).then((request) => request(this.axios, this.basePath));
+    public updateOrder(orderId: string, orderUpdateRequest: OrderUpdateRequest, options?: AxiosRequestConfig) {
+        return OrdersApiFp(this.configuration).updateOrder(orderId, orderUpdateRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -9240,9 +6413,42 @@ export const PaymentsApiAxiosParamCreator = function (configuration?: Configurat
             // authentication merchant-api-key required
             await setApiKeyToObject(localVarHeaderParameter, "x-api-key", configuration)
 
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Only payments in an APPROVED state can be captured. Doing this will capture the held funds from a customers bank account.
+         * @summary Capture an authorised payment
+         * @param {string} paymentId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        capturePayment: async (paymentId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'paymentId' is not null or undefined
+            assertParamExists('capturePayment', 'paymentId', paymentId)
+            const localVarPath = `/payments/{paymentId}/capture`
+                .replace(`{${"paymentId"}}`, encodeURIComponent(String(paymentId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication merchant-api-key required
+            await setApiKeyToObject(localVarHeaderParameter, "x-api-key", configuration)
 
 
     
@@ -9279,10 +6485,6 @@ export const PaymentsApiAxiosParamCreator = function (configuration?: Configurat
 
             // authentication merchant-api-key required
             await setApiKeyToObject(localVarHeaderParameter, "x-api-key", configuration)
-
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
 
     
@@ -9324,10 +6526,6 @@ export const PaymentsApiAxiosParamCreator = function (configuration?: Configurat
             // authentication merchant-api-key required
             await setApiKeyToObject(localVarHeaderParameter, "x-api-key", configuration)
 
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -9340,7 +6538,7 @@ export const PaymentsApiAxiosParamCreator = function (configuration?: Configurat
             };
         },
         /**
-         * 
+         * Get all refunds (partial or full) related to this payment
          * @summary List all payment refunds
          * @param {string} paymentId 
          * @param {*} [options] Override http request option.
@@ -9365,10 +6563,6 @@ export const PaymentsApiAxiosParamCreator = function (configuration?: Configurat
             // authentication merchant-api-key required
             await setApiKeyToObject(localVarHeaderParameter, "x-api-key", configuration)
 
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -9383,13 +6577,14 @@ export const PaymentsApiAxiosParamCreator = function (configuration?: Configurat
         /**
          * 
          * @summary List all payments
-         * @param {number} [pageNum] 
+         * @param {string} [startKey] 
+         * @param {any} [orderBy] 
+         * @param {OrderType} [orderType] 
          * @param {number} [pageSize] 
-         * @param {number} [limit] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listPayments: async (pageNum?: number, pageSize?: number, limit?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        listPayments: async (startKey?: string, orderBy?: any, orderType?: OrderType, pageSize?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/payments`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -9405,20 +6600,20 @@ export const PaymentsApiAxiosParamCreator = function (configuration?: Configurat
             // authentication merchant-api-key required
             await setApiKeyToObject(localVarHeaderParameter, "x-api-key", configuration)
 
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+            if (startKey !== undefined) {
+                localVarQueryParameter['startKey'] = startKey;
+            }
 
-            if (pageNum !== undefined) {
-                localVarQueryParameter['pageNum'] = pageNum;
+            if (orderBy !== undefined) {
+                localVarQueryParameter['orderBy'] = orderBy;
+            }
+
+            if (orderType !== undefined) {
+                localVarQueryParameter['orderType'] = orderType;
             }
 
             if (pageSize !== undefined) {
                 localVarQueryParameter['pageSize'] = pageSize;
-            }
-
-            if (limit !== undefined) {
-                localVarQueryParameter['limit'] = limit;
             }
 
 
@@ -9433,7 +6628,7 @@ export const PaymentsApiAxiosParamCreator = function (configuration?: Configurat
             };
         },
         /**
-         * Create a full or partial refund back to a customer, from a supplied payment.
+         * Create a full or partial refund for this payment
          * @summary Refund a payment
          * @param {string} paymentId 
          * @param {PaymentRefundRequest} paymentRefundRequest 
@@ -9460,10 +6655,6 @@ export const PaymentsApiAxiosParamCreator = function (configuration?: Configurat
 
             // authentication merchant-api-key required
             await setApiKeyToObject(localVarHeaderParameter, "x-api-key", configuration)
-
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
 
     
@@ -9501,6 +6692,17 @@ export const PaymentsApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
+         * Only payments in an APPROVED state can be captured. Doing this will capture the held funds from a customers bank account.
+         * @summary Capture an authorised payment
+         * @param {string} paymentId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async capturePayment(paymentId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaymentRecord>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.capturePayment(paymentId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
          * Collect a payment from an individual user
          * @summary Create a payment
          * @param {CreatePaymentRequest} createPaymentRequest 
@@ -9523,7 +6725,7 @@ export const PaymentsApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * 
+         * Get all refunds (partial or full) related to this payment
          * @summary List all payment refunds
          * @param {string} paymentId 
          * @param {*} [options] Override http request option.
@@ -9536,18 +6738,19 @@ export const PaymentsApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary List all payments
-         * @param {number} [pageNum] 
+         * @param {string} [startKey] 
+         * @param {any} [orderBy] 
+         * @param {OrderType} [orderType] 
          * @param {number} [pageSize] 
-         * @param {number} [limit] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listPayments(pageNum?: number, pageSize?: number, limit?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<PaymentRecord>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listPayments(pageNum, pageSize, limit, options);
+        async listPayments(startKey?: string, orderBy?: any, orderType?: OrderType, pageSize?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<PaymentRecord>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listPayments(startKey, orderBy, orderType, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Create a full or partial refund back to a customer, from a supplied payment.
+         * Create a full or partial refund for this payment
          * @summary Refund a payment
          * @param {string} paymentId 
          * @param {PaymentRefundRequest} paymentRefundRequest 
@@ -9579,6 +6782,16 @@ export const PaymentsApiFactory = function (configuration?: Configuration, baseP
             return localVarFp.cancelPayment(paymentId, options).then((request) => request(axios, basePath));
         },
         /**
+         * Only payments in an APPROVED state can be captured. Doing this will capture the held funds from a customers bank account.
+         * @summary Capture an authorised payment
+         * @param {string} paymentId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        capturePayment(paymentId: string, options?: any): AxiosPromise<PaymentRecord> {
+            return localVarFp.capturePayment(paymentId, options).then((request) => request(axios, basePath));
+        },
+        /**
          * Collect a payment from an individual user
          * @summary Create a payment
          * @param {CreatePaymentRequest} createPaymentRequest 
@@ -9599,7 +6812,7 @@ export const PaymentsApiFactory = function (configuration?: Configuration, baseP
             return localVarFp.getPayment(paymentId, options).then((request) => request(axios, basePath));
         },
         /**
-         * 
+         * Get all refunds (partial or full) related to this payment
          * @summary List all payment refunds
          * @param {string} paymentId 
          * @param {*} [options] Override http request option.
@@ -9611,17 +6824,18 @@ export const PaymentsApiFactory = function (configuration?: Configuration, baseP
         /**
          * 
          * @summary List all payments
-         * @param {number} [pageNum] 
+         * @param {string} [startKey] 
+         * @param {any} [orderBy] 
+         * @param {OrderType} [orderType] 
          * @param {number} [pageSize] 
-         * @param {number} [limit] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listPayments(pageNum?: number, pageSize?: number, limit?: number, options?: any): AxiosPromise<Array<PaymentRecord>> {
-            return localVarFp.listPayments(pageNum, pageSize, limit, options).then((request) => request(axios, basePath));
+        listPayments(startKey?: string, orderBy?: any, orderType?: OrderType, pageSize?: number, options?: any): AxiosPromise<Array<PaymentRecord>> {
+            return localVarFp.listPayments(startKey, orderBy, orderType, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
-         * Create a full or partial refund back to a customer, from a supplied payment.
+         * Create a full or partial refund for this payment
          * @summary Refund a payment
          * @param {string} paymentId 
          * @param {PaymentRefundRequest} paymentRefundRequest 
@@ -9654,6 +6868,18 @@ export class PaymentsApi extends BaseAPI {
     }
 
     /**
+     * Only payments in an APPROVED state can be captured. Doing this will capture the held funds from a customers bank account.
+     * @summary Capture an authorised payment
+     * @param {string} paymentId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PaymentsApi
+     */
+    public capturePayment(paymentId: string, options?: AxiosRequestConfig) {
+        return PaymentsApiFp(this.configuration).capturePayment(paymentId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
      * Collect a payment from an individual user
      * @summary Create a payment
      * @param {CreatePaymentRequest} createPaymentRequest 
@@ -9678,7 +6904,7 @@ export class PaymentsApi extends BaseAPI {
     }
 
     /**
-     * 
+     * Get all refunds (partial or full) related to this payment
      * @summary List all payment refunds
      * @param {string} paymentId 
      * @param {*} [options] Override http request option.
@@ -9692,19 +6918,20 @@ export class PaymentsApi extends BaseAPI {
     /**
      * 
      * @summary List all payments
-     * @param {number} [pageNum] 
+     * @param {string} [startKey] 
+     * @param {any} [orderBy] 
+     * @param {OrderType} [orderType] 
      * @param {number} [pageSize] 
-     * @param {number} [limit] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof PaymentsApi
      */
-    public listPayments(pageNum?: number, pageSize?: number, limit?: number, options?: AxiosRequestConfig) {
-        return PaymentsApiFp(this.configuration).listPayments(pageNum, pageSize, limit, options).then((request) => request(this.axios, this.basePath));
+    public listPayments(startKey?: string, orderBy?: any, orderType?: OrderType, pageSize?: number, options?: AxiosRequestConfig) {
+        return PaymentsApiFp(this.configuration).listPayments(startKey, orderBy, orderType, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * Create a full or partial refund back to a customer, from a supplied payment.
+     * Create a full or partial refund for this payment
      * @summary Refund a payment
      * @param {string} paymentId 
      * @param {PaymentRefundRequest} paymentRefundRequest 
@@ -9750,10 +6977,6 @@ export const RefundsApiAxiosParamCreator = function (configuration?: Configurati
             // authentication merchant-api-key required
             await setApiKeyToObject(localVarHeaderParameter, "x-api-key", configuration)
 
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -9768,13 +6991,15 @@ export const RefundsApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * 
          * @summary List all refunds
-         * @param {number} [pageNum] 
+         * @param {string} [startTime] 
+         * @param {string} [endTime] 
+         * @param {OrderType} [orderType] 
+         * @param {RefundStatus} [status] 
          * @param {number} [pageSize] 
-         * @param {number} [limit] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listRefunds: async (pageNum?: number, pageSize?: number, limit?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        listRefunds: async (startTime?: string, endTime?: string, orderType?: OrderType, status?: RefundStatus, pageSize?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/refunds`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -9790,20 +7015,28 @@ export const RefundsApiAxiosParamCreator = function (configuration?: Configurati
             // authentication merchant-api-key required
             await setApiKeyToObject(localVarHeaderParameter, "x-api-key", configuration)
 
-            // authentication merchant-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+            if (startTime !== undefined) {
+                localVarQueryParameter['startTime'] = (startTime as any instanceof Date) ?
+                    (startTime as any).toISOString() :
+                    startTime;
+            }
 
-            if (pageNum !== undefined) {
-                localVarQueryParameter['pageNum'] = pageNum;
+            if (endTime !== undefined) {
+                localVarQueryParameter['endTime'] = (endTime as any instanceof Date) ?
+                    (endTime as any).toISOString() :
+                    endTime;
+            }
+
+            if (orderType !== undefined) {
+                localVarQueryParameter['orderType'] = orderType;
+            }
+
+            if (status !== undefined) {
+                localVarQueryParameter['status'] = status;
             }
 
             if (pageSize !== undefined) {
                 localVarQueryParameter['pageSize'] = pageSize;
-            }
-
-            if (limit !== undefined) {
-                localVarQueryParameter['limit'] = limit;
             }
 
 
@@ -9841,14 +7074,16 @@ export const RefundsApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary List all refunds
-         * @param {number} [pageNum] 
+         * @param {string} [startTime] 
+         * @param {string} [endTime] 
+         * @param {OrderType} [orderType] 
+         * @param {RefundStatus} [status] 
          * @param {number} [pageSize] 
-         * @param {number} [limit] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listRefunds(pageNum?: number, pageSize?: number, limit?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<RefundRecord>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listRefunds(pageNum, pageSize, limit, options);
+        async listRefunds(startTime?: string, endTime?: string, orderType?: OrderType, status?: RefundStatus, pageSize?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<RefundRecord>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listRefunds(startTime, endTime, orderType, status, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -9874,14 +7109,16 @@ export const RefundsApiFactory = function (configuration?: Configuration, basePa
         /**
          * 
          * @summary List all refunds
-         * @param {number} [pageNum] 
+         * @param {string} [startTime] 
+         * @param {string} [endTime] 
+         * @param {OrderType} [orderType] 
+         * @param {RefundStatus} [status] 
          * @param {number} [pageSize] 
-         * @param {number} [limit] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listRefunds(pageNum?: number, pageSize?: number, limit?: number, options?: any): AxiosPromise<Array<RefundRecord>> {
-            return localVarFp.listRefunds(pageNum, pageSize, limit, options).then((request) => request(axios, basePath));
+        listRefunds(startTime?: string, endTime?: string, orderType?: OrderType, status?: RefundStatus, pageSize?: number, options?: any): AxiosPromise<Array<RefundRecord>> {
+            return localVarFp.listRefunds(startTime, endTime, orderType, status, pageSize, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -9908,15 +7145,17 @@ export class RefundsApi extends BaseAPI {
     /**
      * 
      * @summary List all refunds
-     * @param {number} [pageNum] 
+     * @param {string} [startTime] 
+     * @param {string} [endTime] 
+     * @param {OrderType} [orderType] 
+     * @param {RefundStatus} [status] 
      * @param {number} [pageSize] 
-     * @param {number} [limit] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof RefundsApi
      */
-    public listRefunds(pageNum?: number, pageSize?: number, limit?: number, options?: AxiosRequestConfig) {
-        return RefundsApiFp(this.configuration).listRefunds(pageNum, pageSize, limit, options).then((request) => request(this.axios, this.basePath));
+    public listRefunds(startTime?: string, endTime?: string, orderType?: OrderType, status?: RefundStatus, pageSize?: number, options?: AxiosRequestConfig) {
+        return RefundsApiFp(this.configuration).listRefunds(startTime, endTime, orderType, status, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
